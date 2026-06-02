@@ -3595,21 +3595,30 @@
       .blog-filter-section,
       .blog-search-section,
       .blog-grid-section,
-      .contact-cards-section,
       .contact-form-section,
-      .featured-blog-section {
+      .featured-blog-section,
+      .featured-section,
+      .blog-newsletter,
+      .stats-band {
         padding-top: 48px !important;
         padding-bottom: 48px !important;
         margin-top: 0 !important;
         margin-bottom: 0 !important;
       }
 
-      /* 2. Compact padding for Hero sections to accommodate fixed header navigation */
+      /* Specific handling for contact page cards to keep top spacing tight under the hero */
+      .contact-cards-section {
+        padding-top: 0 !important;
+        padding-bottom: 48px !important;
+      }
+
+      /* 2. Compact padding and clear min-height for Hero sections to accommodate fixed header navigation */
       .hero, 
       .about-hero, 
       .blog-hero {
         padding-top: 100px !important;
         padding-bottom: 40px !important;
+        min-height: auto !important;
       }
 
       /* 3. Standard mobile side paddings for container columns */
