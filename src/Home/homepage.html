@@ -751,10 +751,9 @@
       margin-top: 4px;
     }
 
-    /* ── CLIENT LOGOS MARQUEE ── */
+    /* ── CLIENT LOGOS ── */
     .client-logos {
       margin-top: 28px;
-      overflow: hidden;
       width: 100%;
     }
 
@@ -767,31 +766,26 @@
       margin-bottom: 14px;
     }
 
+    /* Desktop View: Static Row */
     .logo-marquee-container {
-      display: flex;
-      overflow: hidden;
       width: 100%;
-      mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-      -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
     }
 
     .logo-marquee-track {
       display: flex;
       align-items: center;
-      gap: 36px;
-      width: max-content;
-      animation: marquee-scroll 25s linear infinite;
+      flex-wrap: wrap;
+      gap: 32px;
     }
 
-    .logo-marquee-track:hover {
-      animation-play-state: paused;
+    .logo-duplicate {
+      display: none !important; /* Hide duplicate set on desktop */
     }
 
     .client-logo-item {
       height: 28px;
       display: flex;
       align-items: center;
-      flex-shrink: 0;
     }
 
     .client-logo-item img {
@@ -807,6 +801,35 @@
     .client-logo-item img:hover {
       filter: grayscale(0) opacity(.85);
       transform: scale(1.04);
+    }
+
+    /* Mobile View: Infinite Carousel */
+    @media(max-width: 768px) {
+      .client-logos {
+        overflow: hidden;
+      }
+      .logo-marquee-container {
+        display: flex;
+        overflow: hidden;
+        width: 100%;
+        mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+      }
+      .logo-marquee-track {
+        flex-wrap: nowrap !important;
+        gap: 36px;
+        width: max-content;
+        animation: marquee-scroll 25s linear infinite;
+      }
+      .logo-marquee-track:hover {
+        animation-play-state: paused;
+      }
+      .logo-duplicate {
+        display: flex !important; /* Show duplicates for infinite marquee on mobile */
+      }
+      .client-logo-item {
+        flex-shrink: 0;
+      }
     }
 
     @keyframes marquee-scroll {
@@ -3374,18 +3397,18 @@
                 <div class="client-logo-item"><img src="../../public/assets/logos/machinapartners.png" alt="machinapartners" /></div>
                 <div class="client-logo-item"><img src="../../public/assets/logos/tapsvs.png" alt="tapsvs" /></div>
                 <!-- Group 2 (Duplicate for loop) -->
-                <div class="client-logo-item"><img src="../../public/assets/logos/Venturous.png" alt="Venturous" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/Throne_1.avif" alt="Throne" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/DSmotors.png" alt="DS Motors" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/Darehire.jpg" alt="Darehire" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/Jacky2.png" alt="Jacky2" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/Windowcleaning.png" alt="Windowcleaning" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/alofferte.png" alt="alofferte" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/ancorah.png" alt="ancorah" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/capefare.png" alt="capefare" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/dikhatz.png" alt="dikhatz" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/machinapartners.png" alt="machinapartners" /></div>
-                <div class="client-logo-item"><img src="../../public/assets/logos/tapsvs.png" alt="tapsvs" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/Venturous.png" alt="Venturous" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/Throne_1.avif" alt="Throne" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/DSmotors.png" alt="DS Motors" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/Darehire.jpg" alt="Darehire" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/Jacky2.png" alt="Jacky2" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/Windowcleaning.png" alt="Windowcleaning" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/alofferte.png" alt="alofferte" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/ancorah.png" alt="ancorah" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/capefare.png" alt="capefare" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/dikhatz.png" alt="dikhatz" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/machinapartners.png" alt="machinapartners" /></div>
+                <div class="client-logo-item logo-duplicate"><img src="../../public/assets/logos/tapsvs.png" alt="tapsvs" /></div>
               </div>
             </div>
           </div>
