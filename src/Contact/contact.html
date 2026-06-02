@@ -630,9 +630,12 @@ body{
   .hero-h1{text-align:center;}
 }
 @media(max-width:768px){
+  /* Hide decorative orbital animation – let hero text fill the full width */
+  .contact-orbit-wrap{ display:none !important; }
   .hero-inner{
     grid-template-columns:1fr !important;
     text-align:center !important;
+    gap:0 !important;
   }
   .hero-h1{text-align:center !important;}
   .hero-sub{text-align:center !important; margin-left:auto !important; margin-right:auto !important; max-width:100% !important;}
@@ -640,11 +643,10 @@ body{
   .hero-eyebrow-row{justify-content:center !important;}
 }
 @media(max-width:480px){
-  .contact-orbit-wrap{height:250px; margin-top:0; overflow:visible;}
-  .orbit-stage{transform:scale(0.65); transform-origin:center;}
   .hero-inner{
     grid-template-columns:1fr !important;
     text-align:center !important;
+    gap:0 !important;
   }
   .hero-h1{text-align:center !important; font-size:clamp(28px,9vw,36px) !important;}
   .hero-sub{text-align:center !important; margin-left:auto !important; margin-right:auto !important; max-width:100% !important;}
@@ -1210,6 +1212,11 @@ body{
         gap: 32px !important;
       }
 
+      /* Hide Quick Links footer column on mobile to reduce clutter */
+      .footer-quick-links {
+        display: none !important;
+      }
+
       /* 6. Spacing between section header elements and section grids */
       .why-header,
       .test-head,
@@ -1633,7 +1640,7 @@ body{
           <a href="../digital-marketing/digital-marketing.html">Digital Marketing</a>
           <a href="../e-commerce-solutions/e-commerce-solutions.html">E-Commerce Solutions</a>
         </div>
-        <div class="footer-column">
+        <div class="footer-column footer-quick-links">
           <div class="footer-title">Quick Links</div>
           <a href="../Home/homepage.html">Home</a>
 
