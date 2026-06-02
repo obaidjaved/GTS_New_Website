@@ -757,6 +757,7 @@
       width: 100%;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
       padding-top: 28px;
+      overflow: hidden;
     }
 
     .client-logos-label {
@@ -768,24 +769,26 @@
       margin-bottom: 18px;
     }
 
-    /* Desktop View: Static Row */
-    /* Desktop View: Static Single Line Row */
+    /* Infinite Marquee Carousel (Both Desktop & Mobile) */
     .logo-marquee-container {
-      width: 100%;
+      display: flex;
       overflow: hidden;
+      width: 100%;
+      mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
     }
 
     .logo-marquee-track {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       flex-wrap: nowrap;
-      gap: 32px;
-      width: 100%;
+      gap: 48px;
+      width: max-content;
+      animation: marquee-scroll 32s linear infinite;
     }
 
-    .logo-duplicate {
-      display: none !important; /* Hide duplicate set on desktop */
+    .logo-marquee-track:hover {
+      animation-play-state: paused;
     }
 
     .client-logo-item {
@@ -793,15 +796,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      flex: 1 1 auto;
-      max-width: 120px;
-      min-width: 0;
+      flex-shrink: 0;
     }
 
     .client-logo-item img {
       height: 100%;
-      width: 100%;
+      width: auto;
       max-height: 38px;
+      max-width: 130px;
       object-fit: contain;
       filter: grayscale(1) opacity(.45);
       transition: filter .25s ease, transform .25s ease;
@@ -812,40 +814,21 @@
       transform: scale(1.05);
     }
 
-    /* Mobile View: Infinite Carousel */
+    /* Mobile View Tweaks */
     @media(max-width: 768px) {
       .client-logos {
         margin-top: 36px;
         padding-top: 0;
         border-top: none;
-        overflow: hidden;
       }
       .client-logos-label {
         margin-bottom: 14px;
       }
-      .logo-marquee-container {
-        display: flex;
-        overflow: hidden;
-        width: 100%;
-        mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-        -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-      }
       .logo-marquee-track {
-        flex-wrap: nowrap !important;
-        gap: 36px;
-        width: max-content;
-        animation: marquee-scroll 25s linear infinite;
-      }
-      .logo-marquee-track:hover {
-        animation-play-state: paused;
-      }
-      .logo-duplicate {
-        display: flex !important; /* Show duplicates for infinite marquee on mobile */
+        gap: 32px;
       }
       .client-logo-item {
         height: 28px;
-        flex-shrink: 0;
-        max-width: 110px;
       }
       .client-logo-item img {
         max-height: 28px;
