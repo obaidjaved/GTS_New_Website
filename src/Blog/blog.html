@@ -2132,9 +2132,88 @@ body{
         width: 100% !important;
       }
 
-      /* 8. Hide Quick Links footer column – redundant on mobile */
+      /* Hide Quick Links footer column on mobile to reduce clutter */
       .footer-quick-links {
         display: none !important;
+      }
+
+      /* ── ELEGANT MOBILE FOOTER ── */
+      footer {
+        padding: 48px 0 24px !important;
+      }
+      /* Brand takes full width, then columns below */
+      .footer-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0 !important;
+      }
+      /* Brand spans both columns */
+      .footer-brand {
+        grid-column: 1 / -1 !important;
+        padding-bottom: 28px !important;
+        margin-bottom: 28px !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+      }
+      .footer-brand .footer-logo img {
+        width: 130px !important;
+      }
+      .footer-tagline {
+        font-size: 15px !important;
+        margin: 14px 0 8px !important;
+        max-width: 100% !important;
+      }
+      .footer-desc {
+        font-size: 13px !important;
+        line-height: 1.6 !important;
+        max-width: 100% !important;
+      }
+      /* Services column — left */
+      .footer-grid > .footer-column:not(.footer-quick-links) {
+        padding-right: 12px !important;
+      }
+      .footer-title {
+        font-size: 10px !important;
+        letter-spacing: 0.12em !important;
+        margin-bottom: 14px !important;
+      }
+      .footer-column a {
+        font-size: 13px !important;
+        line-height: 1.6 !important;
+      }
+      /* Contact block — compact */
+      .contact-block {
+        gap: 10px !important;
+      }
+      .contact-item {
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+        gap: 8px !important;
+      }
+      .contact-item svg {
+        width: 14px !important;
+        height: 14px !important;
+        flex-shrink: 0 !important;
+        margin-top: 2px !important;
+      }
+      .contact-item strong {
+        font-size: 12px !important;
+        margin-bottom: 2px !important;
+      }
+      /* Footer bottom */
+      .footer-bottom {
+        margin-top: 28px !important;
+        padding-top: 20px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+      }
+      .footer-copy {
+        font-size: 12px !important;
+      }
+      .footer-bottom-links {
+        gap: 14px !important;
+      }
+      .footer-bottom-links a {
+        font-size: 12px !important;
       }
     }
 </style>
