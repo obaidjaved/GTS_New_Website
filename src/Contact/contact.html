@@ -621,16 +621,16 @@ body{
   position:relative;
 }
 @media(max-width:900px){
-  .contact-orbit-wrap{transform:scale(0.85); height:380px; margin-top:-20px;}
+  .contact-orbit-wrap{height:320px; margin-top:0; overflow:visible;}
+  .orbit-stage{transform:scale(0.85); transform-origin:center;}
   .hero-inner{text-align:center;}
   .hero-sub{margin-left:auto; margin-right:auto;}
   .hero-btns{justify-content:center;}
   .hero-eyebrow-row{justify-content:center;}
 }
 @media(max-width:480px){
-  .hero{padding:120px 0 60px;}
-  .contact-orbit-wrap{transform:scale(0.65); height:280px; margin-top:-40px;}
-  .hero-h1{font-size:clamp(36px, 10vw, 40px);}
+  .contact-orbit-wrap{height:250px; margin-top:0; overflow:visible;}
+  .orbit-stage{transform:scale(0.65); transform-origin:center;}
 }
 
 .orbit-stage{
@@ -1112,7 +1112,7 @@ body{
       .hero, 
       .about-hero, 
       .blog-hero {
-        padding-top: 100px !important;
+        padding-top: 140px !important;
         padding-bottom: 40px !important;
         min-height: auto !important;
       }
