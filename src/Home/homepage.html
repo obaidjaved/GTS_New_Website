@@ -751,9 +751,11 @@
       margin-top: 4px;
     }
 
-    /* ── CLIENT LOGOS ── */
+    /* ── CLIENT LOGOS MARQUEE ── */
     .client-logos {
       margin-top: 28px;
+      overflow: hidden;
+      width: 100%;
     }
 
     .client-logos-label {
@@ -765,22 +767,37 @@
       margin-bottom: 14px;
     }
 
-    .client-logos-row {
+    .logo-marquee-container {
+      display: flex;
+      overflow: hidden;
+      width: 100%;
+      mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .logo-marquee-track {
       display: flex;
       align-items: center;
-      gap: 28px;
-      flex-wrap: wrap;
+      gap: 36px;
+      width: max-content;
+      animation: marquee-scroll 25s linear infinite;
+    }
+
+    .logo-marquee-track:hover {
+      animation-play-state: paused;
     }
 
     .client-logo-item {
       height: 28px;
       display: flex;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .client-logo-item img {
       height: 100%;
       width: auto;
+      max-height: 28px;
       max-width: 120px;
       object-fit: contain;
       filter: grayscale(1) opacity(.45);
@@ -790,6 +807,15 @@
     .client-logo-item img:hover {
       filter: grayscale(0) opacity(.85);
       transform: scale(1.04);
+    }
+
+    @keyframes marquee-scroll {
+      0% {
+        transform: translate3d(0, 0, 0);
+      }
+      100% {
+        transform: translate3d(-50%, 0, 0);
+      }
     }
 
     /* ── FLOW DIAGRAM ── */
@@ -3332,9 +3358,41 @@
           </div>
           <div class="client-logos">
             <div class="client-logos-label">Trusted by</div>
-            <div class="client-logos-row">
-              <div class="client-logo-item"><img src="../../public/assets/logos/Venturous.png" alt="Venturous" /></div>
-              <div class="client-logo-item"><img src="../../public/assets/logos/Throne_1.avif" alt="Throne" /></div>
+            <div class="logo-marquee-container">
+              <div class="logo-marquee-track">
+                <!-- Group 1 -->
+                <div class="client-logo-item"><img src="../../public/assets/logos/Venturous.png" alt="Venturous" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/Throne_1.avif" alt="Throne" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/DSmotors.png" alt="DS Motors" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/Darehire.jpg" alt="Darehire" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/Jacky2.png" alt="Jacky2" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/Windowcleaning.png" alt="Windowcleaning" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/alofferte.png" alt="alofferte" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/ancorah.png" alt="ancorah" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/capefare.png" alt="capefare" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/dikhatz.png" alt="dikhatz" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/machinapartners.png" alt="machinapartners" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/tapsvs.png" alt="tapsvs" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/kaspersky.svg" alt="kaspersky" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/namecheap.svg" alt="namecheap" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/vmware.svg" alt="vmware" /></div>
+                <!-- Group 2 (Duplicate for loop) -->
+                <div class="client-logo-item"><img src="../../public/assets/logos/Venturous.png" alt="Venturous" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/Throne_1.avif" alt="Throne" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/DSmotors.png" alt="DS Motors" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/Darehire.jpg" alt="Darehire" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/Jacky2.png" alt="Jacky2" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/Windowcleaning.png" alt="Windowcleaning" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/alofferte.png" alt="alofferte" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/ancorah.png" alt="ancorah" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/capefare.png" alt="capefare" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/dikhatz.png" alt="dikhatz" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/machinapartners.png" alt="machinapartners" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/tapsvs.png" alt="tapsvs" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/kaspersky.svg" alt="kaspersky" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/namecheap.svg" alt="namecheap" /></div>
+                <div class="client-logo-item"><img src="../../public/assets/logos/vmware.svg" alt="vmware" /></div>
+              </div>
             </div>
           </div>
         </div>
