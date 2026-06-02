@@ -3209,6 +3209,119 @@
       .tab-info-header { justify-content: center; }
       .tab-badge { display: none; }
     }
+
+    /* ── MOBILE FIRST LAYOUT OPTIMIZATION (max-width: 768px) ── */
+    @media (max-width: 768px) {
+      /* 1. Reduce section paddings to eliminate excessive vertical spacing on mobile */
+      section, 
+      .hero,
+      .about-hero,
+      .blog-hero,
+      .testimonials,
+      .faq,
+      .comparison,
+      .our-services,
+      .services,
+      .svc-expanded,
+      .process,
+      .process-section,
+      .showcase-section,
+      .tech-stack-section,
+      .features-grid-section,
+      .why-choose,
+      .cta-section,
+      .portfolio,
+      .about-company,
+      .mvg-section,
+      .trust-logos-section,
+      .blog-filter-section,
+      .blog-search-section,
+      .blog-grid-section,
+      .contact-cards-section,
+      .contact-form-section,
+      .featured-blog-section {
+        padding-top: 48px !important;
+        padding-bottom: 48px !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+      }
+
+      /* 2. Compact padding for Hero sections to accommodate fixed header navigation */
+      .hero, 
+      .about-hero, 
+      .blog-hero {
+        padding-top: 100px !important;
+        padding-bottom: 40px !important;
+      }
+
+      /* 3. Standard mobile side paddings for container columns */
+      .container {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 4. Optimize title & heading typography for mobile devices */
+      h1, .hero-h1 {
+        font-size: clamp(30px, 8vw, 38px) !important;
+        line-height: 1.15 !important;
+        margin-bottom: 12px !important;
+        letter-spacing: -0.02em !important;
+      }
+      h2, .section-h2, .cta-h2, .svc-exp-h2 {
+        font-size: clamp(24px, 6vw, 30px) !important;
+        line-height: 1.2 !important;
+        margin-bottom: 12px !important;
+        letter-spacing: -0.02em !important;
+      }
+      .section-eyebrow, .hero-eyebrow, .svc-exp-eyebrow {
+        font-size: 10px !important;
+        margin-bottom: 8px !important;
+        letter-spacing: 0.1em !important;
+      }
+      .hero-sub, .cta-sub {
+        font-size: 15px !important;
+        line-height: 1.5 !important;
+        margin-bottom: 24px !important;
+      }
+
+      /* 5. Force single-column grid layouts and clear extra margins */
+      .hero-grid,
+      .about-hero-grid,
+      .about-company-grid,
+      .mvg-grid,
+      .why-layout,
+      .services-grid,
+      .footer-grid,
+      .contact-cards-grid,
+      .contact-grid,
+      .showcase-grid,
+      .features-grid,
+      .tech-stack-grid,
+      .process-grid,
+      .faq-grid,
+      .testimonials-grid,
+      .blog-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+      }
+
+      /* 6. Spacing between section header elements and section grids */
+      .why-header,
+      .test-head,
+      .trust-logos-head,
+      .faq-head,
+      .portfolio-head {
+        margin-bottom: 28px !important;
+      }
+
+      /* 7. Ensure absolute responsive safety and horizontal containment */
+      html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+      }
+    }
 </style>
 </head>
 
