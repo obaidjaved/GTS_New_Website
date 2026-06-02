@@ -767,15 +767,19 @@
     }
 
     /* Desktop View: Static Row */
+    /* Desktop View: Static Single Line Row */
     .logo-marquee-container {
       width: 100%;
+      overflow: hidden;
     }
 
     .logo-marquee-track {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 32px;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 16px;
+      width: 100%;
     }
 
     .logo-duplicate {
@@ -783,16 +787,19 @@
     }
 
     .client-logo-item {
-      height: 28px;
+      height: 24px;
       display: flex;
       align-items: center;
+      justify-content: center;
+      flex: 1 1 auto;
+      max-width: 90px;
+      min-width: 0;
     }
 
     .client-logo-item img {
       height: 100%;
-      width: auto;
-      max-height: 28px;
-      max-width: 120px;
+      width: 100%;
+      max-height: 24px;
       object-fit: contain;
       filter: grayscale(1) opacity(.45);
       transition: filter .25s ease, transform .25s ease;
