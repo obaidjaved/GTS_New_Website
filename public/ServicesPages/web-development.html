@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Development Services — Globotech Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── DESIGN TOKENS (light-mode only) ── */
+:root {
+  --bg:           #F5F5F7;
+  --bg-2:         #ffffff;
+  --text:         #1d1d1f;
+  --text-2:       #6e6e73;
+  --text-3:       #3d3d3f;
+  --teal:         #33c5f3;
+  --glass-bg:     rgba(255,255,255,0.72);
+  --glass-border: rgba(255,255,255,0.9);
+  --glass-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+  --radius:       20px;
+  --radius-sm:    12px;
+  --radius-pill:  100px;
+  --fh:           'Plus Jakarta Sans',-apple-system,sans-serif;
+  --fb:           'Inter',-apple-system,sans-serif;
+  --ease:         cubic-bezier(0.25,0.46,0.45,0.94);
+}
+
+/* ── BASE ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:88px;}
+body{
+  font-family:var(--fb);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.container{max-width:1520px;margin:0 auto;padding:0 60px;}
+@media(max-width:768px){.container{padding:0 24px;}}
+
+/* ── NAV ── */
+.nav-wrap{position:fixed;top:20px;left:0;right:0;z-index:100;padding:0 40px;}
+@media(max-width:768px){.nav-wrap{padding:0 16px;}}
+nav{
+  position:relative;
+  max-width:1440px;margin:0 auto;
+  background:#ffffff;
+  border:1px solid rgba(0,0,0,0.09);
+  border-radius:24px;
+  padding:0;
+  display:block;
+  box-shadow:0 2px 16px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);
+  transition:border-radius .22s ease, box-shadow .22s ease;
+  overflow:visible;
+}
+.nav-bar-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 8px 8px 24px;
+  width:100%;
+  box-sizing:border-box;
+  position:relative;
+  z-index:100;
+}
+
+.nav-backdrop{
+  display:none !important;
+  pointer-events:none !important;
+}
+.nav-backdrop.visible{
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
+nav::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  border:1px solid transparent;
+  background:linear-gradient(to right, #2dd4bf, #818cf8, #f472b6) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:destination-out;
+  mask-composite:exclude;
+  pointer-events:none;
+  opacity:0.75;
+  transition:border-radius .22s ease;
+}
+
+nav:has(.mega-menu.visible){
+  border-radius:24px 24px 0 0;
+  box-shadow:0 8px 40px rgba(0,0,0,0.10),0 1px 3px rgba(0,0,0,0.04);
+}
+
+nav:has(.mega-menu.visible)::after{
+  border-radius:24px 24px 0 0;
+  clip-path:inset(0 0 1px 0);
+}
+
+.nav-logo{display:flex;align-items:center;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:28px;}
+.nav-links a{font-size:15px;font-weight:500;color:#1d1d1f;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--text);}
+.nav-has-mega{position:static;}
+.nav-has-mega > a{display:flex;align-items:center;gap:4px;}
+.nav-has-mega > a::after{content:'';display:inline-block;width:12px;height:12px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1d1f' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .25s;}
+.nav-has-mega.open > a::after{transform:rotate(180deg);}
+.nav-right{display:flex;align-items:center;gap:8px;}
+.nav-cta{
+  background:#1d1d1f;color:#fff;
+  font-family:var(--fh);font-size:14px;font-weight:800;
+  padding:10px 22px;border-radius:var(--radius-pill);text-decoration:none;
+  transition:opacity .2s,transform .18s var(--ease),box-shadow .2s;
+}
+.nav-cta:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.15);}
+
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .nav-links.open{
+    display:flex;flex-direction:column;gap:0;
+    position:fixed;top:72px;left:12px;right:12px;
+    background:#fff;border-radius:16px;padding:8px 0;
+    box-shadow:0 8px 32px rgba(0,0,0,0.12),0 1px 4px rgba(0,0,0,0.06);
+    border:1px solid rgba(0,0,0,0.06);z-index:9999;
+  }
+  .nav-links.open a{
+    padding:15px 24px;font-size:15px;font-weight:500;
+    border-bottom:1px solid rgba(0,0,0,0.05);
+  }
+  .nav-links.open a:last-child{border-bottom:none;}
+  .nav-hamburger{
+    display:flex;align-items:center;justify-content:center;
+    width:40px;height:40px;border-radius:50%;
+    background:transparent;border:none;cursor:pointer;
+    color:#1d1d1f;flex-shrink:0;
+    transition:background .15s;
+  }
+  .nav-hamburger:hover{background:rgba(0,0,0,0.06);}
+}
+@media(min-width:769px){.nav-hamburger{display:none;}}
+
+.mega-inner{
+  display:grid;
+  grid-template-columns:1fr 1fr 280px;
+  gap:8px 24px;
+}
+.mega-item{
+  display:flex;
+  flex-direction:column;
+  padding:14px 16px;
+  border-radius:12px;
+  text-decoration:none;
+  transition:background .18s;
+  cursor:pointer;
+}
+.mega-item:hover{background:rgba(51,197,243,0.06);}
+.mega-item:hover .mega-item-title{color:var(--teal);}
+.mega-item-title{
+  font-family:var(--fh);
+  font-size:15px;
+  font-weight:700;
+  color:#1d1d1f;
+  margin-bottom:4px;
+  transition:color .18s;
+}
+.mega-item-desc{
+  font-size:13px;
+  color:#6b7280;
+  line-height:1.45;
+}
+.mega-featured{
+  grid-row:1 / 4;
+  grid-column:3;
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  border-radius:16px;
+  padding:28px 24px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  text-decoration:none;
+  transition:transform .2s;
+  min-height:240px;
+}
+.mega-featured:hover{transform:translateY(-2px);}
+.mega-featured-eyebrow{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#33c5f3;
+  margin-bottom:12px;
+}
+.mega-featured-title{
+  font-family:var(--fh);
+  font-size:22px;
+  font-weight:900;
+  color:#fff;
+  line-height:1.2;
+  margin-bottom:8px;
+}
+.mega-featured-desc{
+  font-size:13px;
+  color:rgba(255,255,255,0.6);
+  line-height:1.5;
+  flex:1;
+}
+.mega-featured-link{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:20px;
+  font-size:13px;
+  font-weight:700;
+  color:#33c5f3;
+}
+@media(max-width:768px){
+  .mega-menu{display:none!important;}
+}
+
+.mega-menu{
+  display:none;
+  position:fixed;
+  top:76px;
+  left:40px;
+  right:40px;
+  background:#ffffff;
+  border-radius:0 0 23px 23px;
+  border:1px solid transparent;
+  border-top:none;
+  padding:0 48px 32px;
+  margin:0;
+  box-sizing:border-box;
+  z-index:95;
+  opacity:0;
+  transform:translateY(-6px);
+  transition:opacity .22s ease, transform .22s ease;
+  pointer-events:none;
+  box-shadow:0 12px 36px rgba(0,0,0,0.08),0 4px 10px rgba(0,0,0,0.04);
+  overflow:hidden;
+}
+
+.mega-menu::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  border:1px solid transparent;
+  background:linear-gradient(to right, #2dd4bf, #818cf8, #f472b6) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:destination-out;
+  mask-composite:exclude;
+  pointer-events:none;
+  opacity:0.75;
+}
+
+.mega-menu.visible{
+  display:grid;
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+  padding-top:24px;
+}
+
+/* ── HERO ── */
+.hero{
+  background:#ffffff;
+  min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:140px 0 80px;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 55% 70% at 88% 38%, rgba(51,197,243,0.11) 0%,transparent 65%),
+    radial-gradient(ellipse 35% 45% at 8% 88%, rgba(16,185,129,0.06) 0%,transparent 55%),
+    radial-gradient(ellipse 30% 40% at 72% 88%, rgba(139,92,246,0.05) 0%,transparent 55%);
+  pointer-events:none;
+}
+.hero .container{width:100%;}
+.hero-inner{
+  position:relative;z-index:1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:64px;
+  align-items:center;
+  width:100%;
+}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr;gap:48px;}}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:24px;
+}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s ease infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.65);}}
+
+.hero-h1{
+  font-family:var(--fh);
+  font-size:clamp(38px,4.5vw,64px);
+  font-weight:900;letter-spacing:-.045em;line-height:1.05;
+  color:var(--text);margin-bottom:22px;
+}
+.hero-h1 em{
+  font-style:normal;
+  background:linear-gradient(110deg,#33c5f3 0%,#8b5cf6 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.hero-sub{
+  font-size:17px;line-height:1.7;
+  color:var(--text-2);max-width:420px;margin-bottom:36px;
+}
+
+.hero-btns{display:flex;gap:12px;align-items:center;margin-bottom:44px;flex-wrap:wrap;}
+.hero-btn-primary{
+  background:#1d1d1f;color:#fff;
+  font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:-.01em;
+  padding:15px 30px;border-radius:var(--radius-pill);text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.14);
+  transition:transform .2s var(--ease),box-shadow .2s;
+  border:none;cursor:pointer;
+}
+.hero-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,0,0,0.2);}
+.hero-btn-secondary{
+  font-size:15px;font-weight:600;color:var(--text-2);text-decoration:none;
+  padding:15px 16px;display:inline-flex;align-items:center;gap:5px;transition:color .2s;
+}
+.hero-btn-secondary:hover{color:var(--text);}
+
+/* ── FLOW ANIMATION ── */
+.dev-flow{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:360px;
+  width:100%;
+  padding:20px 0;
+}
+
+.flow-bg{
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 50%, rgba(51,197,243,0.12), transparent 45%);
+  border-radius:24px;
+  filter:blur(36px);
+  pointer-events:none;
+}
+
+.hero-flow-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 187px);
+  grid-template-rows:repeat(2, 60px);
+  gap:80px 82.5px;
+  justify-content:center;
+  align-content:center;
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:800px;
+  margin:0 auto;
+}
+
+/* Explicit placements for desktop loop path */
+#card-req{grid-row:1;grid-column:1;}
+#card-design{grid-row:1;grid-column:2;}
+#card-dev{grid-row:1;grid-column:3;}
+#card-qa{grid-row:2;grid-column:3;}
+#card-dep{grid-row:2;grid-column:2;}
+#card-live{grid-row:2;grid-column:1;}
+
+.fnode{
+  background:rgba(255,255,255,0.82);
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  border:1px solid rgba(255,255,255,0.95);
+  border-radius:14px;
+  padding:12px 16px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.05);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition:transform .3s var(--ease),box-shadow .3s;
+  width:187px;
+  height:60px;
+  box-sizing:border-box;
+  z-index:2;
+}
+
+.fnode:hover{
+  transform:translateY(-4px);
+  box-shadow:0 2px 8px rgba(0,0,0,0.06),0 8px 24px rgba(0,0,0,0.08);
+  border-color:rgba(51,197,243,0.22);
+}
+
+.fnode-icon{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  flex-shrink:0;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+
+.fnode-name{
+  font-family:var(--fh);
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+  line-height:1.2;
+}
+
+/* SVG Line and Dot Styles */
+#flow-svg {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:1;
+  overflow:visible;
+}
+
+#pipeline-path {
+  fill:none;
+  stroke:rgba(51,197,243,0.3);
+  stroke-width:1.5px;
+  filter:drop-shadow(0 0 2px rgba(51,197,243,0.15));
+}
+
+.flow-dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #33c5f3;
+  box-shadow: 0 0 6px #33c5f3, 0 0 12px #33c5f3;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  animation: moveDot 5.5s linear infinite;
+  transform: translate(-50%, -50%);
+}
+
+#dot-1 { animation-delay: 0s; }
+#dot-2 { animation-delay: 0.15s; }
+#dot-3 { animation-delay: 0.3s; }
+
+@keyframes moveDot {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* ── TABLET OPTIMIZATIONS ── */
+@media(max-width:900px){
+  .hero-flow-grid{
+    grid-template-columns:repeat(3, 167px);
+    gap:80px 66.5px;
+  }
+  .fnode{
+    width:167px;
+  }
+}
+
+/* ── MOBILE OPTIMIZATIONS ── */
+@media(max-width:768px){
+  .dev-flow{
+    min-height:auto;
+    padding:10px 0;
+  }
+  .hero-flow-grid{
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+    gap:28px;
+    max-width:240px;
+  }
+  .fnode{
+    width:100%;
+    grid-row:auto !important;
+    grid-column:auto !important;
+  }
+  .flow-dot {
+    animation-duration: 7s;
+  }
+}
+
+.section-eyebrow{font-size:11px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:.12em;margin-bottom:14px;}
+.section-h2{font-family:var(--fh);font-size:clamp(36px,3.5vw,56px);font-weight:900;letter-spacing:-.03em;line-height:1.08;color:var(--text);margin-bottom:14px;}
+
+.cases-btn-ghost{
+  background:transparent;color:var(--text);
+  font-family:var(--fh);font-size:14px;font-weight:700;
+  padding:12px 24px;border-radius:var(--radius-pill);text-decoration:none;
+  border:1px solid rgba(0,0,0,0.15);
+  display:inline-flex;align-items:center;gap:8px;
+  transition:background .2s,transform .2s var(--ease);
+}
+.cases-btn-ghost:hover{background:rgba(0,0,0,0.04);transform:translateY(-1px);}
+
+/* ── WHY CHOOSE GLOBOTECH ── */
+.why-choose {
+  padding: 100px 0;
+  background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+.why-choose-inner {
+  display: grid;
+  grid-template-columns: 1.1fr 1.3fr;
+  gap: 80px;
+  align-items: center;
+}
+.why-choose-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.why-choose-left .section-h2 {
+  font-size: clamp(34px, 3.8vw, 48px);
+  line-height: 1.15;
+  margin-bottom: 24px;
+}
+.why-choose-left .section-h2 span {
+  background: linear-gradient(110deg, #33c5f3 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+.why-choose-desc {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--text-2);
+  margin-bottom: 36px;
+  max-width: 540px;
+}
+.why-choose-right {
+  position: relative;
+}
+.why-choose-grid-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle at 50% 50%, rgba(51,197,243,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.why-choose-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+}
+.why-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius);
+  padding: 36px 28px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03), 0 8px 30px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s, border-color 0.3s;
+}
+.why-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 4px 16px rgba(51,197,243,0.06), 0 12px 40px rgba(51,197,243,0.12);
+  border-color: rgba(51,197,243,0.25);
+}
+.why-card-icon-container {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.why-card-icon-bg {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(51, 197, 243, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+.why-card:hover .why-card-icon-bg {
+  background: rgba(51, 197, 243, 0.15);
+}
+.why-card-title {
+  font-family: var(--fh);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.why-card-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+
+/* ── WHY CHOOSE RESPONSIVENESS ── */
+@media (max-width: 1024px) {
+  .why-choose-inner {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .why-choose-left {
+    align-items: center;
+    text-align: center;
+  }
+  .why-choose-desc {
+    max-width: 640px;
+  }
+}
+@media (max-width: 600px) {
+  .why-choose {
+    padding: 80px 0;
+  }
+  .why-choose-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .why-card {
+    padding: 32px 24px;
+  }
+}
+
+
+/* ── OUR SERVICES SECTION (matches GloboTech design tokens) ── */
+.our-services{
+  background:var(--bg-2);
+  padding:80px 0;
+  position:relative;overflow:visible;
+}
+.our-services .os-inner{max-width:1240px;margin:0 auto;padding:0 60px;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;box-sizing:border-box;}
+@media(max-width:900px){.our-services .os-inner{grid-template-columns:1fr;padding:0 24px;gap:28px;}}
+.os-visual{height:360px;border-radius:var(--radius);position:relative;overflow:hidden;background:linear-gradient(135deg, rgba(51,197,243,0.04), rgba(139,92,246,0.03));border:1px solid rgba(0,0,0,0.03);box-shadow:0 8px 32px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center}
+.os-visual .illustration{width:84%;height:84%;max-width:640px;display:block;filter:drop-shadow(0 8px 18px rgba(51,197,243,0.06));transform-origin:center;animation:illustrationFloat 6s ease-in-out infinite}
+.os-visual::after{content:'';position:absolute;inset:auto -10% -20% -10%;background:radial-gradient(circle at 30% 40%, rgba(51,197,243,0.10), transparent 30%), radial-gradient(circle at 70% 60%, rgba(139,92,246,0.06), transparent 30%);pointer-events:none;filter:blur(28px);opacity:.9}
+@keyframes illustrationFloat{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+.os-content{padding:8px 0}
+.os-label{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:12px}
+.os-h2{font-family:var(--fh);font-size:clamp(28px,3.6vw,40px);font-weight:900;line-height:1.06;margin-bottom:18px;color:var(--text)}
+.os-h2 .grad{background:linear-gradient(110deg,#33c5f3 0%,#8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.os-desc{font-size:16px;color:var(--text-2);max-width:520px;margin-bottom:22px}
+.os-cta{display:flex;gap:14px;align-items:center;margin-top:8px}
+/* subtle fade-in on scroll */
+.our-services{opacity:0;transform:translateY(10px);transition:opacity .7s cubic-bezier(.2,.9,.3,1),transform .7s cubic-bezier(.2,.9,.3,1)}
+.our-services.in{opacity:1;transform:none}
+@media(max-width:560px){.os-visual{height:260px}.os-inner{grid-template-columns:1fr}}
+
+/* ── FOOTER (dark premium) ── */
+footer{background:#1D1D1F;color:#fff;padding:80px 0 32px;border-top:1px solid #4b5563;}
+.footer-grid{display:grid;grid-template-columns:minmax(240px,1.8fr) repeat(4,minmax(140px,1fr));gap:42px;align-items:start;}
+@media(max-width:1120px){.footer-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){.footer-grid{grid-template-columns:1fr;gap:32px;}}
+.footer-brand .footer-logo{display:inline-flex;align-items:center;text-decoration:none;}
+.footer-brand .footer-logo svg,
+.footer-brand .footer-logo img{width:170px;height:auto;display:block;}
+.footer-tagline{margin:20px 0 14px;font-family:var(--fh);font-size:18px;font-weight:700;line-height:1.3;color:#fff;max-width:360px;}
+.footer-desc{max-width:400px;font-size:15px;line-height:1.8;color:rgba(255,255,255,.82);}
+.footer-column{display:flex;flex-direction:column;gap:14px;}
+.footer-title{font-family:var(--fh);font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:10px;}
+.footer-column a{font-size:15px;color:rgba(255,255,255,.82);text-decoration:none;line-height:1.8;transition:color .2s,transform .2s;}
+.footer-column a:hover{color:#fff;transform:translateX(2px);}
+.footer-contact{display:flex;flex-direction:column;gap:16px;}
+.contact-block{display:flex;flex-direction:column;gap:14px;}
+.contact-item{display:flex;gap:12px;align-items:flex-start;color:rgba(255,255,255,.82);font-size:15px;line-height:1.8;}
+.contact-item svg{width:18px;height:18px;flex-shrink:0;color:#33c5f3;}
+.contact-item strong{display:block;font-weight:700;color:#fff;margin-bottom:4px;font-size:15px;}
+.footer-bottom{margin-top:54px;padding-top:28px;border-top:1px solid #4b5563;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.footer-copy{font-size:13px;color:rgba(255,255,255,.75);}
+.footer-bottom-links{display:flex;flex-wrap:wrap;gap:20px;}
+.footer-bottom-links a{font-size:13px;color:rgba(255,255,255,.72);text-decoration:none;transition:color .2s;}
+.footer-bottom-links a:hover{color:#fff;}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav-wrap">
+<nav>
+  <!-- CHANGE 1: Backdrop element kept in DOM but permanently hidden via CSS -->
+  <div class="nav-backdrop" id="nav-backdrop"></div>
+  <div class="nav-bar-row">
+    <a href="/" class="nav-logo">
+      <img src="/assets/Updated-Navbar - Copy.png" alt="Globotech logo" style="height:40px;width:auto;display:block;" />
+    </a>
+    <div class="nav-links">
+      <div class="nav-has-mega" id="nav-services-trigger">
+        <a href="/services">Services</a>
+      </div>
+      <a href="/#cases">Work</a><a href="#">About</a><a href="#">Blog</a>
+    </div>
+    <div class="nav-right">
+      <a href="/#cta" class="nav-cta">Start a Project →</a>
+      <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <div class="mega-menu" id="mega-services">
+    <div class="mega-inner">
+      <a class="mega-item" href="/web-development">
+        <span class="mega-item-title">Web Dev</span>
+        <span class="mega-item-desc">Build fast, scalable web apps and custom digital platforms</span>
+      </a>
+      <a class="mega-item" href="/services#mobile">
+        <span class="mega-item-title">Mobile App</span>
+        <span class="mega-item-desc">iOS, Android, and cross-platform apps built for performance</span>
+      </a>
+      <a class="mega-item" href="/services#ai">
+        <span class="mega-item-title">AI Solutions</span>
+        <span class="mega-item-desc">LLM integrations, AI agents, and intelligent automation</span>
+      </a>
+      <a class="mega-item" href="/services#ecommerce">
+        <span class="mega-item-title">E-Commerce Solutions</span>
+        <span class="mega-item-desc">Shopify, WooCommerce, and custom store integrations</span>
+      </a>
+      <a class="mega-item" href="/services#marketing">
+        <span class="mega-item-title">Digital Marketing</span>
+        <span class="mega-item-desc">SEO, paid ads, and data-driven campaigns for global growth</span>
+      </a>
+      <a class="mega-featured" href="/#cta">
+        <div>
+          <div class="mega-featured-eyebrow">Ready to build?</div>
+          <div class="mega-featured-title">Start a Project</div>
+          <div class="mega-featured-desc">Tell us your idea and we'll turn it into a high-performance digital product.</div>
+        </div>
+        <span class="mega-featured-link">Get started →</span>
+      </a>
+    </div>
+  </div>
+</nav>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <!-- LEFT SIDE -->
+      <div>
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          WEB & APP DEVELOPMENT
+        </div>
+        
+        <h1 class="hero-h1">We Build <em>Fast. Scalable.</em> Products.</h1>
+        
+        <p class="hero-sub">From idea to deployment — full-stack development with React, Node.js, and cloud-native architecture.</p>
+        
+        <div class="hero-btns">
+          <a href="#cta" class="hero-btn-primary">Start a Project →</a>
+          <a href="/#cases" class="hero-btn-secondary">View our work ↓</a>
+        </div>
+      </div>
+      
+      <!-- RIGHT SIDE: FLOW ANIMATION -->
+      <div class="dev-flow" id="pipeline-container">
+        <div class="flow-bg"></div>
+        
+        <!-- SVG Pipeline Canvas -->
+        <svg id="flow-svg">
+          <path id="pipeline-path" d="" />
+          <polygon id="pipeline-arrow" fill="#33c5f3" points="" />
+        </svg>
+
+        <!-- 3 glowing cyan dots flowing together -->
+        <div class="flow-dot" id="dot-1"></div>
+        <div class="flow-dot" id="dot-2"></div>
+        <div class="flow-dot" id="dot-3"></div>
+
+        <div class="hero-flow-grid">
+          <!-- TOP ROW -->
+          <div class="fnode" id="card-req">
+            <div class="fnode-icon" style="background:rgba(51,197,243,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></div>
+            <div class="fnode-name">Requirement</div>
+          </div>
+          <div class="fnode" id="card-design">
+            <div class="fnode-icon" style="background:rgba(16,185,129,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+            <div class="fnode-name">UI Design</div>
+          </div>
+          <div class="fnode" id="card-dev">
+            <div class="fnode-icon" style="background:rgba(139,92,246,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+            <div class="fnode-name">Development</div>
+          </div>
+
+          <!-- BOTTOM ROW (DOM order matches sequential pipeline flow: Requirement -> UI Design -> Development -> QA Testing -> Deployment -> Live Product) -->
+          <div class="fnode" id="card-qa">
+            <div class="fnode-icon" style="background:rgba(16,185,129,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="fnode-name">QA Testing</div>
+          </div>
+          <div class="fnode" id="card-dep">
+            <div class="fnode-icon" style="background:rgba(99,102,241,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.25-2.5 3.5-2.5 3.5s2.25-1 3.5-2.5M15 9l-9 9M9 15l-3 3M19 3a10.9 10.9 0 0 0-7.8 3.2L6 11.4a1 1 0 0 0 .2 1.4L11 17.6a1 1 0 0 0 1.4-.2l5.2-5.2A10.9 10.9 0 0 0 21 5V3z"/></svg></div>
+            <div class="fnode-name">Deployment</div>
+          </div>
+          <div class="fnode" id="card-live">
+            <div class="fnode-icon" style="background:rgba(51,197,243,.1)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+            <div class="fnode-name">Live Product</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR SERVICES (added) -->
+<section class="our-services" aria-labelledby="os-heading">
+  <div class="os-inner">
+    <div class="os-visual" aria-hidden="true">
+      <!-- Minimal premium illustration (SVG) matching GloboTech aesthetic -->
+      <svg class="illustration" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0%" stop-color="#33c5f3" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.08"/>
+          </linearGradient>
+          <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="12" result="b"/>
+            <feBlend in="SourceGraphic" in2="b"/>
+          </filter>
+        </defs>
+        <rect x="40" y="40" width="720" height="420" rx="20" fill="url(#g1)" opacity="0.65"/>
+        <g transform="translate(70,70)" filter="url(#soft)">
+          <circle cx="180" cy="120" r="60" fill="#33c5f3" opacity="0.12"/>
+          <rect x="300" y="60" rx="12" ry="12" width="220" height="120" fill="#8b5cf6" opacity="0.06"/>
+          <g transform="translate(40,220)">
+            <rect x="0" y="0" width="320" height="120" rx="12" fill="#fff" opacity="0.95" stroke="rgba(0,0,0,0.02)"/>
+            <circle cx="40" cy="40" r="16" fill="#33c5f3"/>
+            <rect x="72" y="28" width="180" height="8" rx="4" fill="#e6f7fb"/>
+            <rect x="72" y="48" width="120" height="8" rx="4" fill="#f3f8fb"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="os-content">
+      <div class="os-label">OUR SERVICES</div>
+      <h2 id="os-heading" class="os-h2"><span class="grad">Custom</span> Web Development</h2>
+      <p class="os-desc">To connect our clients with their customers effectively, we research, plan, design, and implement custom web solutions. With engaging UI/UX and scalable engineering, we create fast, secure, and high-performance websites tailored for modern businesses.</p>
+      <div class="os-cta">
+        <a href="#cta" class="hero-btn-primary">Start a Project →</a>
+        <a href="/" class="hero-btn-secondary">View our work ↓</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Fade-in on scroll for this section (lightweight)
+    (function(){
+      const el = document.querySelector('.our-services');
+      if(!el) return;
+      const io = new IntersectionObserver(entries=>{
+        entries.forEach(e=>{ if(e.isIntersecting){ el.classList.add('in'); io.unobserve(el); } });
+      },{threshold:0.12});
+      io.observe(el);
+    })();
+  </script>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">
+          <img src="/assets/footer-and-header.png" alt="Globotech logo" />
+        </a>
+        <p class="footer-tagline">One team. Every layer of your stack.</p>
+        <p class="footer-desc">Globotech delivers full-stack product builds, AI automation, and premium growth systems for ambitious companies.</p>
+      </div>
+      <div class="footer-column">
+        <div class="footer-title">Services</div>
+        <a href="#">Mobile App Development</a>
+        <a href="/web-development">Web Development</a>
+        <a href="#">AI & Automation</a>
+        <a href="#">Digital Marketing</a>
+        <a href="#">Product Strategy</a>
+      </div>
+      <div class="footer-column">
+        <div class="footer-title">Quick Links</div>
+        <a href="/">Home</a>
+        <a href="/#cases">Work</a>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#cta">Contact</a>
+      </div>
+              <div class="footer-column contact-block">
+          <div class="footer-title">USA</div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L9.91 10.09a16 16 0 0 0 6 6l1.45-1.45a2 2 0 0 1 2.11-.45 12.05 12.05 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><div><strong>+1 214 644 9136</strong></div></div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6L12 13 2 6"/></svg><div><strong>info@globotechsolutions.com</strong></div></div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l16 8-16 8V4z"/></svg><div><span>8105 Rasor Blvd, Plano, TX 75024, United States</span></div></div>
+        </div>
+      </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Globotech Solutions. All rights reserved.</div>
+      <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a><a href="#">Clutch</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Flow Animation Pipeline Layout & Motion Path Calculator ──
+function updatePipeline() {
+  const container = document.getElementById('pipeline-container');
+  const path = document.getElementById('pipeline-path');
+  const arrow = document.getElementById('pipeline-arrow');
+  const dots = [
+    document.getElementById('dot-1'),
+    document.getElementById('dot-2'),
+    document.getElementById('dot-3')
+  ];
+  if (!container || !path) return;
+
+  const containerRect = container.getBoundingClientRect();
+
+  const cards = [
+    document.getElementById('card-req'),
+    document.getElementById('card-design'),
+    document.getElementById('card-dev'),
+    document.getElementById('card-qa'),
+    document.getElementById('card-dep'),
+    document.getElementById('card-live')
+  ];
+
+  if (cards.some(c => !c)) return;
+
+  const points = cards.map(card => {
+    const rect = card.getBoundingClientRect();
+    return {
+      x: rect.left - containerRect.left + rect.width / 2,
+      y: rect.top - containerRect.top + rect.height / 2
+    };
+  });
+
+  const isMobile = window.innerWidth <= 768;
+  let pathD = '';
+
+  if (isMobile) {
+    if (arrow) arrow.style.display = 'none';
+    // Mobile: simple vertical sequence
+    pathD = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      pathD += ` L ${points[i].x} ${points[i].y}`;
+    }
+  } else {
+    // Desktop: Row 1 (L-to-R) -> orthogonal curve down -> Row 2 (R-to-L)
+    const pDev = points[2];
+    const pQA = points[3];
+    
+    // Calculate right boundary based on the Development card's right edge
+    const rectDev = cards[2].getBoundingClientRect();
+    const devRight = rectDev.right - containerRect.left;
+    
+    const dx = 50; // Distance the line travels right of the cards
+    const xRightLimit = devRight + dx;
+    const R = 24; // Rounded corner radius
+
+    pathD = `M ${points[0].x} ${points[0].y}`;
+    pathD += ` L ${points[1].x} ${points[1].y}`;
+    pathD += ` L ${pDev.x} ${pDev.y}`;
+    
+    // Draw horizontal segment out of Development, curve 90° down, straight down, curve 90° left, and horizontal into QA
+    pathD += ` L ${xRightLimit - R} ${pDev.y}`;
+    pathD += ` Q ${xRightLimit} ${pDev.y}, ${xRightLimit} ${pDev.y + R}`;
+    pathD += ` L ${xRightLimit} ${pQA.y - R}`;
+    pathD += ` Q ${xRightLimit} ${pQA.y}, ${xRightLimit - R} ${pQA.y}`;
+    pathD += ` L ${pQA.x} ${pQA.y}`;
+    
+    pathD += ` L ${points[4].x} ${points[4].y}`;
+    pathD += ` L ${points[5].x} ${points[5].y}`;
+
+    // Place and orient arrowhead pointing left at the right edge of QA Testing
+    if (arrow) {
+      arrow.style.display = 'block';
+      const rectQA = cards[3].getBoundingClientRect();
+      const qaRight = rectQA.right - containerRect.left;
+      const offset = 2; // small clearance from card edge
+      const tipX = qaRight + offset;
+      arrow.setAttribute('points', `${tipX},${pQA.y} ${tipX + 8},${pQA.y - 4} ${tipX + 8},${pQA.y + 4}`);
+    }
+  }
+
+  path.setAttribute('d', pathD);
+
+  // Apply motion path dynamically
+  dots.forEach(dot => {
+    if (dot) {
+      dot.style.setProperty('offset-path', `path('${pathD}')`);
+      dot.style.setProperty('-webkit-offset-path', `path('${pathD}')`);
+    }
+  });
+}
+
+// Run layout on load, resize, and font rendering
+window.addEventListener('DOMContentLoaded', updatePipeline);
+window.addEventListener('load', updatePipeline);
+window.addEventListener('resize', updatePipeline);
+if (document.fonts) {
+  document.fonts.ready.then(updatePipeline);
+}
+
+// ── Mega Menu — PATCHED: no backdrop, no padding-bottom, no nav color change ──
+(function(){
+  const trigger = document.getElementById('nav-services-trigger');
+  const menu = document.getElementById('mega-services');
+  if(!trigger || !menu) return;
+
+  let closeTimer;
+
+  function openMenu(){
+    clearTimeout(closeTimer);
+    trigger.classList.add('open');
+
+    // Set menu top accounting for nav-wrap (20px) + nav-bar-row height for seamless join
+    const nav = document.querySelector('nav');
+    const navRow = nav.querySelector('.nav-bar-row');
+    menu.style.top = `${20 + navRow.offsetHeight}px`;
+
+    menu.style.display = 'block';
+    // CHANGE 2: Nav border-radius updates via CSS :has() selector — no JS needed
+    // CHANGE 1: No backdrop — removed entirely
+    // CHANGE 3: No padding-bottom on nav — menu is absolutely positioned inside border
+
+    requestAnimationFrame(()=>{ menu.classList.add('visible'); });
+  }
+
+  function closeMenu(){
+    closeTimer = setTimeout(()=>{
+      trigger.classList.remove('open');
+      menu.classList.remove('visible');
+      // CHANGE 1: no backdrop to hide
+      // CHANGE 3: no padding-bottom to reset
+      setTimeout(()=>{ if(!menu.classList.contains('visible')) menu.style.display='none'; }, 220);
+    }, 120);
+  }
+
+  trigger.addEventListener('mouseenter', openMenu);
+  trigger.addEventListener('mouseleave', closeMenu);
+  menu.addEventListener('mouseenter', ()=>clearTimeout(closeTimer));
+  menu.addEventListener('mouseleave', closeMenu);
+})();
+
+// ── Hamburger nav toggle ──
+const ham = document.querySelector('.nav-hamburger');
+const navLinks = document.querySelector('.nav-links');
+if(ham && navLinks){
+  const iconMenu = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  const iconClose = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+  ham.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = navLinks.classList.toggle('open');
+    ham.setAttribute('aria-expanded', open);
+    ham.innerHTML = open ? iconClose : iconMenu;
+  });
+  document.addEventListener('click', (e) => {
+    const path = e.composedPath ? e.composedPath() : [];
+    const inNav = path.some(el => el === document.querySelector('nav'));
+    if(!inNav){
+      navLinks.classList.remove('open');
+      ham.setAttribute('aria-expanded','false');
+      ham.innerHTML = iconMenu;
+    }
+  });
+}
+</script>
+
+</body>
+</html>

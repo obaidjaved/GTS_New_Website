@@ -1,0 +1,4336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom E-Commerce Storefronts & Integrations — Globotech Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── DESIGN TOKENS (light-mode only) ── */
+    :root {
+      --bg: #F5F5F7;
+      --bg-2: #ffffff;
+      --text: #1d1d1f;
+      --text-2: #6e6e73;
+      --text-3: #3d3d3f;
+      --teal: #33c5f3;
+      --glass-bg: rgba(255, 255, 255, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.9);
+      --glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --radius-pill: 100px;
+      --fh: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --fb: 'Inter', -apple-system, sans-serif;
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ── BASE ── */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 88px;
+    }
+
+    body {
+      font-family: var(--fb);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    @media(max-width:768px) {
+      .container {
+        padding: 0 24px;
+      }
+    }
+
+    /* ── NAV ── */
+    .nav-wrap {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 40px;
+    }
+
+    @media(max-width:768px) {
+      .nav-wrap {
+        padding: 0 16px;
+      }
+    }
+
+    nav {
+      position: relative;
+      max-width: 1440px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.09);
+      border-radius: 24px;
+      padding: 0;
+      display: block;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: border-radius .22s ease, box-shadow .22s ease;
+      overflow: visible;
+    }
+
+    .nav-bar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 8px 8px 24px;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 100;
+    }
+
+    .nav-backdrop {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    .nav-backdrop.visible {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    nav::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      background: linear-gradient(to right, #2dd4bf, #818cf8, #f472b6) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.75;
+      transition: border-radius .22s ease;
+    }
+
+    nav:has(.mega-menu.visible) {
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.10), 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    nav:has(.mega-menu.visible)::after {
+      border-radius: 24px 24px 0 0;
+      clip-path: inset(0 0 1px 0);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d1d1f;
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    .nav-has-mega {
+      position: static;
+    }
+
+    .nav-has-mega>a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-has-mega>a::after {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1d1f' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+      transition: transform .25s;
+    }
+
+    .nav-has-mega.open>a::after {
+      transform: rotate(180deg);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-cta {
+      background: #1d1d1f;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 800;
+      padding: 10px 22px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: opacity .2s, transform .18s var(--ease), box-shadow .2s;
+    }
+
+    .nav-cta:hover {
+      opacity: .88;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    @media(max-width:768px) {
+      .nav-links {
+        display: none;
+      }
+      .nav-cta {
+        display: none !important;
+      }
+
+      .nav-hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #1d1d1f;
+        flex-shrink: 0;
+        transition: background .15s;
+      }
+
+      .nav-hamburger:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+    }
+
+    @media(min-width:769px) {
+      .nav-hamburger {
+        display: none;
+      }
+    }
+
+    /* ── SIDE DRAWER ── */
+    .nav-drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 9998;
+      opacity: 0;
+      transition: opacity .32s ease;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    .nav-drawer-overlay.open {
+      display: block;
+      opacity: 1;
+    }
+
+    .nav-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 300px;
+      max-width: 85vw;
+      background: #fff;
+      z-index: 9999;
+      transform: translateX(110%);
+      transition: transform .32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      flex-direction: column;
+      box-shadow: -12px 0 48px rgba(0, 0, 0, 0.14);
+      border-left: 1px solid rgba(0, 0, 0, 0.07);
+    }
+
+    .nav-drawer.open {
+      transform: translateX(0);
+    }
+
+    @media(min-width:769px) {
+
+      .nav-drawer,
+      .nav-drawer-overlay {
+        display: none !important;
+      }
+    }
+
+    .nav-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      flex-shrink: 0;
+    }
+
+    .nav-drawer-logo {
+      height: 34px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-drawer-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.05);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1d1d1f;
+      transition: background .15s;
+      flex-shrink: 0;
+    }
+
+    .nav-drawer-close:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0 28px;
+    }
+
+    .nav-drawer-body>a {
+      display: block;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d1d1f;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: background .15s, color .15s;
+    }
+
+    .nav-drawer-body>a:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .nav-drawer-body>a.active {
+      color: var(--teal);
+    }
+
+    .nav-drawer-services-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d1d1f;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: background .15s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .nav-drawer-services-toggle:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .drawer-chevron {
+      display: inline-flex;
+      align-items: center;
+      transition: transform .25s var(--ease);
+      color: #6e6e73;
+    }
+
+    .nav-drawer-services-toggle.open .drawer-chevron {
+      transform: rotate(90deg);
+    }
+
+    .nav-drawer-services {
+      display: none;
+      background: rgba(245, 245, 247, 0.6);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-drawer-services.open {
+      display: block;
+    }
+
+    .nav-drawer-services a {
+      display: block;
+      padding: 12px 24px 12px 36px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #3a3a3c;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      transition: background .15s, color .15s;
+    }
+
+    .nav-drawer-services a:last-child {
+      border-bottom: none;
+    }
+
+    .nav-drawer-services a:hover {
+      background: rgba(51, 197, 243, 0.07);
+      color: var(--teal);
+    }
+
+    .nav-drawer-cta {
+      display: block;
+      margin: 20px 20px 0;
+      padding: 14px 24px;
+      border-radius: 100px;
+      background: #1d1d1f;
+      color: #fff !important;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+      transition: opacity .2s, transform .18s;
+    }
+
+    .nav-drawer-cta:hover {
+      opacity: .88;
+      transform: translateY(-1px);
+    }
+
+    .mega-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr 280px;
+      gap: 8px 24px;
+    }
+
+    .mega-item {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: background .18s;
+      cursor: pointer;
+    }
+
+    .mega-item:hover {
+      background: rgba(51, 197, 243, 0.06);
+    }
+
+    .mega-item:hover .mega-item-title {
+      color: var(--teal);
+    }
+
+    .mega-item-title {
+      font-family: var(--fh);
+      font-size: 15px;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 4px;
+      transition: color .18s;
+    }
+
+    .mega-item-desc {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.45;
+    }
+
+    .mega-featured {
+      grid-row: 1 / 4;
+      grid-column: 3;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      border-radius: 16px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      transition: transform .2s;
+      min-height: 240px;
+    }
+
+    .mega-featured:hover {
+      transform: translateY(-2px);
+    }
+
+    .mega-featured-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #33c5f3;
+      margin-bottom: 12px;
+    }
+
+    .mega-featured-title {
+      font-family: var(--fh);
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .mega-featured-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .mega-featured-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #33c5f3;
+    }
+
+    @media(max-width:768px) {
+      .mega-menu {
+        display: none !important;
+      }
+    }
+
+    .mega-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: -1px;
+      right: -1px;
+      background: #ffffff;
+      border-radius: 0 0 23px 23px;
+      border: 1px solid transparent;
+      border-top: none;
+      padding: 0 48px 32px;
+      margin: 0;
+      box-sizing: border-box;
+      z-index: 95;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .22s ease, transform .22s ease;
+      pointer-events: none;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+    }
+
+    .mega-menu::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      background: linear-gradient(to right, #2dd4bf, #818cf8, #f472b6) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    .mega-menu.visible {
+      display: grid;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      padding-top: 24px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 140px 0 80px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 70% at 88% 38%, rgba(51, 197, 243, 0.11) 0%, transparent 65%),
+        radial-gradient(ellipse 35% 45% at 8% 88%, rgba(16, 185, 129, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 30% 40% at 72% 88%, rgba(139, 92, 246, 0.05) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .hero .container {
+      width: 100%;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      width: 100%;
+    }
+
+    @media(max-width:900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 24px;
+    }
+
+    .hero-eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s ease infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .3;
+        transform: scale(.65);
+      }
+    }
+
+    .hero-h1 {
+      font-family: var(--fh);
+      font-size: clamp(38px, 4.5vw, 64px);
+      font-weight: 900;
+      letter-spacing: -.045em;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
+
+    .hero-h1 em {
+      font-style: normal;
+      background: linear-gradient(110deg, #33c5f3 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-2);
+      max-width: 420px;
+      margin-bottom: 36px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn-primary {
+      background: #1d1d1f;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      padding: 15px 30px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+      transition: transform .2s var(--ease), box-shadow .2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .hero-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-btn-secondary {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-2);
+      text-decoration: none;
+      padding: 15px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color .2s;
+    }
+
+    .hero-btn-secondary:hover {
+      color: var(--text);
+    }
+
+    /* ── BUILD MONITOR ANIMATION ── */
+    .dev-flow {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 440px;
+      width: 100%;
+      padding: 20px 0;
+    }
+
+    /* ─ Build Monitor Card ─ */
+    .build-monitor {
+      width: 100%;
+      max-width: 460px;
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid rgba(220, 230, 245, 0.7);
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.04),
+        0 20px 60px rgba(0,0,0,0.07),
+        0 0 0 1px rgba(255,255,255,0.9) inset;
+      overflow: hidden;
+    }
+
+    /* MacOS chrome bar */
+    .bm-chrome {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      background: #fafbfc;
+      border-bottom: 1px solid rgba(0,0,0,0.055);
+    }
+
+    .bm-dots { display: flex; gap: 5px; }
+    .bm-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .bm-dots span:nth-child(1) { background: #ff6159; }
+    .bm-dots span:nth-child(2) { background: #ffbc2e; }
+    .bm-dots span:nth-child(3) { background: #28c840; }
+
+    .bm-url {
+      flex: 1;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 10.5px;
+      color: #aab0bc;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+
+    .bm-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #10b981;
+      letter-spacing: 0.05em;
+    }
+
+    .bm-live-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: livePulse 1.6s ease infinite;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* Body */
+    .bm-body {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .bm-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .bm-section-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      color: #c0c8d8;
+      text-transform: uppercase;
+    }
+
+    .bm-cycle-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: #8b5cf6;
+      background: rgba(139,92,246,0.08);
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.03em;
+    }
+
+    /* Progress */
+    .bm-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bm-progress-track {
+      flex: 1;
+      height: 5px;
+      background: rgba(51, 197, 243, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .bm-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #33c5f3, #8b5cf6);
+      border-radius: 10px;
+      transition: width 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bm-pct {
+      font-family: 'SF Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #33c5f3;
+      min-width: 34px;
+      text-align: right;
+    }
+
+    .bm-status-msg {
+      font-size: 11px;
+      color: #b0b8c8;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      min-height: 16px;
+    }
+
+    /* Steps list */
+    .bm-steps { display: flex; flex-direction: column; gap: 6px; }
+
+    .bm-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 11px;
+      border: 1px solid transparent;
+      transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bm-step.bm-pending { background: transparent; }
+
+    .bm-step.bm-running {
+      background: rgba(51, 197, 243, 0.04);
+      border-color: rgba(51, 197, 243, 0.14);
+    }
+
+    .bm-step.bm-done {
+      background: rgba(16, 185, 129, 0.03);
+      border-color: rgba(16, 185, 129, 0.1);
+    }
+
+    .bm-step-ico {
+      width: 20px; height: 20px;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .bm-step-ico-circle {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid #d0d8e8;
+    }
+
+    .bm-step.bm-running .bm-step-ico-circle {
+      border-color: #33c5f3;
+      background: rgba(51,197,243,0.15);
+      animation: stepPing 1s ease infinite;
+    }
+
+    @keyframes stepPing {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.6; }
+    }
+
+    .bm-step-label {
+      flex: 1;
+      font-family: var(--fh);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #c8d0e0;
+      letter-spacing: -0.01em;
+      transition: color 0.4s;
+    }
+
+    .bm-step.bm-running .bm-step-label { color: #1d1d1f; }
+    .bm-step.bm-done .bm-step-label { color: #3d3d3f; }
+
+    .bm-step-time {
+      font-family: 'SF Mono', monospace;
+      font-size: 10px;
+      color: #d0d8e8;
+      transition: color 0.4s;
+      min-width: 28px;
+      text-align: right;
+    }
+
+    .bm-step.bm-done .bm-step-time { color: #10b981; }
+
+    /* Metrics footer */
+    .bm-metrics {
+      display: flex;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .bm-metric {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      background: rgba(0,0,0,0.02);
+      border-radius: 11px;
+      padding: 10px 6px;
+      border: 1px solid rgba(0,0,0,0.035);
+    }
+
+    .bm-metric-val {
+      font-family: var(--fh);
+      font-size: 18px;
+      font-weight: 900;
+      color: #1d1d1f;
+      letter-spacing: -0.03em;
+      transition: color 0.5s;
+    }
+
+    .bm-metric-val.lit { color: #8b5cf6; }
+
+    .bm-metric-lbl {
+      font-size: 9px;
+      font-weight: 700;
+      color: #c0c8d8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    @keyframes bmSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Mobile */
+    @media(max-width:768px) {
+      .dev-flow { min-height: auto; padding: 0; }
+      .build-monitor { max-width: 100%; border-radius: 16px; }
+      .bm-body { padding: 14px 16px; gap: 12px; }
+      .bm-step { padding: 8px 10px; }
+      .bm-step-label { font-size: 11.5px; }
+      .bm-metric-val { font-size: 15px; }
+    }
+
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 14px;
+    }
+
+    .section-h2 {
+      font-family: var(--fh);
+      font-size: clamp(36px, 3.5vw, 56px);
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1.08;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    /* ── PRE-HERO DESCRIPTION (centered, site font) ── */
+    .pre-our-wrap {
+      max-width: 1100px;
+      margin: 62px auto 0;
+      padding: 0 24px;
+      box-sizing: border-box
+    }
+
+    .pre-our-desc {
+      font-family: var(--fh);
+      font-size: 20px;
+      color: var(--text-2);
+      max-width: 980px;
+      margin: 0 auto 18px;
+      text-align: center;
+      line-height: 1.9
+    }
+
+    /* ── PREMIUM FEATURE SHOWCASE ── */
+    .showcase-section {
+      padding: 100px 0;
+      background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .showcase-glow-blob {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(120px);
+      opacity: 0.12;
+      z-index: 0;
+      transition: background 0.8s ease;
+    }
+
+    .showcase-glow-blob.blob-1 {
+      background: #8b5cf6;
+      top: 25%;
+      left: 20%;
+    }
+
+    .showcase-header {
+      max-width: 1200px;
+      margin: 0 auto 72px;
+      padding: 0 24px;
+      box-sizing: border-box;
+      text-align: left;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── DYNAMIC INTERACTIVE SHOWCASE CONSOLE ── */
+    .showcase-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Specialty selectors (left side) */
+    .specialty-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .specialty-tab-btn {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.4s var(--ease);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 4px 20px rgba(0, 0, 0, 0.01);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .specialty-tab-btn::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: transparent;
+      transition: background 0.3s;
+    }
+
+    .specialty-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.65);
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: translateX(4px);
+    }
+
+    /* Active states for tabs based on active-theme class */
+    .specialty-tab-btn.active {
+      background: #fff;
+      border-color: rgba(255, 255, 255, 0.95);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 10px 30px rgba(0, 0, 0, 0.04);
+    }
+
+    .specialty-tab-btn.active[data-theme="purple"]::before {
+      background: #8b5cf6;
+    }
+
+    .specialty-tab-btn.active[data-theme="cyan"]::before {
+      background: #33c5f3;
+    }
+
+    .specialty-tab-btn.active[data-theme="green"]::before {
+      background: #10b981;
+    }
+
+    .specialty-tab-btn.active[data-theme="orange"]::before {
+      background: #f59e0b;
+    }
+
+    .tab-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.03);
+      color: #6e6e73;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .specialty-tab-btn:hover .tab-icon-wrap {
+      color: #1d1d1f;
+    }
+
+    /* Active icon colors */
+    .specialty-tab-btn.active[data-theme="purple"] .tab-icon-wrap {
+      background: rgba(139, 92, 246, 0.1);
+      color: #8b5cf6;
+    }
+
+    .specialty-tab-btn.active[data-theme="cyan"] .tab-icon-wrap {
+      background: rgba(51, 197, 243, 0.1);
+      color: #33c5f3;
+    }
+
+    .specialty-tab-btn.active[data-theme="green"] .tab-icon-wrap {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+
+    .specialty-tab-btn.active[data-theme="orange"] .tab-icon-wrap {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .tab-info {
+      flex: 1;
+    }
+
+    .tab-info-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .tab-title {
+      font-family: var(--fh);
+      font-size: 16px;
+      font-weight: 800;
+      color: #1d1d1f;
+    }
+
+    .tab-badge {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+      background: rgba(0, 0, 0, 0.04);
+      color: #6e6e73;
+    }
+
+    .specialty-tab-btn.active[data-theme="purple"] .tab-badge {
+      background: rgba(139, 92, 246, 0.1);
+      color: #8b5cf6;
+    }
+
+    .specialty-tab-btn.active[data-theme="cyan"] .tab-badge {
+      background: rgba(51, 197, 243, 0.1);
+      color: #33c5f3;
+    }
+
+    .specialty-tab-btn.active[data-theme="green"] .tab-badge {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+
+    .specialty-tab-btn.active[data-theme="orange"] .tab-badge {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .tab-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #6e6e73;
+      margin: 0;
+    }
+
+    .specialty-tab-btn.active .tab-desc {
+      color: #3a3a3c;
+    }
+
+    /* Console container (right side) */
+    .console-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+    }
+
+    .console-screen {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 32px;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), 0 20px 50px rgba(0, 0, 0, 0.03);
+      padding: 40px;
+      box-sizing: border-box;
+      height: 100%;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.4s var(--ease);
+    }
+
+    .console-screen:hover {
+      border-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .simulator-panel {
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: simFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    .simulator-panel.active {
+      display: flex;
+    }
+
+    @keyframes simFadeIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.97) translateY(8px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* ── SIMULATOR 1: IDE / COMPILER ── */
+    .ide-mock {
+      background: #111216;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      font-family: monospace;
+      font-size: 12px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ide-header {
+      background: #1a1c23;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .ide-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .ide-btn-run {
+      background: #8b5cf6;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 12px;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ide-btn-run:hover {
+      background: #7c3aed;
+      transform: translateY(-1px);
+    }
+
+    .ide-btn-run:active {
+      transform: translateY(0);
+    }
+
+    .ide-btn-run.building {
+      background: #5b21b6;
+      cursor: not-allowed;
+    }
+
+    .ide-body {
+      padding: 20px;
+      color: #abb2bf;
+      line-height: 1.7;
+      min-height: 220px;
+      box-sizing: border-box;
+    }
+
+    .ide-code-lines {
+      color: #636d83;
+      margin-bottom: 12px;
+      font-size: 11px;
+    }
+
+    .ide-console-out {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 16px;
+      padding-top: 16px;
+      color: rgba(255, 255, 255, 0.4);
+      min-height: 70px;
+    }
+
+    .ide-line {
+      margin: 0;
+    }
+
+    .ide-line.success {
+      color: #10b981;
+    }
+
+    .ide-line.info {
+      color: #33c5f3;
+    }
+
+    .ide-line.warn {
+      color: #f59e0b;
+    }
+
+    .ide-cursor {
+      display: inline-block;
+      width: 6px;
+      height: 12px;
+      background: #8b5cf6;
+      animation: termBlink 1s infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+
+    @keyframes termBlink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* ── SIMULATOR 2: RESPONSIVE VIEWPORT ── */
+    .responsive-panel-wrap {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .responsive-controls {
+      display: flex;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.03);
+      padding: 4px;
+      border-radius: 100px;
+      width: fit-content;
+    }
+
+    .resp-btn {
+      background: transparent;
+      border: none;
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-family: var(--fh);
+      font-size: 11px;
+      font-weight: 700;
+      color: #6e6e73;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .resp-btn:hover {
+      color: #1d1d1f;
+    }
+
+    .resp-btn.active {
+      background: #fff;
+      color: #33c5f3;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .responsive-viewport-container {
+      width: 100%;
+      height: 280px;
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px dashed rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .responsive-canvas {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .canvas-browser-bar {
+      background: #f4f5f6;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .canvas-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .canvas-url-bar {
+      background: #fff;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      font-size: 8px;
+      color: #8e8e93;
+      padding: 2px 16px;
+      text-align: center;
+      flex: 1;
+      max-width: 180px;
+      margin: 0 auto;
+    }
+
+    .canvas-content {
+      padding: 12px;
+      flex: 1;
+      overflow-y: auto;
+      background: #fafbfc;
+      box-sizing: border-box;
+    }
+
+    .canvas-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 8px;
+    }
+
+    .canvas-hero {
+      grid-column: span 12;
+      background: linear-gradient(135deg, rgba(51, 197, 243, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+      border: 1px solid rgba(51, 197, 243, 0.1);
+      border-radius: 6px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 12px;
+    }
+
+    .canvas-hero-title {
+      width: 40%;
+      height: 6px;
+      background: #33c5f3;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .canvas-hero-text {
+      width: 70%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 4px;
+    }
+
+    .canvas-card {
+      grid-column: span 4;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      border-radius: 6px;
+      padding: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+      height: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s;
+    }
+
+    .canvas-card-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      background: rgba(51, 197, 243, 0.1);
+    }
+
+    .canvas-card-line {
+      width: 80%;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 2px;
+      margin: 4px 0;
+    }
+
+    .canvas-card-line-sm {
+      width: 50%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 2px;
+    }
+
+    .resizer-slider-wrap {
+      width: 100%;
+      max-width: 320px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .resizer-slider-wrap label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6e6e73;
+    }
+
+    .resizer-slider {
+      flex: 1;
+      height: 4px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.08);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .resizer-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #33c5f3;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: transform 0.1s;
+    }
+
+    .resizer-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* ── SIMULATOR 3: MODULAR CMS BUILDER ── */
+    .cms-panel-wrap {
+      width: 100%;
+      max-width: 520px;
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 20px;
+      box-sizing: border-box;
+    }
+
+    .cms-toolbox {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 16px;
+      padding: 16px;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .cms-tool-heading {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6e6e73;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .cms-item-chip {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: var(--fh);
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d1d1f;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s;
+    }
+
+    .cms-item-chip:hover {
+      border-color: #10b981;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.08);
+    }
+
+    .cms-item-chip:active {
+      transform: translateY(0);
+    }
+
+    .cms-canvas-wrap {
+      display: flex;
+      flex-direction: column;
+      border: 1px dashed rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      background: #fff;
+      padding: 16px;
+      min-height: 280px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .cms-canvas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .cms-canvas-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8e8e93;
+    }
+
+    .cms-btn-clear {
+      background: transparent;
+      border: none;
+      font-size: 10px;
+      font-weight: 700;
+      color: #ef4444;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+
+    .cms-canvas-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      overflow-y: auto;
+      max-height: 230px;
+    }
+
+    .cms-canvas-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #8e8e93;
+      font-size: 11px;
+      text-align: center;
+      margin-top: 50px;
+      pointer-events: none;
+    }
+
+    .cms-canvas-empty svg {
+      opacity: 0.4;
+      margin-bottom: 8px;
+    }
+
+    .cms-placed-block {
+      background: #fafbfc;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d1d1f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: blockSlideIn 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    @keyframes blockSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .cms-placed-block.hero-block {
+      border-left: 3px solid #10b981;
+    }
+
+    .cms-placed-block.text-block {
+      border-left: 3px solid #33c5f3;
+    }
+
+    .cms-placed-block.gallery-block {
+      border-left: 3px solid #f59e0b;
+    }
+
+    .cms-placed-block.cta-block {
+      border-left: 3px solid #8b5cf6;
+    }
+
+    .cms-block-delete {
+      background: transparent;
+      border: none;
+      color: #c7c7cc;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 0;
+    }
+
+    .cms-block-delete:hover {
+      color: #ff3b30;
+    }
+
+    /* ── SIMULATOR 4: ECOMMERCE TRANSACTION ── */
+    .ecom-panel-wrap {
+      width: 100%;
+      max-width: 520px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .ecom-checkout-card {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .ecom-checkout-title {
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 800;
+      color: #1d1d1f;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      padding-bottom: 10px;
+      margin: 0;
+    }
+
+    .ecom-checkout-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .ecom-item-thumb {
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .ecom-item-meta {
+      flex: 1;
+    }
+
+    .ecom-item-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 2px;
+    }
+
+    .ecom-item-qty {
+      font-size: 9px;
+      color: #8e8e93;
+    }
+
+    .ecom-item-price {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d1d1f;
+    }
+
+    .ecom-checkout-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      padding-top: 12px;
+    }
+
+    .ecom-total-label {
+      font-size: 11px;
+      color: #6e6e73;
+    }
+
+    .ecom-total-price {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1d1d1f;
+    }
+
+    .ecom-btn-pay {
+      background: #f59e0b;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .ecom-btn-pay:hover {
+      background: #d97706;
+      transform: translateY(-1px);
+    }
+
+    .ecom-btn-pay:active {
+      transform: translateY(0);
+    }
+
+    .ecom-btn-pay.processing {
+      background: #b45309;
+      cursor: not-allowed;
+    }
+
+    /* Credit Card Graphics */
+    .ecom-graphics {
+      perspective: 1000px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .interactive-card {
+      background: linear-gradient(135deg, #1d1d1f 0%, #3a3b3f 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      width: 220px;
+      height: 130px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+      box-sizing: border-box;
+      text-align: left;
+      transform: rotateY(15deg) rotateX(10deg);
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s;
+    }
+
+    .interactive-card:hover {
+      transform: rotateY(5deg) rotateX(4deg) translateY(-4px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .interactive-card.paid {
+      animation: cardSlideAway 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes cardSlideAway {
+      0% {
+        transform: rotateY(5deg) rotateX(4deg) translateY(-4px);
+        opacity: 1;
+      }
+
+      100% {
+        transform: rotateY(30deg) rotateX(20deg) translateY(-200px) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    .payment-receipt {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      width: 200px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: receiptIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      box-sizing: border-box;
+    }
+
+    @keyframes receiptIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .receipt-check {
+      width: 36px;
+      height: 36px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .receipt-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1d1d1f;
+      margin-bottom: 4px;
+    }
+
+    .receipt-desc {
+      font-size: 10px;
+      color: #8e8e93;
+      text-align: center;
+      margin: 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── RESPONSIVE ADAPTATIONS ── */
+    @media(max-width: 950px) {
+      .showcase-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .specialty-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .specialty-tab-btn {
+        flex-shrink: 0;
+        width: 280px;
+        scroll-snap-align: start;
+      }
+
+      .specialty-tab-btn:hover {
+        transform: none;
+      }
+    }
+
+    @media(max-width: 768px) {
+      .specialty-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+        gap: 12px;
+        overflow: visible;
+        white-space: normal;
+        scroll-snap-type: none;
+      }
+
+      .specialty-tab-btn {
+        flex-shrink: 1;
+        width: 100%;
+        min-width: auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 16px 8px;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 16px;
+        overflow: visible;
+      }
+
+      .specialty-tab-btn::before {
+        display: none !important;
+      }
+
+      .specialty-tab-btn.active {
+        background: #fff;
+        border-color: rgba(0, 0, 0, 0.05);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        transform: translateY(-2px);
+      }
+
+      .tab-icon-wrap {
+        width: 36px;
+        height: 36px;
+        margin: 0 auto;
+        border-radius: 10px;
+      }
+
+      .tab-info {
+        width: 100%;
+      }
+
+      .tab-info-header {
+        display: block;
+        margin: 0;
+      }
+
+      .tab-title {
+        font-size: 11px;
+        font-weight: 700;
+        display: block;
+        text-align: center;
+        white-space: normal !important;
+        line-height: 1.2;
+      }
+
+      .tab-desc,
+      .tab-badge {
+        display: none !important;
+      }
+
+      .console-screen {
+        padding: 24px;
+        min-height: 420px;
+      }
+    }
+
+    @media(max-width: 580px) {
+      .console-screen {
+        padding: 16px;
+        min-height: 360px;
+      }
+
+      .ide-mock {
+        font-size: 10px;
+      }
+
+      .ide-body {
+        padding: 12px;
+        min-height: 180px;
+      }
+
+      .cms-panel-wrap {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .cms-toolbox {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+      }
+
+      .cms-item-chip {
+        flex: 1 1 calc(50% - 8px);
+        justify-content: center;
+        padding: 8px 10px;
+        font-size: 10px;
+      }
+
+      .cms-canvas-wrap {
+        min-height: 240px;
+        padding: 12px;
+      }
+
+      .cms-canvas-body {
+        max-height: 180px;
+      }
+
+      .cms-canvas-empty {
+        margin-top: 30px;
+      }
+
+      .ecom-panel-wrap {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .ecom-checkout-card {
+        padding: 16px;
+      }
+
+      .interactive-card {
+        transform: none !important;
+        width: 100%;
+        max-width: 240px;
+        height: 130px;
+        margin: 0 auto;
+      }
+
+      .interactive-card:hover {
+        transform: none !important;
+      }
+
+      .payment-receipt {
+        width: 100%;
+        max-width: 240px;
+        margin: 0 auto;
+      }
+
+      .responsive-viewport-container {
+        height: 240px;
+        padding: 8px;
+      }
+
+      .canvas-hero {
+        height: 38px;
+      }
+
+      .canvas-card {
+        grid-column: span 12 !important;
+        height: 42px !important;
+      }
+    }
+
+
+    /* ── TECH STACK SECTION ── */
+    .tech-stack-section {
+      padding: 110px 0;
+      background: #fafbfc;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+
+    .tech-stack-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 56px;
+    }
+
+    .tech-stack-sub {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #6e6e73;
+      margin: 14px 0 0;
+    }
+
+    .tech-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .tech-tab-btn {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 100px;
+      padding: 12px 24px;
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 700;
+      color: #6e6e73;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      transition: background .2s, border-color .2s, color .2s, transform .2s var(--ease);
+    }
+
+    .tech-tab-btn:hover {
+      border-color: rgba(0, 0, 0, 0.15);
+      color: #1d1d1f;
+      transform: translateY(-1px);
+    }
+
+    .tech-tab-btn.active {
+      background: #1d1d1f;
+      border-color: #1d1d1f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .tech-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+    .tech-grid.active {
+      display: grid;
+    }
+
+    .tech-card {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 4px 16px rgba(0, 0, 0, 0.02);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color 0.3s;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04);
+    }
+
+    .tech-icon-container {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .tech-card-title {
+      font-family: var(--fh);
+      font-size: 18px;
+      font-weight: 800;
+      color: #1d1d1f;
+      margin: 0 0 10px;
+    }
+
+    .tech-card-desc {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #6e6e73;
+      margin: 0;
+    }
+
+    @media(max-width:900px) {
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bento-card.span-2 {
+        grid-column: span 1;
+      }
+
+      .bento-card {
+        min-height: auto;
+        gap: 32px;
+      }
+
+      .bento-visual {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .bento-card.span-2 .bento-visual {
+        width: 100%;
+      }
+
+      .tech-stack-section {
+        padding: 70px 0;
+      }
+    }
+
+    /* ── PROCESS SECTION (dark premium contrast) ── */
+    .process-section {
+      padding: 110px 0;
+      background: #111216;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .process-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(51, 197, 243, 0.08), transparent 70%);
+      z-index: 0;
+    }
+
+    .process-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 72px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .process-header .section-h2 {
+      color: #fff;
+    }
+
+    .process-header .section-eyebrow {
+      color: var(--teal);
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 28px;
+      position: relative;
+      z-index: 1;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+    .process-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      padding: 36px 24px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: transform 0.4s var(--ease), border-color 0.4s, box-shadow 0.4s, background 0.4s;
+      box-sizing: border-box;
+    }
+
+    .process-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(51, 197, 243, 0.35);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+    }
+
+    .process-step {
+      font-family: var(--fh);
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .process-card-title {
+      font-family: var(--fh);
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 12px;
+    }
+
+    .process-card-desc {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0;
+    }
+
+    .process-arrow {
+      position: absolute;
+      top: 50%;
+      right: -22px;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.15);
+      z-index: 2;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media(max-width: 1120px) {
+      .process-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .process-arrow {
+        top: auto;
+        bottom: -28px;
+        right: 50%;
+        transform: translateX(50%) rotate(90deg);
+      }
+
+      .process-card:last-child .process-arrow {
+        display: none;
+      }
+    }
+
+    /* ── CAPABILITIES / FEATURES GRID ── */
+    .features-grid-section {
+      padding: 110px 0;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .features-grid-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+    .feature-grid-card {
+      background: #fafbfc;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 24px;
+      padding: 40px;
+      box-sizing: border-box;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s, border-color 0.3s;
+      text-align: left;
+    }
+
+    .feature-grid-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.03);
+      border-color: rgba(51, 197, 243, 0.15);
+    }
+
+    .feature-grid-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .feature-grid-title {
+      font-family: var(--fh);
+      font-size: 20px;
+      font-weight: 800;
+      color: #1d1d1f;
+      margin: 0 0 12px;
+    }
+
+    .feature-grid-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #6e6e73;
+      margin: 0;
+    }
+
+    @media(max-width: 900px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cases-btn-ghost {
+      background: transparent;
+      color: var(--text);
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .2s, transform .2s var(--ease);
+    }
+
+    .cases-btn-ghost:hover {
+      background: rgba(0, 0, 0, 0.04);
+      transform: translateY(-1px);
+    }
+
+    /* ── WHY CHOOSE GLOBOTECH ── */
+    .why-choose {
+      padding: 100px 0;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .why-choose-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 1.3fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .why-choose-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .why-choose-left .section-h2 {
+      font-size: 40px;
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .why-choose-left .section-h2 span {
+      background: linear-gradient(110deg, #33c5f3 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+
+    .why-choose-desc {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text-2);
+      margin-bottom: 36px;
+      max-width: 540px;
+    }
+
+    .why-choose-right {
+      position: relative;
+    }
+
+    .why-choose-grid-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle at 50% 50%, rgba(51, 197, 243, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .why-choose-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .why-card {
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 32px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s, border-color 0.3s;
+    }
+
+    .why-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 4px 16px rgba(51, 197, 243, 0.06), 0 12px 40px rgba(51, 197, 243, 0.12);
+      border-color: rgba(51, 197, 243, 0.25);
+    }
+
+    .why-card-icon-container {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .why-card-icon-bg {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(51, 197, 243, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
+
+    .why-card:hover .why-card-icon-bg {
+      background: rgba(51, 197, 243, 0.15);
+    }
+
+    .why-card-title {
+      font-family: var(--fh);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .why-card-desc {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--text-2);
+    }
+
+    /* ── WHY CHOOSE RESPONSIVENESS ── */
+    @media (max-width: 1024px) {
+      .why-choose-inner {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .why-choose-left {
+        align-items: center;
+        text-align: center;
+      }
+
+      .why-choose-desc {
+        max-width: 640px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .why-choose {
+        padding: 80px 0;
+      }
+
+      .why-choose-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .why-card {
+        padding: 32px 24px;
+      }
+    }
+
+
+    /* ── FOOTER (dark premium) ── */
+    footer {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 80px 0 32px;
+      border-top: 1px solid #4b5563;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(240px, 1.8fr) repeat(3, minmax(140px, 1fr));
+      gap: 42px;
+      align-items: start;
+    }
+
+    @media(max-width:1120px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media(max-width:768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    .footer-brand .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .footer-brand .footer-logo svg,
+    .footer-brand .footer-logo img {
+      width: 170px;
+      height: auto;
+      display: block;
+    }
+
+    .footer-tagline {
+      margin: 20px 0 14px;
+      font-family: var(--fh);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #fff;
+      max-width: 360px;
+    }
+
+    .footer-desc {
+      max-width: 400px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, .82);
+    }
+
+    .footer-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .footer-title {
+      font-family: var(--fh);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .footer-column a {
+      font-size: 15px;
+      color: rgba(255, 255, 255, .82);
+      text-decoration: none;
+      line-height: 1.8;
+      transition: color .2s, transform .2s;
+    }
+
+    .footer-column a:hover {
+      color: #fff;
+      transform: translateX(2px);
+    }
+
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-block {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: rgba(255, 255, 255, .82);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .contact-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: #33c5f3;
+    }
+
+    .contact-item strong {
+      display: block;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    .footer-bottom {
+      margin-top: 54px;
+      padding-top: 28px;
+      border-top: 1px solid #4b5563;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .75);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .72);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .footer-bottom-links a:hover {
+      color: #fff;
+    }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+
+    .d1 {
+      transition-delay: .1s;
+    }
+
+    .d2 {
+      transition-delay: .2s;
+    }
+
+    .d3 {
+      transition-delay: .3s;
+    }
+
+    .d4 {
+      transition-delay: .4s;
+    }
+
+    @keyframes mq {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    @keyframes mqr {
+      from {
+        transform: translateX(-50%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    /* ── CTA (dark contrast) ── */
+    .cta-section {
+      background: #1d1d1f;
+      padding: 140px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 700px;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(51, 197, 243, .06), transparent 70%);
+    }
+
+    .cta-inner {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-h2 {
+      font-family: var(--fh);
+      font-size: clamp(40px, 4.5vw, 72px);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      color: #fff;
+      margin-bottom: 20px;
+      line-height: 1.05;
+    }
+
+    .cta-sub {
+      font-size: 18px;
+      color: rgba(255, 255, 255, .45);
+      margin-bottom: 44px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn-primary {
+      background: #fff;
+      color: #1d1d1f;
+      font-family: var(--fh);
+      font-size: 16px;
+      font-weight: 800;
+      padding: 16px 36px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity .2s, transform .2s var(--ease);
+    }
+
+    .cta-btn-primary:hover {
+      opacity: .9;
+      transform: translateY(-2px);
+    }
+
+    .cta-btn-ghost {
+      background: rgba(255, 255, 255, .08);
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 36px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, .2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .2s, transform .2s var(--ease);
+    }
+
+    .cta-btn-ghost:hover {
+      background: rgba(255, 255, 255, .14);
+      transform: translateY(-2px);
+    }
+
+    .cta-note {
+      margin-top: 22px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, .28);
+    }
+
+    /* ── ADDITIONAL MOBILE RESPONSIVENESS AND GRID OPTIMIZATIONS ── */
+    @media(max-width: 768px) {
+
+      /* Tech Stack Section Grid */
+      .tech-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 0 16px !important;
+      }
+
+      .tech-card {
+        padding: 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .tech-icon-container {
+        width: 36px !important;
+        height: 36px !important;
+        margin-bottom: 12px !important;
+        border-radius: 8px !important;
+      }
+
+      .tech-icon-container svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+
+      .tech-card-title {
+        font-size: 14px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .tech-card-desc {
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+
+      /* Dev Process Timeline */
+      .process-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 0 16px !important;
+      }
+
+      .process-card {
+        padding: 20px 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .process-card:last-child {
+        grid-column: span 2 !important;
+      }
+
+      .process-step {
+        margin-bottom: 8px !important;
+        font-size: 9px !important;
+      }
+
+      .process-card-title {
+        font-size: 15px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .process-card-desc {
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+
+      .process-arrow {
+        display: none !important;
+      }
+
+      /* Core Features Grid */
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 0 16px !important;
+      }
+
+      .feature-grid-card {
+        padding: 20px 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .feature-grid-card:last-child {
+        grid-column: span 2 !important;
+      }
+
+      .feature-grid-icon {
+        width: 36px !important;
+        height: 36px !important;
+        margin-bottom: 12px !important;
+        border-radius: 8px !important;
+      }
+
+      .feature-grid-icon svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+
+      .feature-grid-title {
+        font-size: 15px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .feature-grid-desc {
+        font-size: 11px !important;
+        line-height: 1.45 !important;
+      }
+
+      /* Footer Grid */
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 32px 16px !important;
+      }
+
+      .footer-brand {
+        grid-column: span 2 !important;
+      }
+    }
+
+    @media(max-width: 600px) {
+
+      /* Why Choose Infographic Grid */
+      .why-choose-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+      }
+
+      .why-card {
+        padding: 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .why-card-icon-bg {
+        width: 36px !important;
+        height: 36px !important;
+        margin-bottom: 12px !important;
+      }
+
+      .why-card-icon-bg svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+
+      .why-card-title {
+        font-size: 13px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .why-card-desc {
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <div class="nav-wrap">
+    <nav>
+      <!-- CHANGE 1: Backdrop element kept in DOM but permanently hidden via CSS -->
+      <div class="nav-backdrop" id="nav-backdrop"></div>
+      <div class="nav-bar-row">
+        <a href="../Home/homepage.html" class="nav-logo">
+          <img src="../../public/assets/Updated-Navbar.png" alt="Globotech logo"
+            style="height:40px;width:auto;display:block;" />
+        </a>
+        <div class="nav-links">
+          <a href="../Home/homepage.html">Home</a>
+          <div class="nav-has-mega" id="nav-services-trigger">
+            <a href="../Services/services.html" class="active">Services</a>
+          </div>
+          <a href="../About/aboutus.html">About</a><a href="../Blog/blog.html">Blog</a><a
+            href="../Contact/contact.html">Contact Us</a>
+        </div>
+        <div class="nav-right">
+          <a href="../Home/homepage.html#cta" class="nav-cta">Start a Project →</a>
+          <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mega-menu" id="mega-services">
+        <div class="mega-inner">
+          <a class="mega-item" href="../Web-Dev/web-development.html">
+            <span class="mega-item-title">Web Dev</span>
+            <span class="mega-item-desc">Build fast, scalable web apps and custom digital platforms</span>
+          </a>
+          <a class="mega-item" href="../mobile-app/mobile-app.html">
+            <span class="mega-item-title">Mobile App</span>
+            <span class="mega-item-desc">iOS, Android, and cross-platform apps built for performance</span>
+          </a>
+          <a class="mega-item" href="../ai-solutions/ai-solutions.html">
+            <span class="mega-item-title">AI Solutions</span>
+            <span class="mega-item-desc">LLM integrations, AI agents, and intelligent automation</span>
+          </a>
+          <a class="mega-item active" href="../e-commerce-solutions/e-commerce-solutions.html">
+            <span class="mega-item-title">E-Commerce Solutions</span>
+            <span class="mega-item-desc">Shopify, WooCommerce, and custom store integrations</span>
+          </a>
+          <a class="mega-item" href="../digital-marketing/digital-marketing.html">
+            <span class="mega-item-title">Digital Marketing</span>
+            <span class="mega-item-desc">SEO, paid ads, and data-driven campaigns for global growth</span>
+          </a>
+          <a class="mega-featured" href="../Contact/contact.html">
+            <div>
+              <div class="mega-featured-eyebrow">Ready to build?</div>
+              <div class="mega-featured-title">Start a Project</div>
+              <div class="mega-featured-desc">Tell us your idea and we'll turn it into a high-performance digital
+                product.</div>
+            </div>
+            <span class="mega-featured-link">Get started →</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <!-- SIDE DRAWER -->
+    <div class="nav-drawer-overlay" id="nav-drawer-overlay"></div>
+    <div class="nav-drawer" id="nav-drawer" role="navigation" aria-label="Mobile navigation">
+      <div class="nav-drawer-header">
+        <a href="../Home/homepage.html"><img src="../../public/assets/Updated-Navbar.png" alt="Globotech logo"
+            class="nav-drawer-logo" /></a>
+        <button class="nav-drawer-close" id="nav-drawer-close" aria-label="Close menu">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="nav-drawer-body">
+        <a href="../Home/homepage.html">Home</a>
+        <div class="nav-drawer-services-toggle" id="nav-drawer-services-toggle">
+          Services
+          <span class="drawer-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg></span>
+        </div>
+        <div class="nav-drawer-services" id="nav-drawer-services">
+          <a href="../Web-Dev/web-development.html">Web Development</a>
+          <a href="../mobile-app/mobile-app.html">Mobile App</a>
+          <a href="../ai-solutions/ai-solutions.html">AI Solutions</a>
+          <a href="../e-commerce-solutions/e-commerce-solutions.html" class="active">E-Commerce Solutions</a>
+          <a href="../digital-marketing/digital-marketing.html">Digital Marketing</a>
+        </div>
+        <a href="../About/aboutus.html">About</a>
+        <a href="../Blog/blog.html">Blog</a>
+        <a href="../Contact/contact.html">Contact Us</a>
+        <a href="../Contact/contact.html" class="nav-drawer-cta">Start a Project →</a>
+      </div>
+    </div>
+  </div>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <!-- LEFT SIDE -->
+        <div>
+          <div class="hero-eyebrow">
+            <div class="hero-eyebrow-dot"></div>
+            E-COMMERCE DEVELOPMENT
+          </div>
+
+          <h1 class="hero-h1">We Build <em>Scalable. Profitable.</em> Stores.</h1>
+
+          <p class="hero-sub">From custom Shopify builds to headless commerce — we engineer end-to-end storefronts that convert visitors into loyal customers.</p>
+
+          <div class="hero-btns">
+            <a href="#cta" class="hero-btn-primary">Start a Project &rarr;</a>
+            <a href="../Home/homepage.html#cases" class="hero-btn-secondary">View our work &darr;</a>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE: BUILD MONITOR -->
+        <div class="dev-flow" id="pipeline-container">
+          <div class="build-monitor" id="build-monitor">
+            <!-- MacOS chrome bar -->
+            <div class="bm-chrome">
+              <div class="bm-dots"><span></span><span></span><span></span></div>
+              <div class="bm-url">store.pipeline — globotechsolutions.com</div>
+              <div class="bm-live"><div class="bm-live-dot"></div>LIVE</div>
+            </div>
+
+            <!-- Body -->
+            <div class="bm-body">
+              <div class="bm-header-row">
+                <span class="bm-section-label">Store Build Pipeline</span>
+                <span class="bm-cycle-badge" id="bm-cycle">Cycle 1</span>
+              </div>
+
+              <!-- Progress bar -->
+              <div class="bm-progress-row">
+                <div class="bm-progress-track">
+                  <div class="bm-progress-fill" id="bm-fill"></div>
+                </div>
+                <span class="bm-pct" id="bm-pct">0%</span>
+              </div>
+              <div class="bm-status-msg" id="bm-status">Initializing store environment...</div>
+
+              <!-- Steps -->
+              <div class="bm-steps">
+                <div class="bm-step bm-pending" id="bm-s0">
+                  <div class="bm-step-ico"><div class="bm-step-ico-circle"></div></div>
+                  <div class="bm-step-label">Operational Audit &amp; Scoping</div>
+                  <div class="bm-step-time" id="bm-t0"></div>
+                </div>
+                <div class="bm-step bm-pending" id="bm-s1">
+                  <div class="bm-step-ico"><div class="bm-step-ico-circle"></div></div>
+                  <div class="bm-step-label">Storefront Design &amp; UX</div>
+                  <div class="bm-step-time" id="bm-t1"></div>
+                </div>
+                <div class="bm-step bm-pending" id="bm-s2">
+                  <div class="bm-step-ico"><div class="bm-step-ico-circle"></div></div>
+                  <div class="bm-step-label">Cart &amp; Checkout Engineering</div>
+                  <div class="bm-step-time" id="bm-t2"></div>
+                </div>
+                <div class="bm-step bm-pending" id="bm-s3">
+                  <div class="bm-step-ico"><div class="bm-step-ico-circle"></div></div>
+                  <div class="bm-step-label">Third-Party API Integrations</div>
+                  <div class="bm-step-time" id="bm-t3"></div>
+                </div>
+                <div class="bm-step bm-pending" id="bm-s4">
+                  <div class="bm-step-ico"><div class="bm-step-ico-circle"></div></div>
+                  <div class="bm-step-label">Payment QA &amp; Security</div>
+                  <div class="bm-step-time" id="bm-t4"></div>
+                </div>
+                <div class="bm-step bm-pending" id="bm-s5">
+                  <div class="bm-step-ico"><div class="bm-step-ico-circle"></div></div>
+                  <div class="bm-step-label">Live Storefront Launch</div>
+                  <div class="bm-step-time" id="bm-t5"></div>
+                </div>
+              </div>
+
+              <!-- Metrics footer -->
+              <div class="bm-metrics">
+                <div class="bm-metric">
+                  <span class="bm-metric-val" id="bm-m0">—</span>
+                  <span class="bm-metric-lbl">Conversion</span>
+                </div>
+                <div class="bm-metric">
+                  <span class="bm-metric-val" id="bm-m1">—</span>
+                  <span class="bm-metric-lbl">Load Time</span>
+                </div>
+                <div class="bm-metric">
+                  <span class="bm-metric-val" id="bm-m2">—</span>
+                  <span class="bm-metric-lbl">Uptime</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- PREMIUM FEATURE SHOWCASE -->
+  <section class="showcase-section reveal">
+    <div class="showcase-glow-blob blob-1" id="showcase-glow"></div>
+
+    <div class="container">
+      <div class="showcase-header">
+        <p class="section-eyebrow">OUR SPECIALIZATION</p>
+        <h2 class="section-h2">Headless E-Commerce Solutions</h2>
+        <p style="font-size: 16px; line-height: 1.7; color: var(--text-2); margin-top: 14px;">
+          We build secure transactional environments, automatic warehouse inventory bridges, and multi-currency localized checkouts.
+        </p>
+      </div>
+
+      <div class="showcase-layout">
+        <!-- Tab Navigation (Left Column) -->
+        <div class="specialty-tabs">
+
+          <!-- Tab 1: Checkout -->
+          <div class="specialty-tab-btn active" data-tab="sim-ecom" data-theme="purple">
+            <div class="tab-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+            </div>
+            <div class="tab-info">
+              <div class="tab-info-header">
+                <span class="tab-title">Checkout Funnel</span>
+                <span class="tab-badge">Instant Pay</span>
+              </div>
+              <p class="tab-desc">Provide seamless checkout experiences with secure 3D-secure card authentication and zero latency.</p>
+            </div>
+          </div>
+
+          <!-- Tab 2: Inventory Sync -->
+          <div class="specialty-tab-btn" data-tab="sim-custom" data-theme="cyan">
+            <div class="tab-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+              </svg>
+            </div>
+            <div class="tab-info">
+              <div class="tab-info-header">
+                <span class="tab-title">Stock Sync Monitor</span>
+                <span class="tab-badge">Omnichannel</span>
+              </div>
+              <p class="tab-desc">Automatically synchronize stock levels across warehouse databases, ERP systems, and retail platforms.</p>
+            </div>
+          </div>
+
+          <!-- Tab 3: Promo Coupon -->
+          <div class="specialty-tab-btn" data-tab="sim-cms" data-theme="green">
+            <div class="tab-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+            </div>
+            <div class="tab-info">
+              <div class="tab-info-header">
+                <span class="tab-title">Coupon Promo Engine</span>
+                <span class="tab-badge">Drives AOV</span>
+              </div>
+              <p class="tab-desc">Calculate discounts, bulk pricing, and localized VAT rates instantly during checkout.</p>
+            </div>
+          </div>
+
+          <!-- Tab 4: Multi-Currency -->
+          <div class="specialty-tab-btn" data-tab="sim-responsive" data-theme="orange">
+            <div class="tab-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </div>
+            <div class="tab-info">
+              <div class="tab-info-header">
+                <span class="tab-title">Localized Pricing</span>
+                <span class="tab-badge">Global Reach</span>
+              </div>
+              <p class="tab-desc">Instantly update product pricing and shipping rules relative to localized visitor countries.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Interactive Console Display (Right Column) -->
+        <div class="console-container">
+          <div class="console-screen">
+
+            <!-- Panel 1: Checkout Transaction -->
+            <div class="simulator-panel active" id="sim-ecom">
+              <div class="ecom-panel-wrap">
+                <div class="ecom-checkout-card">
+                  <h4 class="ecom-checkout-title">Express Checkout</h4>
+                  <div class="ecom-checkout-item">
+                    <div class="ecom-item-thumb">👟</div>
+                    <div class="ecom-item-meta">
+                      <div class="ecom-item-name">Flyknit Racer Pro</div>
+                      <div class="ecom-item-qty">Qty: 1</div>
+                    </div>
+                    <div class="ecom-item-price">$180.00</div>
+                  </div>
+                  <div class="ecom-checkout-total">
+                    <span class="ecom-total-label">Total Amount</span>
+                    <span class="ecom-total-price" id="checkout-total-val">$180.00</span>
+                  </div>
+                  <button class="ecom-btn-pay" id="btn-place-order">Place Order →</button>
+                </div>
+                <div class="ecom-graphics">
+                  <!-- Tilt card -->
+                  <div class="interactive-card" id="ecom-visa-card">
+                    <div class="card-chip"></div>
+                    <div class="card-number">•••• •••• •••• 9024</div>
+                    <div class="card-footer">
+                      <span class="card-holder">GLOBO DTC</span>
+                      <div class="card-vendor"></div>
+                    </div>
+                  </div>
+                  <!-- Success receipt -->
+                  <div class="payment-receipt" id="checkout-receipt">
+                    <div class="receipt-check">✓</div>
+                    <div class="receipt-title">Order Confirmed!</div>
+                    <p class="receipt-desc">Thank you for your purchase. Receipt sent to customer@dtc.io</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 2: Inventory Sync -->
+            <div class="simulator-panel" id="sim-custom">
+              <div class="ide-mock">
+                <div class="ide-header">
+                  <div class="ide-dots">
+                    <span class="term-dot term-dot-r"></span>
+                    <span class="term-dot term-dot-y"></span>
+                    <span class="term-dot term-dot-g"></span>
+                  </div>
+                  <button class="ide-btn-run" id="btn-run-compiler" style="background: #33c5f3;">
+                    Trigger Sync
+                  </button>
+                </div>
+                <div class="ide-body">
+                  <div style="display: flex; gap: 10px; margin-bottom: 12px; align-items: center;">
+                    <span style="color: #6e6e73; font-size: 11px;">Target Product:</span>
+                    <select id="sync-product-selector" style="background:#1a1c23; border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 4px 8px; color: #fff; font-family: monospace; font-size: 11px; outline: none;">
+                      <option value="Flyknit Racer Pro">Flyknit Racer Pro</option>
+                      <option value="Vision Pro DevKit">Vision Pro DevKit</option>
+                    </select>
+                  </div>
+                  <div class="ide-console-out" id="ide-console" style="height: 110px; overflow-y: auto;">
+                    <p class="ide-line info">Click "Trigger Sync" above to run inventory check across channels...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 3: Promo Coupon -->
+            <div class="simulator-panel" id="sim-cms">
+              <div class="cms-panel-wrap" style="grid-template-columns: 1fr; width: 100%;">
+                <div style="display: flex; gap: 12px; align-items: center; width: 100%;">
+                  <input type="text" id="promo-code-input" value="GLOBOTECH20" placeholder="Enter coupon code..." style="flex: 1; background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 10px; font-family: monospace; font-size: 12px; outline: none; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" />
+                  <button id="btn-apply-promo" class="ide-btn-run" style="background:#10b981; padding: 10px 20px; border-radius: 8px;">Apply Code</button>
+                </div>
+                <div class="cms-canvas-wrap" style="min-height: 140px; padding: 16px; margin-top: 10px; background: #fafbfc; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                  <div style="width: 100%; max-width: 280px; font-family: monospace; font-size: 11px; display: flex; flex-direction: column; gap: 6px;" id="promo-receipt-box">
+                    <div style="display:flex; justify-content: space-between;"><span>Subtotal:</span><span>$180.00</span></div>
+                    <div style="display:flex; justify-content: space-between; color: #8e8e93;" id="promo-discount-line"><span>Discount (0%):</span><span>-$0.00</span></div>
+                    <div style="display:flex; justify-content: space-between; border-top: 1px dashed rgba(0,0,0,0.08); padding-top: 6px; font-weight: 700; font-size: 12px;"><span>Grand Total:</span><span id="promo-grand-total">$180.00</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 4: Localized pricing -->
+            <div class="simulator-panel" id="sim-responsive">
+              <div class="responsive-panel-wrap">
+                <div class="responsive-controls" style="gap: 6px;">
+                  <button class="resp-btn active" data-currency="USD">🇺🇸 USD ($)</button>
+                  <button class="resp-btn" data-currency="EUR">🇪🇺 EUR (€)</button>
+                  <button class="resp-btn" data-currency="GBP">🇬🇧 GBP (£)</button>
+                  <button class="resp-btn" data-currency="JPY">🇯🇵 JPY (¥)</button>
+                </div>
+                <div class="responsive-viewport-container" style="height: 220px; background: #fff; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+                    <span style="font-size: 38px;">👟</span>
+                    <h4 style="font-family: var(--fh); font-size: 16px; font-weight: 800; color: #1d1d1f; margin: 0;">Flyknit Racer Pro</h4>
+                    <div style="font-family: monospace; font-size: 20px; font-weight: 800; color: #10b981;" id="currency-price-tag">$180.00</div>
+                    <p style="font-size: 10px; color: #8e8e93;" id="currency-shipping-rule">Free shipping across USA</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- TECH STACK SECTION -->
+  <section class="tech-stack-section reveal">
+    <div class="container">
+      <div class="tech-stack-head">
+        <p class="section-eyebrow">E-COMMERCE TECHNOLOGY STACK</p>
+        <h2 class="section-h2">Storefront Technology We Use</h2>
+        <p class="tech-stack-sub">
+          We leverage modern headless frontends, SaaS commerce platforms, and secure transaction gateways to build fast online stores.
+        </p>
+      </div>
+
+      <div class="tech-tabs">
+        <button class="tech-tab-btn active" data-tab="tech-frontend">Headless Frontends</button>
+        <button class="tech-tab-btn" data-tab="tech-backend">Commerce Platforms</button>
+        <button class="tech-tab-btn" data-tab="tech-database">Integrations &amp; Shipping</button>
+      </div>
+
+      <!-- Frontends -->
+      <div class="tech-grid active" id="tech-frontend">
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(51, 197, 243, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line></svg>
+          </div>
+          <h3 class="tech-card-title">Next.js Commerce</h3>
+          <p class="tech-card-desc">Developing blazing-fast React storefronts utilizing static generation, incremental rebuilds, and edge route rendering.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(139, 92, 246, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg>
+          </div>
+          <h3 class="tech-card-title">Shopify Hydrogen</h3>
+          <p class="tech-card-desc">Building sub-second headless Shopify storefronts powered by specialized React components and oxygen edge hostings.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(16, 185, 129, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path></svg>
+          </div>
+          <h3 class="tech-card-title">Tailwind CSS</h3>
+          <p class="tech-card-desc">Accelerating checkout page designs and layout configurations with utility-first CSS styling frameworks.</p>
+        </div>
+      </div>
+
+      <!-- Platforms -->
+      <div class="tech-grid" id="tech-backend">
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(51, 197, 243, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /></svg>
+          </div>
+          <h3 class="tech-card-title">Shopify Custom</h3>
+          <p class="tech-card-desc">Writing custom templates, schema sections, and private applications utilizing the GraphQL Admin APIs.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(139, 92, 246, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10z"/></svg>
+          </div>
+          <h3 class="tech-card-title">WooCommerce &amp; WP</h3>
+          <p class="tech-card-desc">Developing relational WordPress shop extensions and localized payment gateway connectors optimized for scale.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(16, 185, 129, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 22 12 17 22 22 12 2"/></svg>
+          </div>
+          <h3 class="tech-card-title">MedusaJS &amp; Custom</h3>
+          <p class="tech-card-desc">Architecting custom, open-source Node.js headless commerce engines supporting unique subscription rules.</p>
+        </div>
+      </div>
+
+      <!-- Shipping -->
+      <div class="tech-grid" id="tech-database">
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(51, 197, 243, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect></svg>
+          </div>
+          <h3 class="tech-card-title">Stripe &amp; PayPal APIs</h3>
+          <p class="tech-card-desc">Integrating transactional token checkouts, subscription processors, and 3D Secure verification cards.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(139, 92, 246, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          </div>
+          <h3 class="tech-card-title">ERP &amp; Inventory Bridges</h3>
+          <p class="tech-card-desc">Syncing warehouse count logs dynamically with storefront catalogs to prevent overselling risks.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(16, 185, 129, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <h3 class="tech-card-title">Logistics &amp; Shipping</h3>
+          <p class="tech-card-desc">Hooking up automated shipping labels, tracking updates, and return portals via ShipStation or custom APIs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- DEVELOPMENT PROCESS SECTION -->
+  <section class="process-section reveal">
+    <div class="process-glow"></div>
+    <div class="container">
+      <div class="process-header">
+        <p class="section-eyebrow">METHODOLOGY</p>
+        <h2 class="section-h2">Our E-Com Build Process</h2>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255, 255, 255, 0.6); margin-top: 14px;">
+          How we map catalogs, draft responsive stores, sync ERP inventories, and launch custom checkouts.
+        </p>
+      </div>
+
+      <div class="process-grid">
+        <!-- Step 1 -->
+        <div class="process-card">
+          <span class="process-step">Phase 01</span>
+          <h3 class="process-card-title">Audit &amp; Scope</h3>
+          <p class="process-card-desc">We audit product catalogs, analyze checkout funnels, review warehouse databases, and draft API scopes.</p>
+          <div class="process-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="process-card">
+          <span class="process-step">Phase 02</span>
+          <h3 class="process-card-title">UI/UX Design</h3>
+          <p class="process-card-desc">We draft storefront interfaces, optimize product detail pages, and build simple checkout wireframes.</p>
+          <div class="process-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="process-card">
+          <span class="process-step">Phase 03</span>
+          <h3 class="process-card-title">Storefront Build</h3>
+          <p class="process-card-desc">Engineers build fast Next.js React templates or custom Shopify Liquid pages optimized for mobile load speeds.</p>
+          <div class="process-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="process-card">
+          <span class="process-step">Phase 04</span>
+          <h3 class="process-card-title">Integrations</h3>
+          <p class="process-card-desc">We bridge secure payment processors, sync ERP shipping logs, and hook up automated stock updates.</p>
+          <div class="process-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="process-card">
+          <span class="process-step">Phase 05</span>
+          <h3 class="process-card-title">Speed &amp; Launch</h3>
+          <p class="process-card-desc">We load test transactional gateways, run speed index checks, and launch your optimized storefront globally.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- WEB CAPABILITIES SECTION -->
+  <section class="features-grid-section reveal">
+    <div class="container">
+      <div class="features-grid-head">
+        <p class="section-eyebrow">BUILT FOR RETAIL SCALE</p>
+        <h2 class="section-h2">Core Capabilities in Every Store</h2>
+        <p style="font-size: 16px; line-height: 1.7; color: var(--text-2); margin-top: 14px;">
+          We construct storefronts targeting speed, high conversion yields, and stable operational synchronization.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-grid-card">
+          <div class="feature-grid-icon" style="background: rgba(16, 185, 129, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line></svg>
+          </div>
+          <h3 class="feature-grid-title">0.2s Storefront Speeds</h3>
+          <p class="feature-grid-desc">Every storefront is optimized to yield 99+ Lighthouse speed scores, using statically pre-rendered content and edge caches to rank higher on search engines.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-grid-card">
+          <div class="feature-grid-icon" style="background: rgba(51, 197, 243, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /></svg>
+          </div>
+          <h3 class="feature-grid-title">Zero Checkout Drops</h3>
+          <p class="feature-grid-desc">Minimizing abandoned carts by stripping input fields, bridging mobile express wallets (Apple/Google Pay), and rendering instant checkout transitions.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-grid-card">
+          <div class="feature-grid-icon" style="background: rgba(139, 92, 246, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          </div>
+          <h3 class="feature-grid-title">Omnichannel Sync</h3>
+          <p class="feature-grid-desc">Bidirectional webhook pipelines update stock counts automatically between ERP, Shopify, Amazon, and warehouse locations in under 500ms.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- WHY CHOOSE -->
+  <section class="why-choose">
+    <div class="container">
+      <div class="why-choose-inner">
+        <!-- LEFT SIDE -->
+        <div class="why-choose-left">
+          <div class="hero-eyebrow" style="margin-bottom: 14px;">
+            <div class="hero-eyebrow-dot"></div>
+            WHY CHOOSE GLOBOTECH
+          </div>
+          <h2 class="section-h2">Why GloboTech for <span>E-Commerce Services in USA?</span></h2>
+          <p class="why-choose-desc" style="margin-bottom: 20px;">Globotech Solutions offers high-performance e-commerce development that scales. We combine fast React page architectures with robust SaaS inventory connectors to ensure your store is fast and converts visitors into sales.</p>
+          <p class="why-choose-desc" style="margin-bottom: 0;">We have helped retail companies across the USA modernize their storefront layouts and bridge logistics channels cleanly. We guarantee 99.9% storefront uptime, secure payment transactions, and direct developer communication. Please read about our past projects on our case studies page.</p>
+        </div>
+        <!-- RIGHT SIDE -->
+        <div class="why-choose-right">
+          <div class="why-choose-grid-glow"></div>
+          <div class="why-choose-grid">
+            <!-- Card 1 -->
+            <div class="why-card">
+              <div class="why-card-icon-container">
+                <div class="why-card-icon-bg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect></svg>
+                </div>
+              </div>
+              <div class="why-card-title">99.99% Uptime</div>
+              <div class="why-card-desc">We build headless pages served via edge hosts, guaranteeing your store never drops offline during ad spikes.</div>
+            </div>
+            <!-- Card 2 -->
+            <div class="why-card">
+              <div class="why-card-icon-container">
+                <div class="why-card-icon-bg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /></svg>
+                </div>
+              </div>
+              <div class="why-card-title">Conversion UX</div>
+              <div class="why-card-desc">We craft beautiful storefront wireframes designed to optimize average order values and reduce drops.</div>
+            </div>
+            <!-- Card 3 -->
+            <div class="why-card">
+              <div class="why-card-icon-container">
+                <div class="why-card-icon-bg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                </div>
+              </div>
+              <div class="why-card-title">Seamless ERP Sync</div>
+              <div class="why-card-desc">We bridge ERP warehouses and sales platforms cleanly, matching stock logs across channels.</div>
+            </div>
+            <!-- Card 4 -->
+            <div class="why-card">
+              <div class="why-card-icon-container">
+                <div class="why-card-icon-bg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                </div>
+              </div>
+              <div class="why-card-title">Post-Launch Support</div>
+              <div class="why-card-desc">We stay with you to audit security configurations, test discount engines, and expand catalogs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+<footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../Home/homepage.html" class="footer-logo">
+            <img src="../../public/assets/footer-and-header.png" alt="Globotech logo" />
+          </a>
+          <p class="footer-tagline">One team. Every layer of your stack.</p>
+          <p class="footer-desc">Globotech delivers full-stack product builds, AI automation, and premium growth systems
+            for ambitious companies.</p>
+        </div>
+        <div class="footer-column">
+          <div class="footer-title">Services</div>
+          <a href="../mobile-app/mobile-app.html">Mobile App Development</a>
+          <a href="../Web-Dev/web-development.html">Web Development</a>
+          <a href="../ai-solutions/ai-solutions.html">AI &amp; Automation</a>
+          <a href="../digital-marketing/digital-marketing.html">Digital Marketing</a>
+          <a href="../e-commerce-solutions/e-commerce-solutions.html">E-Commerce Solutions</a>
+        </div>
+        <div class="footer-column">
+          <div class="footer-title">Quick Links</div>
+          <a href="../Home/homepage.html">Home</a>
+
+          <a href="../About/aboutus.html">About</a>
+          <a href="../Blog/blog.html">Blog</a><a href="../Contact/contact.html">Contact Us</a>
+          <a href="#cta">Contact</a>
+        </div>
+        <div class="footer-column contact-block">
+          <div class="footer-title">USA</div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L9.91 10.09a16 16 0 0 0 6 6l1.45-1.45a2 2 0 0 1 2.11-.45 12.05 12.05 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            <div><strong>+1 214 644 9136</strong></div>
+          </div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16v16H4z" />
+              <path d="M22 6L12 13 2 6" />
+            </svg>
+            <div><strong>info@globotechsolutions.com</strong></div>
+          </div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4l16 8-16 8V4z" />
+            </svg>
+            <div><span>8105 Rasor Blvd, Plano, TX 75024, United States</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 Globotech Solutions. All rights reserved.</div>
+        <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a><a
+            href="#">Clutch</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Flow Animation Pipeline Layout & Motion Path Calculator ──
+    function updatePipeline() {
+      const container = document.getElementById('pipeline-container');
+      const path = document.getElementById('pipeline-path');
+      const arrow = document.getElementById('pipeline-arrow');
+      const dots = [
+        document.getElementById('dot-1'),
+        document.getElementById('dot-2'),
+        document.getElementById('dot-3')
+      ];
+      if (!container || !path) return;
+
+      const containerRect = container.getBoundingClientRect();
+
+      const cards = [
+        document.getElementById('card-req'),
+        document.getElementById('card-design'),
+        document.getElementById('card-dev'),
+        document.getElementById('card-qa'),
+        document.getElementById('card-dep'),
+        document.getElementById('card-live')
+      ];
+
+      if (cards.some(c => !c)) return;
+
+      const points = cards.map(card => {
+        const rect = card.getBoundingClientRect();
+        return {
+          x: rect.left - containerRect.left + rect.width / 2,
+          y: rect.top - containerRect.top + rect.height / 2
+        };
+      });
+
+      const isMobile = window.innerWidth <= 768;
+      let pathD = '';
+
+      if (isMobile) {
+        if (arrow) arrow.style.display = 'none';
+        pathD = "M " + points[0].x + " " + points[0].y;
+        for (let i = 1; i < points.length; i++) {
+          pathD += " L " + points[i].x + " " + points[i].y;
+        }
+      } else {
+        const pDev = points[2];
+        const pQA = points[3];
+
+        const rectDev = cards[2].getBoundingClientRect();
+        const devRight = rectDev.right - containerRect.left;
+
+        const dx = 50;
+        const xRightLimit = devRight + dx;
+        const R = 24;
+
+        pathD = "M " + points[0].x + " " + points[0].y;
+        pathD += " L " + points[1].x + " " + points[1].y;
+        pathD += " L " + pDev.x + " " + pDev.y;
+
+        pathD += " L " + (xRightLimit - R) + " " + pDev.y;
+        pathD += " Q " + xRightLimit + " " + pDev.y + ", " + xRightLimit + " " + (pDev.y + R);
+        pathD += " L " + xRightLimit + " " + (pQA.y - R);
+        pathD += " Q " + xRightLimit + " " + pQA.y + ", " + (xRightLimit - R) + " " + pQA.y;
+        pathD += " L " + pQA.x + " " + pQA.y;
+
+        pathD += " L " + points[4].x + " " + points[4].y;
+        pathD += " L " + points[5].x + " " + points[5].y;
+
+        if (arrow) {
+          arrow.style.display = 'block';
+          const rectQA = cards[3].getBoundingClientRect();
+          const qaRight = rectQA.right - containerRect.left;
+          const offset = 2;
+          const tipX = qaRight + offset;
+          arrow.setAttribute('points', tipX + "," + pQA.y + " " + (tipX + 8) + "," + (pQA.y - 4) + " " + (tipX + 8) + "," + (pQA.y + 4));
+        }
+      }
+
+      path.setAttribute('d', pathD);
+
+      dots.forEach(dot => {
+        if (dot) {
+          dot.style.setProperty('offset-path', "path('" + pathD + "')");
+          dot.style.setProperty('-webkit-offset-path', "path('" + pathD + "')");
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', updatePipeline);
+    window.addEventListener('load', updatePipeline);
+    window.addEventListener('resize', updatePipeline);
+    if (document.fonts) {
+      document.fonts.ready.then(updatePipeline);
+    }
+
+    (function () {
+      var segments = [
+        { id: 'card-req', at: 0.03 },
+        { id: 'card-design', at: 0.18 },
+        { id: 'card-dev', at: 0.35 },
+        { id: 'card-qa', at: 0.62 },
+        { id: 'card-dep', at: 0.79 },
+        { id: 'card-live', at: 0.94 }
+      ];
+      var HALF = 0.065;
+      var activeId = null;
+      var epoch = performance.now();
+
+      var dot1 = document.getElementById('dot-1');
+      if (dot1) dot1.addEventListener('animationiteration', function () { epoch = performance.now(); });
+
+      function tick(now) {
+        var cycle = window.innerWidth <= 768 ? 7000 : 5500;
+        var progress = ((now - epoch) % cycle) / cycle;
+        if (progress < 0) progress += 1;
+
+        var newId = null;
+        for (var i = 0; i < segments.length; i++) {
+          if (progress >= segments[i].at - HALF && progress <= segments[i].at + HALF) {
+            newId = segments[i].id;
+            break;
+          }
+        }
+
+        if (newId !== activeId) {
+          if (activeId) { var prev = document.getElementById(activeId); if (prev) prev.classList.remove('fnode-active'); }
+          if (newId) { var next = document.getElementById(newId); if (next) next.classList.add('fnode-active'); }
+          activeId = newId;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      window.addEventListener('load', function () { epoch = performance.now(); requestAnimationFrame(tick); });
+    })();
+
+    // ── Mega Menu ──
+    (function () {
+      const trigger = document.getElementById('nav-services-trigger');
+      const menu = document.getElementById('mega-services');
+      if (!trigger || !menu) return;
+      let closeTimer;
+      function openMenu() {
+        clearTimeout(closeTimer);
+        trigger.classList.add('open');
+        menu.style.display = 'block';
+        requestAnimationFrame(() => { menu.classList.add('visible'); });
+      }
+      function closeMenu() {
+        closeTimer = setTimeout(() => {
+          trigger.classList.remove('open');
+          menu.classList.remove('visible');
+          setTimeout(() => { if (!menu.classList.contains('visible')) menu.style.display = 'none'; }, 220);
+        }, 120);
+      }
+      trigger.addEventListener('mouseenter', openMenu);
+      trigger.addEventListener('mouseleave', closeMenu);
+      menu.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+      menu.addEventListener('mouseleave', closeMenu);
+    })();
+
+    // ── Side Drawer Navigation ──
+    (function () {
+      const ham = document.querySelector('.nav-hamburger');
+      const drawer = document.getElementById('nav-drawer');
+      const overlay = document.getElementById('nav-drawer-overlay');
+      const closeBtn = document.getElementById('nav-drawer-close');
+      const svcToggle = document.getElementById('nav-drawer-services-toggle');
+      const svcMenu = document.getElementById('nav-drawer-services');
+      if (!ham || !drawer) return;
+      function openDrawer() { drawer.classList.add('open'); overlay && overlay.classList.add('open'); document.body.style.overflow = 'hidden'; ham.setAttribute('aria-expanded', 'true'); }
+      function closeDrawer() { drawer.classList.remove('open'); overlay && overlay.classList.remove('open'); document.body.style.overflow = ''; ham.setAttribute('aria-expanded', 'false'); }
+      ham.addEventListener('click', (e) => { e.stopPropagation(); openDrawer(); });
+      overlay && overlay.addEventListener('click', closeDrawer);
+      closeBtn && closeBtn.addEventListener('click', closeDrawer);
+      svcToggle && svcToggle.addEventListener('click', () => {
+        const isOpen = svcMenu && svcMenu.classList.contains('open');
+        svcToggle.classList.toggle('open');
+        if (svcMenu) {
+          svcMenu.classList.toggle('open');
+          svcMenu.style.display = isOpen ? 'none' : 'block';
+        }
+      });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+    })();
+
+    // ── Scroll Reveal Observer ──
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // ── Specialty Showcase Tabs and Simulator Engine ──
+    (function () {
+      const tabs = document.querySelectorAll('.specialty-tab-btn');
+      const panels = document.querySelectorAll('.simulator-panel');
+      const glow = document.getElementById('showcase-glow');
+
+      const themeColors = {
+        purple: '#8b5cf6',
+        cyan: '#33c5f3',
+        green: '#10b981',
+        orange: '#f59e0b'
+      };
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetId = tab.getAttribute('data-tab');
+          const theme = tab.getAttribute('data-theme');
+
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          panels.forEach(p => p.classList.remove('active'));
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) targetPanel.classList.add('active');
+
+          if (glow && themeColors[theme]) {
+            glow.style.background = themeColors[theme];
+          }
+        });
+      });
+
+      // --- SIMULATOR 1: Checkout Transaction ---
+      const payBtn = document.getElementById('btn-place-order');
+      const visaCard = document.getElementById('ecom-visa-card');
+      const receipt = document.getElementById('checkout-receipt');
+
+      if (payBtn && visaCard && receipt) {
+        payBtn.addEventListener('click', () => {
+          if (payBtn.classList.contains('processing')) return;
+
+          payBtn.classList.add('processing');
+          payBtn.innerText = 'Processing Order...';
+
+          setTimeout(() => {
+            visaCard.classList.add('paid');
+            setTimeout(() => {
+              visaCard.style.display = 'none';
+              receipt.style.display = 'flex';
+              payBtn.innerText = 'Order Placed!';
+              payBtn.style.background = '#10b981';
+            }, 600);
+          }, 1200);
+        });
+      }
+
+      // --- SIMULATOR 2: Inventory Sync Monitor ---
+      const runBtn = document.getElementById('btn-run-compiler');
+      const consoleOut = document.getElementById('ide-console');
+      const productSelect = document.getElementById('sync-product-selector');
+      
+      if (runBtn && consoleOut && productSelect) {
+        runBtn.addEventListener('click', () => {
+          if (runBtn.classList.contains('building')) return;
+
+          runBtn.classList.add('building');
+          runBtn.innerText = "Syncing...";
+
+          const prod = productSelect.value;
+          consoleOut.innerHTML = `
+            <p class="ide-line info">[sync] Triggering stock query for "${prod}"...</p>
+            <p class="ide-line">[sync] Querying ERP backend database (Stock: 142)...</p>
+          `;
+
+          setTimeout(() => {
+            consoleOut.innerHTML += `<p class="ide-line">[sync] Sending webhook update to Shopify admin ports... PASS</p>`;
+          }, 500);
+
+          setTimeout(() => {
+            consoleOut.innerHTML += `<p class="ide-line">[sync] Updating Amazon storefront catalog index... PASS</p>`;
+          }, 1000);
+
+          setTimeout(() => {
+            consoleOut.innerHTML += `
+              <p class="ide-line success">✓ Inventory fully synced across all channels!</p>
+              <p class="ide-line info">ℹ Sync execution duration: 0.38s</p>
+            `;
+            runBtn.classList.remove('building');
+            runBtn.innerText = "Trigger Sync";
+          }, 1500);
+        });
+      }
+
+      // --- SIMULATOR 3: Promo Coupon engine ---
+      const applyPromoBtn = document.getElementById('btn-apply-promo');
+      const promoInput = document.getElementById('promo-code-input');
+      const discountLine = document.getElementById('promo-discount-line');
+      const grandTotal = document.getElementById('promo-grand-total');
+      
+      if (applyPromoBtn && promoInput && discountLine && grandTotal) {
+        applyPromoBtn.addEventListener('click', () => {
+          const code = promoInput.value.replace(/^\s+|\s+$/g, '').toUpperCase();
+          
+          if (code === "GLOBOTECH20") {
+            applyPromoBtn.innerText = "Applying...";
+            setTimeout(() => {
+              discountLine.innerHTML = "<span>Discount (20%):</span><span>-$36.00</span>";
+              discountLine.style.color = "#10b981";
+              grandTotal.innerText = "$144.00";
+              applyPromoBtn.innerText = "Code Applied!";
+              applyPromoBtn.style.background = "#10b981";
+            }, 600);
+          } else if (code === "FREESHIP") {
+            applyPromoBtn.innerText = "Applying...";
+            setTimeout(() => {
+              discountLine.innerHTML = "<span>Shipping Coupon:</span><span>-$10.00</span>";
+              discountLine.style.color = "#10b981";
+              grandTotal.innerText = "$170.00";
+              applyPromoBtn.innerText = "Code Applied!";
+              applyPromoBtn.style.background = "#10b981";
+            }, 600);
+          } else {
+            promoInput.value = "INVALID CODE";
+            setTimeout(() => { promoInput.value = ""; }, 1000);
+          }
+        });
+      }
+
+      // --- SIMULATOR 4: Multi-currency converter preset ---
+      const respBtns = document.querySelectorAll('.resp-btn');
+      const priceTag = document.getElementById('currency-price-tag');
+      const shipRule = document.getElementById('currency-shipping-rule');
+      
+      const currencyPrices = {
+        USD: { price: "$180.00", ship: "Free shipping across USA" },
+        EUR: { price: "€168.00", ship: "VAT included. International shipping €15" },
+        GBP: { price: "£142.00", ship: "Duty free delivery across UK" },
+        JPY: { price: "¥26,500", ship: "Custom shipping calculated at port" }
+      };
+
+      if (respBtns && priceTag && shipRule) {
+        respBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            const cur = btn.getAttribute('data-currency');
+            respBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (currencyPrices[cur]) {
+              priceTag.innerText = currencyPrices[cur].price;
+              shipRule.innerText = currencyPrices[cur].ship;
+            }
+          });
+        });
+      }
+    })();
+
+    // ── Tech Stack Tab Switching ──
+    document.querySelectorAll('.tech-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-tab');
+
+        document.querySelectorAll('.tech-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.querySelectorAll('.tech-grid').forEach(grid => grid.classList.remove('active'));
+        const targetGrid = document.getElementById(targetId);
+        if (targetGrid) {
+          targetGrid.classList.add('active');
+        }
+      });
+    });
+</script>
+
+</body>
+
+</html>

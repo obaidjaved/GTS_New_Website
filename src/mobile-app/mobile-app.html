@@ -1,0 +1,5077 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile App Development — Globotech Solutions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── DESIGN TOKENS (light-mode only) ── */
+    :root {
+      --bg: #F5F5F7;
+      --bg-2: #ffffff;
+      --text: #1d1d1f;
+      --text-2: #6e6e73;
+      --text-3: #3d3d3f;
+      --teal: #33c5f3;
+      --glass-bg: rgba(255, 255, 255, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.9);
+      --glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      --radius: 20px;
+      --radius-sm: 12px;
+      --radius-pill: 100px;
+      --fh: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --fb: 'Inter', -apple-system, sans-serif;
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ── BASE ── */
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 88px;
+    }
+
+    body {
+      font-family: var(--fb);
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    @media(max-width:768px) {
+      .container {
+        padding: 0 24px;
+      }
+    }
+
+    /* ── NAV ── */
+    .nav-wrap {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 0 40px;
+    }
+
+    @media(max-width:768px) {
+      .nav-wrap {
+        padding: 0 16px;
+      }
+    }
+
+    nav {
+      position: relative;
+      max-width: 1440px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.09);
+      border-radius: 24px;
+      padding: 0;
+      display: block;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: border-radius .22s ease, box-shadow .22s ease;
+      overflow: visible;
+    }
+
+    .nav-bar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 8px 8px 24px;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 100;
+    }
+
+    .nav-backdrop {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    .nav-backdrop.visible {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    nav::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      background: linear-gradient(to right, #2dd4bf, #818cf8, #f472b6) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.75;
+      transition: border-radius .22s ease;
+    }
+
+    nav:has(.mega-menu.visible) {
+      border-radius: 24px 24px 0 0;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.10), 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    nav:has(.mega-menu.visible)::after {
+      border-radius: 24px 24px 0 0;
+      clip-path: inset(0 0 1px 0);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d1d1f;
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    .nav-has-mega {
+      position: static;
+    }
+
+    .nav-has-mega>a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-has-mega>a::after {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1d1f' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat;
+      transition: transform .25s;
+    }
+
+    .nav-has-mega.open>a::after {
+      transform: rotate(180deg);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-cta {
+      background: #1d1d1f;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 800;
+      padding: 10px 22px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: opacity .2s, transform .18s var(--ease), box-shadow .2s;
+    }
+
+    .nav-cta:hover {
+      opacity: .88;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    @media(max-width:768px) {
+      .nav-links {
+        display: none;
+      }
+      .nav-cta {
+        display: none !important;
+      }
+
+      .nav-hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #1d1d1f;
+        flex-shrink: 0;
+        transition: background .15s;
+      }
+
+      .nav-hamburger:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+    }
+
+    @media(min-width:769px) {
+      .nav-hamburger {
+        display: none;
+      }
+    }
+
+    /* ── SIDE DRAWER ── */
+    .nav-drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 9998;
+      opacity: 0;
+      transition: opacity .32s ease;
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    .nav-drawer-overlay.open {
+      display: block;
+      opacity: 1;
+    }
+
+    .nav-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 300px;
+      max-width: 85vw;
+      background: #fff;
+      z-index: 9999;
+      transform: translateX(110%);
+      transition: transform .32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      flex-direction: column;
+      box-shadow: -12px 0 48px rgba(0, 0, 0, 0.14);
+      border-left: 1px solid rgba(0, 0, 0, 0.07);
+    }
+
+    .nav-drawer.open {
+      transform: translateX(0);
+    }
+
+    @media(min-width:769px) {
+
+      .nav-drawer,
+      .nav-drawer-overlay {
+        display: none !important;
+      }
+    }
+
+    .nav-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+      flex-shrink: 0;
+    }
+
+    .nav-drawer-logo {
+      height: 34px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-drawer-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.05);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1d1d1f;
+      transition: background .15s;
+      flex-shrink: 0;
+    }
+
+    .nav-drawer-close:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0 28px;
+    }
+
+    .nav-drawer-body>a {
+      display: block;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d1d1f;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: background .15s, color .15s;
+    }
+
+    .nav-drawer-body>a:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .nav-drawer-body>a.active {
+      color: var(--teal);
+    }
+
+    .nav-drawer-services-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d1d1f;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: background .15s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .nav-drawer-services-toggle:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .drawer-chevron {
+      display: inline-flex;
+      align-items: center;
+      transition: transform .25s var(--ease);
+      color: #6e6e73;
+    }
+
+    .nav-drawer-services-toggle.open .drawer-chevron {
+      transform: rotate(90deg);
+    }
+
+    .nav-drawer-services {
+      display: none;
+      background: rgba(245, 245, 247, 0.6);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-drawer-services.open {
+      display: block;
+    }
+
+    .nav-drawer-services a {
+      display: block;
+      padding: 12px 24px 12px 36px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #3a3a3c;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      transition: background .15s, color .15s;
+    }
+
+    .nav-drawer-services a:last-child {
+      border-bottom: none;
+    }
+
+    .nav-drawer-services a:hover {
+      background: rgba(51, 197, 243, 0.07);
+      color: var(--teal);
+    }
+
+    .nav-drawer-cta {
+      display: block;
+      margin: 20px 20px 0;
+      padding: 14px 24px;
+      border-radius: 100px;
+      background: #1d1d1f;
+      color: #fff !important;
+      font-size: 15px;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+      transition: opacity .2s, transform .18s;
+    }
+
+    .nav-drawer-cta:hover {
+      opacity: .88;
+      transform: translateY(-1px);
+    }
+
+    .mega-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr 280px;
+      gap: 8px 24px;
+    }
+
+    .mega-item {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: background .18s;
+      cursor: pointer;
+    }
+
+    .mega-item:hover {
+      background: rgba(51, 197, 243, 0.06);
+    }
+
+    .mega-item:hover .mega-item-title {
+      color: var(--teal);
+    }
+
+    .mega-item-title {
+      font-family: var(--fh);
+      font-size: 15px;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 4px;
+      transition: color .18s;
+    }
+
+    .mega-item-desc {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.45;
+    }
+
+    .mega-featured {
+      grid-row: 1 / 4;
+      grid-column: 3;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      border-radius: 16px;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      transition: transform .2s;
+      min-height: 240px;
+    }
+
+    .mega-featured:hover {
+      transform: translateY(-2px);
+    }
+
+    .mega-featured-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #33c5f3;
+      margin-bottom: 12px;
+    }
+
+    .mega-featured-title {
+      font-family: var(--fh);
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .mega-featured-desc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .mega-featured-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #33c5f3;
+    }
+
+    @media(max-width:768px) {
+      .mega-menu {
+        display: none !important;
+      }
+    }
+
+    .mega-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: -1px;
+      right: -1px;
+      background: #ffffff;
+      border-radius: 0 0 23px 23px;
+      border: 1px solid transparent;
+      border-top: none;
+      padding: 0 48px 32px;
+      margin: 0;
+      box-sizing: border-box;
+      z-index: 95;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity .22s ease, transform .22s ease;
+      pointer-events: none;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+    }
+
+    .mega-menu::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      border: 1px solid transparent;
+      background: linear-gradient(to right, #2dd4bf, #818cf8, #f472b6) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    .mega-menu.visible {
+      display: grid;
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      padding-top: 24px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 140px 0 80px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 70% at 88% 38%, rgba(51, 197, 243, 0.11) 0%, transparent 65%),
+        radial-gradient(ellipse 35% 45% at 8% 88%, rgba(16, 185, 129, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 30% 40% at 72% 88%, rgba(139, 92, 246, 0.05) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .hero .container {
+      width: 100%;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      width: 100%;
+    }
+
+    @media(max-width:900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 24px;
+    }
+
+    .hero-eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s ease infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: .3;
+        transform: scale(.65);
+      }
+    }
+
+    .hero-h1 {
+      font-family: var(--fh);
+      font-size: clamp(38px, 4.5vw, 64px);
+      font-weight: 900;
+      letter-spacing: -.045em;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
+
+    .hero-h1 em {
+      font-style: normal;
+      background: linear-gradient(110deg, #33c5f3 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--text-2);
+      max-width: 420px;
+      margin-bottom: 36px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 44px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn-primary {
+      background: #1d1d1f;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      padding: 15px 30px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+      transition: transform .2s var(--ease), box-shadow .2s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .hero-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-btn-secondary {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-2);
+      text-decoration: none;
+      padding: 15px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color .2s;
+    }
+
+    .hero-btn-secondary:hover {
+      color: var(--text);
+    }
+
+    /* ── FLOW ANIMATION ── */
+    .dev-flow {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 360px;
+      width: 100%;
+      padding: 20px 0;
+    }
+
+    .flow-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(51, 197, 243, 0.12), transparent 45%);
+      border-radius: 24px;
+      filter: blur(36px);
+      pointer-events: none;
+    }
+
+    .hero-flow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 187px);
+      grid-template-rows: repeat(2, 60px);
+      gap: 80px 82.5px;
+      justify-content: center;
+      align-content: center;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Explicit placements for desktop loop path */
+    #card-req {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    #card-design {
+      grid-row: 1;
+      grid-column: 2;
+    }
+
+    #card-dev {
+      grid-row: 1;
+      grid-column: 3;
+    }
+
+    #card-qa {
+      grid-row: 2;
+      grid-column: 3;
+    }
+
+    #card-dep {
+      grid-row: 2;
+      grid-column: 2;
+    }
+
+    #card-live {
+      grid-row: 2;
+      grid-column: 1;
+    }
+
+    .fnode {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 14px;
+      padding: 12px 16px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
+      width: 187px;
+      height: 60px;
+      box-sizing: border-box;
+      z-index: 2;
+    }
+
+    .fnode:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+      border-color: rgba(51, 197, 243, 0.22);
+    }
+
+    /* Active glow state — synced with dot animation */
+    .fnode.fnode-active {
+      transform: scale(1.04);
+      box-shadow: 0 0 20px rgba(51, 197, 243, 0.10), 0 0 40px rgba(51, 197, 243, 0.05), 0 4px 16px rgba(0, 0, 0, 0.05);
+      border-color: rgba(51, 197, 243, 0.25);
+    }
+
+    .fnode.fnode-active:hover {
+      transform: scale(1.04) translateY(-4px);
+      box-shadow: 0 0 20px rgba(51, 197, 243, 0.12), 0 0 40px rgba(51, 197, 243, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .fnode-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .fnode-name {
+      font-family: var(--fh);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    /* SVG Line and Dot Styles */
+    #flow-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: visible;
+    }
+
+    #pipeline-path {
+      fill: none;
+      stroke: rgba(51, 197, 243, 0.3);
+      stroke-width: 1.5px;
+      filter: drop-shadow(0 0 2px rgba(51, 197, 243, 0.15));
+    }
+
+    .flow-dot {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #33c5f3;
+      box-shadow: 0 0 6px #33c5f3, 0 0 12px #33c5f3;
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
+      animation: moveDot 5.5s linear infinite;
+      transform: translate(-50%, -50%);
+    }
+
+    #dot-1 {
+      animation-delay: 0s;
+    }
+
+    #dot-2 {
+      animation-delay: 0.15s;
+    }
+
+    #dot-3 {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes moveDot {
+      0% {
+        offset-distance: 0%;
+        opacity: 0;
+      }
+
+      3% {
+        opacity: 1;
+      }
+
+      97% {
+        opacity: 1;
+      }
+
+      100% {
+        offset-distance: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* ── TABLET OPTIMIZATIONS ── */
+    @media(max-width:900px) {
+      .hero-flow-grid {
+        grid-template-columns: repeat(3, 167px);
+        gap: 80px 66.5px;
+      }
+
+      .fnode {
+        width: 167px;
+      }
+    }
+
+    /* ── MOBILE OPTIMIZATIONS ── */
+    @media(max-width:768px) {
+      .dev-flow {
+        min-height: auto;
+        padding: 10px 0;
+      }
+
+      .hero-flow-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        gap: 16px 12px;
+        max-width: 420px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .fnode {
+        width: 100%;
+        grid-row: auto !important;
+        grid-column: auto !important;
+      }
+
+      .flow-dot {
+        animation-duration: 7s;
+      }
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 14px;
+    }
+
+    .section-h2 {
+      font-family: var(--fh);
+      font-size: clamp(36px, 3.5vw, 56px);
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1.08;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    /* ── PRE-HERO DESCRIPTION (centered, site font) ── */
+    .pre-our-wrap {
+      max-width: 1100px;
+      margin: 62px auto 0;
+      padding: 0 24px;
+      box-sizing: border-box
+    }
+
+    .pre-our-desc {
+      font-family: var(--fh);
+      font-size: 20px;
+      color: var(--text-2);
+      max-width: 980px;
+      margin: 0 auto 18px;
+      text-align: center;
+      line-height: 1.9
+    }
+
+    /* ── PREMIUM FEATURE SHOWCASE ── */
+    .showcase-section {
+      padding: 100px 0;
+      background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .showcase-glow-blob {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(120px);
+      opacity: 0.12;
+      z-index: 0;
+      transition: background 0.8s ease;
+    }
+
+    .showcase-glow-blob.blob-1 {
+      background: #8b5cf6;
+      top: 25%;
+      left: 20%;
+    }
+
+    .showcase-header {
+      max-width: 1200px;
+      margin: 0 auto 72px;
+      padding: 0 24px;
+      box-sizing: border-box;
+      text-align: left;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── DYNAMIC INTERACTIVE SHOWCASE CONSOLE ── */
+    .showcase-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Specialty selectors (left side) */
+    .specialty-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .specialty-tab-btn {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.4s var(--ease);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6), 0 4px 20px rgba(0, 0, 0, 0.01);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .specialty-tab-btn::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: transparent;
+      transition: background 0.3s;
+    }
+
+    .specialty-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.65);
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: translateX(4px);
+    }
+
+    /* Active states for tabs based on active-theme class */
+    .specialty-tab-btn.active {
+      background: #fff;
+      border-color: rgba(255, 255, 255, 0.95);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 10px 30px rgba(0, 0, 0, 0.04);
+    }
+
+    .specialty-tab-btn.active[data-theme="purple"]::before {
+      background: #8b5cf6;
+    }
+
+    .specialty-tab-btn.active[data-theme="cyan"]::before {
+      background: #33c5f3;
+    }
+
+    .specialty-tab-btn.active[data-theme="green"]::before {
+      background: #10b981;
+    }
+
+    .specialty-tab-btn.active[data-theme="orange"]::before {
+      background: #f59e0b;
+    }
+
+    .tab-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.03);
+      color: #6e6e73;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .specialty-tab-btn:hover .tab-icon-wrap {
+      color: #1d1d1f;
+    }
+
+    /* Active icon colors */
+    .specialty-tab-btn.active[data-theme="purple"] .tab-icon-wrap {
+      background: rgba(139, 92, 246, 0.1);
+      color: #8b5cf6;
+    }
+
+    .specialty-tab-btn.active[data-theme="cyan"] .tab-icon-wrap {
+      background: rgba(51, 197, 243, 0.1);
+      color: #33c5f3;
+    }
+
+    .specialty-tab-btn.active[data-theme="green"] .tab-icon-wrap {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+
+    .specialty-tab-btn.active[data-theme="orange"] .tab-icon-wrap {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .tab-info {
+      flex: 1;
+    }
+
+    .tab-info-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .tab-title {
+      font-family: var(--fh);
+      font-size: 16px;
+      font-weight: 800;
+      color: #1d1d1f;
+    }
+
+    .tab-badge {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+      background: rgba(0, 0, 0, 0.04);
+      color: #6e6e73;
+    }
+
+    .specialty-tab-btn.active[data-theme="purple"] .tab-badge {
+      background: rgba(139, 92, 246, 0.1);
+      color: #8b5cf6;
+    }
+
+    .specialty-tab-btn.active[data-theme="cyan"] .tab-badge {
+      background: rgba(51, 197, 243, 0.1);
+      color: #33c5f3;
+    }
+
+    .specialty-tab-btn.active[data-theme="green"] .tab-badge {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+    }
+
+    .specialty-tab-btn.active[data-theme="orange"] .tab-badge {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+    }
+
+    .tab-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #6e6e73;
+      margin: 0;
+    }
+
+    .specialty-tab-btn.active .tab-desc {
+      color: #3a3a3c;
+    }
+
+    /* Console container (right side) */
+    .console-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 480px;
+    }
+
+    .console-screen {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 32px;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), 0 20px 50px rgba(0, 0, 0, 0.03);
+      padding: 40px;
+      box-sizing: border-box;
+      height: 100%;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.4s var(--ease);
+    }
+
+    .console-screen:hover {
+      border-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .simulator-panel {
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: simFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    .simulator-panel.active {
+      display: flex;
+    }
+
+    @keyframes simFadeIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.97) translateY(8px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* ── SIMULATOR 1: IDE / COMPILER ── */
+    .ide-mock {
+      background: #111216;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      font-family: monospace;
+      font-size: 12px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ide-header {
+      background: #1a1c23;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .ide-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .ide-btn-run {
+      background: #8b5cf6;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 12px;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ide-btn-run:hover {
+      background: #7c3aed;
+      transform: translateY(-1px);
+    }
+
+    .ide-btn-run:active {
+      transform: translateY(0);
+    }
+
+    .ide-btn-run.building {
+      background: #5b21b6;
+      cursor: not-allowed;
+    }
+
+    .ide-body {
+      padding: 20px;
+      color: #abb2bf;
+      line-height: 1.7;
+      min-height: 220px;
+      box-sizing: border-box;
+    }
+
+    .ide-code-lines {
+      color: #636d83;
+      margin-bottom: 12px;
+      font-size: 11px;
+    }
+
+    .ide-console-out {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: 16px;
+      padding-top: 16px;
+      color: rgba(255, 255, 255, 0.4);
+      min-height: 70px;
+    }
+
+    .ide-line {
+      margin: 0;
+    }
+
+    .ide-line.success {
+      color: #10b981;
+    }
+
+    .ide-line.info {
+      color: #33c5f3;
+    }
+
+    .ide-line.warn {
+      color: #f59e0b;
+    }
+
+    .ide-cursor {
+      display: inline-block;
+      width: 6px;
+      height: 12px;
+      background: #8b5cf6;
+      animation: termBlink 1s infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+
+    @keyframes termBlink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    /* ── SIMULATOR 2: RESPONSIVE VIEWPORT ── */
+    .responsive-panel-wrap {
+      width: 100%;
+      max-width: 540px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .responsive-controls {
+      display: flex;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.03);
+      padding: 4px;
+      border-radius: 100px;
+      width: fit-content;
+    }
+
+    .resp-btn {
+      background: transparent;
+      border: none;
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-family: var(--fh);
+      font-size: 11px;
+      font-weight: 700;
+      color: #6e6e73;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .resp-btn:hover {
+      color: #1d1d1f;
+    }
+
+    .resp-btn.active {
+      background: #fff;
+      color: #33c5f3;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .responsive-viewport-container {
+      width: 100%;
+      height: 280px;
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px dashed rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .responsive-canvas {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .canvas-browser-bar {
+      background: #f4f5f6;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .canvas-dots {
+      display: flex;
+      gap: 4px;
+    }
+
+    .canvas-url-bar {
+      background: #fff;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      font-size: 8px;
+      color: #8e8e93;
+      padding: 2px 16px;
+      text-align: center;
+      flex: 1;
+      max-width: 180px;
+      margin: 0 auto;
+    }
+
+    .canvas-content {
+      padding: 12px;
+      flex: 1;
+      overflow-y: auto;
+      background: #fafbfc;
+      box-sizing: border-box;
+    }
+
+    .canvas-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 8px;
+    }
+
+    .canvas-hero {
+      grid-column: span 12;
+      background: linear-gradient(135deg, rgba(51, 197, 243, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+      border: 1px solid rgba(51, 197, 243, 0.1);
+      border-radius: 6px;
+      height: 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 12px;
+    }
+
+    .canvas-hero-title {
+      width: 40%;
+      height: 6px;
+      background: #33c5f3;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+
+    .canvas-hero-text {
+      width: 70%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 4px;
+    }
+
+    .canvas-card {
+      grid-column: span 4;
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      border-radius: 6px;
+      padding: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+      height: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s;
+    }
+
+    .canvas-card-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      background: rgba(51, 197, 243, 0.1);
+    }
+
+    .canvas-card-line {
+      width: 80%;
+      height: 4px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 2px;
+      margin: 4px 0;
+    }
+
+    .canvas-card-line-sm {
+      width: 50%;
+      height: 3px;
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 2px;
+    }
+
+    .resizer-slider-wrap {
+      width: 100%;
+      max-width: 320px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .resizer-slider-wrap label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6e6e73;
+    }
+
+    .resizer-slider {
+      flex: 1;
+      height: 4px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.08);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .resizer-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #33c5f3;
+      cursor: pointer;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      transition: transform 0.1s;
+    }
+
+    .resizer-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* ── SIMULATOR 3: MODULAR CMS BUILDER ── */
+    .cms-panel-wrap {
+      width: 100%;
+      max-width: 520px;
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 20px;
+      box-sizing: border-box;
+    }
+
+    .cms-toolbox {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 16px;
+      padding: 16px;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .cms-tool-heading {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6e6e73;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .cms-item-chip {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: var(--fh);
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d1d1f;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s;
+    }
+
+    .cms-item-chip:hover {
+      border-color: #10b981;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.08);
+    }
+
+    .cms-item-chip:active {
+      transform: translateY(0);
+    }
+
+    .cms-canvas-wrap {
+      display: flex;
+      flex-direction: column;
+      border: 1px dashed rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      background: #fff;
+      padding: 16px;
+      min-height: 280px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .cms-canvas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .cms-canvas-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8e8e93;
+    }
+
+    .cms-btn-clear {
+      background: transparent;
+      border: none;
+      font-size: 10px;
+      font-weight: 700;
+      color: #ef4444;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+
+    .cms-canvas-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+      overflow-y: auto;
+      max-height: 230px;
+    }
+
+    .cms-canvas-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #8e8e93;
+      font-size: 11px;
+      text-align: center;
+      margin-top: 50px;
+      pointer-events: none;
+    }
+
+    .cms-canvas-empty svg {
+      opacity: 0.4;
+      margin-bottom: 8px;
+    }
+
+    .cms-placed-block {
+      background: #fafbfc;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d1d1f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: blockSlideIn 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    @keyframes blockSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .cms-placed-block.hero-block {
+      border-left: 3px solid #10b981;
+    }
+
+    .cms-placed-block.text-block {
+      border-left: 3px solid #33c5f3;
+    }
+
+    .cms-placed-block.gallery-block {
+      border-left: 3px solid #f59e0b;
+    }
+
+    .cms-placed-block.cta-block {
+      border-left: 3px solid #8b5cf6;
+    }
+
+    .cms-block-delete {
+      background: transparent;
+      border: none;
+      color: #c7c7cc;
+      cursor: pointer;
+      font-size: 12px;
+      padding: 0;
+    }
+
+    .cms-block-delete:hover {
+      color: #ff3b30;
+    }
+
+    /* ── SIMULATOR 4: ECOMMERCE TRANSACTION ── */
+    .ecom-panel-wrap {
+      width: 100%;
+      max-width: 520px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+      box-sizing: border-box;
+    }
+
+    .ecom-checkout-card {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .ecom-checkout-title {
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 800;
+      color: #1d1d1f;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      padding-bottom: 10px;
+      margin: 0;
+    }
+
+    .ecom-checkout-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .ecom-item-thumb {
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.03);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .ecom-item-meta {
+      flex: 1;
+    }
+
+    .ecom-item-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 2px;
+    }
+
+    .ecom-item-qty {
+      font-size: 9px;
+      color: #8e8e93;
+    }
+
+    .ecom-item-price {
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d1d1f;
+    }
+
+    .ecom-checkout-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      padding-top: 12px;
+    }
+
+    .ecom-total-label {
+      font-size: 11px;
+      color: #6e6e73;
+    }
+
+    .ecom-total-price {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1d1d1f;
+    }
+
+    .ecom-btn-pay {
+      background: #f59e0b;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .ecom-btn-pay:hover {
+      background: #d97706;
+      transform: translateY(-1px);
+    }
+
+    .ecom-btn-pay:active {
+      transform: translateY(0);
+    }
+
+    .ecom-btn-pay.processing {
+      background: #b45309;
+      cursor: not-allowed;
+    }
+
+    /* Credit Card Graphics */
+    .ecom-graphics {
+      perspective: 1000px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .interactive-card {
+      background: linear-gradient(135deg, #1d1d1f 0%, #3a3b3f 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      width: 220px;
+      height: 130px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+      box-sizing: border-box;
+      text-align: left;
+      transform: rotateY(15deg) rotateX(10deg);
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s;
+    }
+
+    .interactive-card:hover {
+      transform: rotateY(5deg) rotateX(4deg) translateY(-4px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    }
+
+    .interactive-card.paid {
+      animation: cardSlideAway 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes cardSlideAway {
+      0% {
+        transform: rotateY(5deg) rotateX(4deg) translateY(-4px);
+        opacity: 1;
+      }
+
+      100% {
+        transform: rotateY(30deg) rotateX(20deg) translateY(-200px) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    .payment-receipt {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      width: 200px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: receiptIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      box-sizing: border-box;
+    }
+
+    @keyframes receiptIn {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .receipt-check {
+      width: 36px;
+      height: 36px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .receipt-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #1d1d1f;
+      margin-bottom: 4px;
+    }
+
+    .receipt-desc {
+      font-size: 10px;
+      color: #8e8e93;
+      text-align: center;
+      margin: 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── RESPONSIVE ADAPTATIONS ── */
+    @media(max-width: 950px) {
+      .showcase-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .specialty-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .specialty-tab-btn {
+        flex-shrink: 0;
+        width: 280px;
+        scroll-snap-align: start;
+      }
+
+      .specialty-tab-btn:hover {
+        transform: none;
+      }
+    }
+
+    @media(max-width: 768px) {
+      .specialty-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+        gap: 12px;
+        overflow: visible;
+        white-space: normal;
+        scroll-snap-type: none;
+      }
+
+      .specialty-tab-btn {
+        flex-shrink: 1;
+        width: 100%;
+        min-width: auto;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 16px 8px;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 16px;
+        overflow: visible;
+      }
+
+      .specialty-tab-btn::before {
+        display: none !important;
+      }
+
+      .specialty-tab-btn.active {
+        background: #fff;
+        border-color: rgba(0, 0, 0, 0.05);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        transform: translateY(-2px);
+      }
+
+      .tab-icon-wrap {
+        width: 36px;
+        height: 36px;
+        margin: 0 auto;
+        border-radius: 10px;
+      }
+
+      .tab-info {
+        width: 100%;
+      }
+
+      .tab-info-header {
+        display: block;
+        margin: 0;
+      }
+
+      .tab-title {
+        font-size: 11px;
+        font-weight: 700;
+        display: block;
+        text-align: center;
+        white-space: normal !important;
+        line-height: 1.2;
+      }
+
+      .tab-desc,
+      .tab-badge {
+        display: none !important;
+      }
+
+      .console-screen {
+        padding: 24px;
+        min-height: 420px;
+      }
+    }
+
+    @media(max-width: 580px) {
+      .console-screen {
+        padding: 16px;
+        min-height: 360px;
+      }
+
+      .ide-mock {
+        font-size: 10px;
+      }
+
+      .ide-body {
+        padding: 12px;
+        min-height: 180px;
+      }
+
+      .cms-panel-wrap {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .cms-toolbox {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+      }
+
+      .cms-item-chip {
+        flex: 1 1 calc(50% - 8px);
+        justify-content: center;
+        padding: 8px 10px;
+        font-size: 10px;
+      }
+
+      .cms-canvas-wrap {
+        min-height: 240px;
+        padding: 12px;
+      }
+
+      .cms-canvas-body {
+        max-height: 180px;
+      }
+
+      .cms-canvas-empty {
+        margin-top: 30px;
+      }
+
+      .ecom-panel-wrap {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .ecom-checkout-card {
+        padding: 16px;
+      }
+
+      .interactive-card {
+        transform: none !important;
+        width: 100%;
+        max-width: 240px;
+        height: 130px;
+        margin: 0 auto;
+      }
+
+      .interactive-card:hover {
+        transform: none !important;
+      }
+
+      .payment-receipt {
+        width: 100%;
+        max-width: 240px;
+        margin: 0 auto;
+      }
+
+      .responsive-viewport-container {
+        height: 240px;
+        padding: 8px;
+      }
+
+      .canvas-hero {
+        height: 38px;
+      }
+
+      .canvas-card {
+        grid-column: span 12 !important;
+        height: 42px !important;
+      }
+    }
+
+
+    /* ── TECH STACK SECTION ── */
+    .tech-stack-section {
+      padding: 110px 0;
+      background: #fafbfc;
+      border-top: 1px solid rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+
+    .tech-stack-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 56px;
+    }
+
+    .tech-stack-sub {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #6e6e73;
+      margin: 14px 0 0;
+    }
+
+    .tech-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    .tech-tab-btn {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 100px;
+      padding: 12px 24px;
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 700;
+      color: #6e6e73;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      transition: background .2s, border-color .2s, color .2s, transform .2s var(--ease);
+    }
+
+    .tech-tab-btn:hover {
+      border-color: rgba(0, 0, 0, 0.15);
+      color: #1d1d1f;
+      transform: translateY(-1px);
+    }
+
+    .tech-tab-btn.active {
+      background: #1d1d1f;
+      border-color: #1d1d1f;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .tech-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+    .tech-grid.active {
+      display: grid;
+    }
+
+    .tech-card {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 4px 16px rgba(0, 0, 0, 0.02);
+      transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color 0.3s;
+      text-align: left;
+      box-sizing: border-box;
+    }
+
+    .tech-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04);
+    }
+
+    .tech-icon-container {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .tech-card-title {
+      font-family: var(--fh);
+      font-size: 18px;
+      font-weight: 800;
+      color: #1d1d1f;
+      margin: 0 0 10px;
+    }
+
+    .tech-card-desc {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #6e6e73;
+      margin: 0;
+    }
+
+    @media(max-width:900px) {
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bento-card.span-2 {
+        grid-column: span 1;
+      }
+
+      .bento-card {
+        min-height: auto;
+        gap: 32px;
+      }
+
+      .bento-visual {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .bento-card.span-2 .bento-visual {
+        width: 100%;
+      }
+
+      .tech-stack-section {
+        padding: 70px 0;
+      }
+    }
+
+    /* ── PROCESS SECTION (dark premium contrast) ── */
+    .process-section {
+      padding: 110px 0;
+      background: #111216;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .process-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(51, 197, 243, 0.08), transparent 70%);
+      z-index: 0;
+    }
+
+    .process-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 72px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .process-header .section-h2 {
+      color: #fff;
+    }
+
+    .process-header .section-eyebrow {
+      color: var(--teal);
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 28px;
+      position: relative;
+      z-index: 1;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+    .process-card {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      padding: 36px 24px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: transform 0.4s var(--ease), border-color 0.4s, box-shadow 0.4s, background 0.4s;
+      box-sizing: border-box;
+    }
+
+    .process-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(51, 197, 243, 0.35);
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+    }
+
+    .process-step {
+      font-family: var(--fh);
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .process-card-title {
+      font-family: var(--fh);
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+      margin: 0 0 12px;
+    }
+
+    .process-card-desc {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0;
+    }
+
+    .process-arrow {
+      position: absolute;
+      top: 50%;
+      right: -22px;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.15);
+      z-index: 2;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media(max-width: 1120px) {
+      .process-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .process-arrow {
+        top: auto;
+        bottom: -28px;
+        right: 50%;
+        transform: translateX(50%) rotate(90deg);
+      }
+
+      .process-card:last-child .process-arrow {
+        display: none;
+      }
+    }
+
+    /* ── CAPABILITIES / FEATURES GRID ── */
+    .features-grid-section {
+      padding: 110px 0;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .features-grid-head {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+
+    .feature-grid-card {
+      background: #fafbfc;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 24px;
+      padding: 40px;
+      box-sizing: border-box;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s, border-color 0.3s;
+      text-align: left;
+    }
+
+    .feature-grid-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.03);
+      border-color: rgba(51, 197, 243, 0.15);
+    }
+
+    .feature-grid-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .feature-grid-title {
+      font-family: var(--fh);
+      font-size: 20px;
+      font-weight: 800;
+      color: #1d1d1f;
+      margin: 0 0 12px;
+    }
+
+    .feature-grid-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #6e6e73;
+      margin: 0;
+    }
+
+    @media(max-width: 900px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cases-btn-ghost {
+      background: transparent;
+      color: var(--text);
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .2s, transform .2s var(--ease);
+    }
+
+    .cases-btn-ghost:hover {
+      background: rgba(0, 0, 0, 0.04);
+      transform: translateY(-1px);
+    }
+
+    /* ── WHY CHOOSE GLOBOTECH ── */
+    .why-choose {
+      padding: 100px 0;
+      background: #ffffff;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .why-choose-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 1.3fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .why-choose-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .why-choose-left .section-h2 {
+      font-size: 40px;
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .why-choose-left .section-h2 span {
+      background: linear-gradient(110deg, #33c5f3 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+    }
+
+    .why-choose-desc {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text-2);
+      margin-bottom: 36px;
+      max-width: 540px;
+    }
+
+    .why-choose-right {
+      position: relative;
+    }
+
+    .why-choose-grid-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle at 50% 50%, rgba(51, 197, 243, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .why-choose-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .why-card {
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 8px 32px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s, border-color 0.3s;
+    }
+
+    .why-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 4px 16px rgba(51, 197, 243, 0.06), 0 12px 40px rgba(51, 197, 243, 0.12);
+      border-color: rgba(51, 197, 243, 0.25);
+    }
+
+    .why-card-icon-container {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .why-card-icon-bg {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(51, 197, 243, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
+
+    .why-card:hover .why-card-icon-bg {
+      background: rgba(51, 197, 243, 0.15);
+    }
+
+    .why-card-title {
+      font-family: var(--fh);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .why-card-desc {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--text-2);
+    }
+
+    /* ── WHY CHOOSE RESPONSIVENESS ── */
+    @media (max-width: 1024px) {
+      .why-choose-inner {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .why-choose-left {
+        align-items: center;
+        text-align: center;
+      }
+
+      .why-choose-desc {
+        max-width: 640px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .why-choose {
+        padding: 80px 0;
+      }
+
+      .why-choose-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .why-card {
+        padding: 32px 24px;
+      }
+    }
+
+
+    /* ── FOOTER (dark premium) ── */
+    footer {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 80px 0 32px;
+      border-top: 1px solid #4b5563;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(240px, 1.8fr) repeat(3, minmax(140px, 1fr));
+      gap: 42px;
+      align-items: start;
+    }
+
+    @media(max-width:1120px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media(max-width:768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    .footer-brand .footer-logo {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .footer-brand .footer-logo svg,
+    .footer-brand .footer-logo img {
+      width: 170px;
+      height: auto;
+      display: block;
+    }
+
+    .footer-tagline {
+      margin: 20px 0 14px;
+      font-family: var(--fh);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #fff;
+      max-width: 360px;
+    }
+
+    .footer-desc {
+      max-width: 400px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, .82);
+    }
+
+    .footer-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .footer-title {
+      font-family: var(--fh);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .footer-column a {
+      font-size: 15px;
+      color: rgba(255, 255, 255, .82);
+      text-decoration: none;
+      line-height: 1.8;
+      transition: color .2s, transform .2s;
+    }
+
+    .footer-column a:hover {
+      color: #fff;
+      transform: translateX(2px);
+    }
+
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-block {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: rgba(255, 255, 255, .82);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .contact-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: #33c5f3;
+    }
+
+    .contact-item strong {
+      display: block;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+
+    .footer-bottom {
+      margin-top: 54px;
+      padding-top: 28px;
+      border-top: 1px solid #4b5563;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .75);
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-bottom-links a {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .72);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .footer-bottom-links a:hover {
+      color: #fff;
+    }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: none;
+    }
+
+    .d1 {
+      transition-delay: .1s;
+    }
+
+    .d2 {
+      transition-delay: .2s;
+    }
+
+    .d3 {
+      transition-delay: .3s;
+    }
+
+    .d4 {
+      transition-delay: .4s;
+    }
+
+    @keyframes mq {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    @keyframes mqr {
+      from {
+        transform: translateX(-50%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    /* ── CTA (dark contrast) ── */
+    .cta-section {
+      background: #1d1d1f;
+      padding: 140px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 700px;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(51, 197, 243, .06), transparent 70%);
+    }
+
+    .cta-inner {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-h2 {
+      font-family: var(--fh);
+      font-size: clamp(40px, 4.5vw, 72px);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      color: #fff;
+      margin-bottom: 20px;
+      line-height: 1.05;
+    }
+
+    .cta-sub {
+      font-size: 18px;
+      color: rgba(255, 255, 255, .45);
+      margin-bottom: 44px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .cta-btn-primary {
+      background: #fff;
+      color: #1d1d1f;
+      font-family: var(--fh);
+      font-size: 16px;
+      font-weight: 800;
+      padding: 16px 36px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity .2s, transform .2s var(--ease);
+    }
+
+    .cta-btn-primary:hover {
+      opacity: .9;
+      transform: translateY(-2px);
+    }
+
+    .cta-btn-ghost {
+      background: rgba(255, 255, 255, .08);
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 36px;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, .2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .2s, transform .2s var(--ease);
+    }
+
+    .cta-btn-ghost:hover {
+      background: rgba(255, 255, 255, .14);
+      transform: translateY(-2px);
+    }
+
+    .cta-note {
+      margin-top: 22px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, .28);
+    }
+
+    /* ── ADDITIONAL MOBILE RESPONSIVENESS AND GRID OPTIMIZATIONS ── */
+    @media(max-width: 768px) {
+
+      /* Tech Stack Section Grid */
+      .tech-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 0 16px !important;
+      }
+
+      .tech-card {
+        padding: 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .tech-icon-container {
+        width: 36px !important;
+        height: 36px !important;
+        margin-bottom: 12px !important;
+        border-radius: 8px !important;
+      }
+
+      .tech-icon-container svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+
+      .tech-card-title {
+        font-size: 14px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .tech-card-desc {
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+
+      /* Dev Process Timeline */
+      .process-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 0 16px !important;
+      }
+
+      .process-card {
+        padding: 20px 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .process-card:last-child {
+        grid-column: span 2 !important;
+      }
+
+      .process-step {
+        margin-bottom: 8px !important;
+        font-size: 9px !important;
+      }
+
+      .process-card-title {
+        font-size: 15px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .process-card-desc {
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+
+      .process-arrow {
+        display: none !important;
+      }
+
+      /* Core Features Grid */
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        padding: 0 16px !important;
+      }
+
+      .feature-grid-card {
+        padding: 20px 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .feature-grid-card:last-child {
+        grid-column: span 2 !important;
+      }
+
+      .feature-grid-icon {
+        width: 36px !important;
+        height: 36px !important;
+        margin-bottom: 12px !important;
+        border-radius: 8px !important;
+      }
+
+      .feature-grid-icon svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+
+      .feature-grid-title {
+        font-size: 15px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .feature-grid-desc {
+        font-size: 11px !important;
+        line-height: 1.45 !important;
+      }
+
+      /* Footer Grid */
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 32px 16px !important;
+      }
+
+      .footer-brand {
+        grid-column: span 2 !important;
+      }
+    }
+
+    @media(max-width: 600px) {
+
+      /* Why Choose Infographic Grid */
+      .why-choose-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+      }
+
+      .why-card {
+        padding: 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .why-card-icon-bg {
+        width: 36px !important;
+        height: 36px !important;
+        margin-bottom: 12px !important;
+      }
+
+      .why-card-icon-bg svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+
+      .why-card-title {
+        font-size: 13px !important;
+        margin-bottom: 6px !important;
+      }
+
+      .why-card-desc {
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+    }
+  
+    /* ── MOBILE SIMULATOR CUSTOM STYLES ── */
+    .mobile-showcase-layout {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 28px;
+      align-items: start;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    @media(max-width: 900px) {
+      .mobile-showcase-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
+    .phone-simulator-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      padding: 10px 0;
+    }
+    .phone-simulator {
+      width: 235px;
+      height: 470px;
+      background: #000000;
+      border-radius: 38px;
+      border: 9px solid #242426; /* Space Gray premium bezel color */
+      box-shadow: 
+        0 25px 60px -15px rgba(0,0,0,0.4),
+        0 0 0 1px #3a3a3c,
+        inset 0 0 4px rgba(255,255,255,0.2);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      transform: translate3d(0,0,0);
+      flex-shrink: 0;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+    }
+    .phone-simulator:hover {
+      transform: rotateY(-4deg) rotateX(4deg) translateY(-2px);
+    }
+    .phone-notch {
+      width: 80px;
+      height: 18px;
+      background: #000000;
+      border-radius: 100px; /* Dynamic Island floating capsule */
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .phone-notch.notch-android {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      top: 10px;
+    }
+    .phone-screen {
+      flex: 1;
+      background: #f4f5f7;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border-radius: 29px; /* Rounded screen inside the bezel */
+      box-sizing: border-box;
+      padding-top: 0;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+    }
+    .phone-screen-ios {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    }
+    .phone-screen-android {
+      font-family: "Roboto", "Noto Sans", sans-serif;
+    }
+    .phone-booting {
+      position: absolute;
+      inset: 0;
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+      border-radius: inherit;
+    }
+    .phone-booting.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .apple-logo {
+      width: 38px;
+      height: auto;
+      fill: #ffffff;
+    }
+    .android-logo {
+      width: 44px;
+      height: auto;
+      fill: #a4c639;
+    }
+    .phone-app-header {
+      height: 48px;
+      padding-top: 14px; /* clearance for Dynamic Island */
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+      box-sizing: border-box;
+    }
+    .phone-app-header.android-header {
+      background: #121212;
+      justify-content: flex-start;
+      padding-left: 16px;
+      padding-top: 12px;
+      color: #38bdf8;
+    }
+    .phone-app-body {
+      flex: 1;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      box-sizing: border-box;
+    }
+    .phone-app-body.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .phone-app-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.015);
+      text-align: left;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .phone-app-card-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: #4b5563;
+      margin-bottom: 4px;
+    }
+    .phone-app-card-desc {
+      font-size: 9px;
+      color: #6b7280;
+      line-height: 1.35;
+    }
+    .phone-app-chart {
+      height: 48px;
+      display: flex;
+      align-items: flex-end;
+      gap: 5px;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid #f3f4f6;
+    }
+    .phone-app-chart-bar {
+      flex: 1;
+      background: rgba(59, 130, 246, 0.15);
+      border-radius: 3px 3px 0 0;
+      height: 10%;
+      transition: height 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .phone-app-chart-bar.filled {
+      background: #3b82f6;
+    }
+    .phone-app-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+    .phone-app-action-btn {
+      background: #eff6ff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #1d4ed8;
+      cursor: pointer;
+    }
+    .phone-app-action-btn svg {
+      color: #3b82f6;
+    }
+    .phone-app-action-label {
+      font-size: 8px;
+      font-weight: 700;
+    }
+    .cross-toggle-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      background: rgba(0, 0, 0, 0.03);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .cross-toggle-btn {
+      background: transparent;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b7280;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cross-toggle-btn.active {
+      background: #fff;
+      color: #1d1d1f;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .store-checklist-card {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-sizing: border-box;
+      text-align: left;
+    }
+    .store-checklist-title {
+      font-family: var(--fh);
+      font-size: 14px;
+      font-weight: 800;
+      color: #1d1d1f;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      padding-bottom: 10px;
+      margin: 0;
+    }
+    .checklist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: #4b5563;
+      cursor: pointer;
+      user-select: none;
+    }
+    .checklist-item input[type="checkbox"] {
+      accent-color: #10b981;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .checklist-item.checked {
+      color: #10b981;
+      text-decoration: line-through;
+    }
+    .store-btn-launch {
+      background: #8b5cf6;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      font-family: var(--fh);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+    }
+    .store-btn-launch:hover {
+      background: #7c3aed;
+      transform: translateY(-1px);
+    }
+    .store-btn-launch:active {
+      transform: translateY(0);
+    }
+    .store-btn-launch.processing {
+      background: #6d28d9;
+      cursor: not-allowed;
+    }
+    .store-console {
+      background: #0f172a;
+      border-radius: 16px;
+      padding: 16px;
+      min-height: 150px;
+      color: #38bdf8;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 10px;
+      line-height: 1.5;
+      text-align: left;
+      overflow-y: auto;
+      max-height: 180px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .store-console p {
+      margin: 0 0 4px 0;
+    }
+    .store-console p.success {
+      color: #4ade80;
+    }
+    .store-console p.warning {
+      color: #fbbf24;
+    }
+    .store-console p.info {
+      color: #94a3b8;
+    }
+    .store-status-display {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-badge.draft {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+    .status-badge.review {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    .status-badge.live {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status-icon {
+      font-size: 32px;
+      margin-bottom: 4px;
+    }
+    .status-meta {
+      font-size: 11px;
+      color: #6b7280;
+    }
+</style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <div class="nav-wrap">
+    <nav>
+      <!-- CHANGE 1: Backdrop element kept in DOM but permanently hidden via CSS -->
+      <div class="nav-backdrop" id="nav-backdrop"></div>
+      <div class="nav-bar-row">
+        <a href="../Home/homepage.html" class="nav-logo">
+          <img src="../../public/assets/Updated-Navbar.png" alt="Globotech logo"
+            style="height:40px;width:auto;display:block;" />
+        </a>
+        <div class="nav-links">
+          <a href="../Home/homepage.html">Home</a>
+          <div class="nav-has-mega" id="nav-services-trigger">
+            <a href="../Services/services.html" class="active">Services</a>
+          </div>
+          <a href="../About/aboutus.html">About</a><a href="../Blog/blog.html">Blog</a><a
+            href="../Contact/contact.html">Contact Us</a>
+        </div>
+        <div class="nav-right">
+          <a href="../Home/homepage.html#cta" class="nav-cta">Start a Project →</a>
+          <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mega-menu" id="mega-services">
+        <div class="mega-inner">
+          <a class="mega-item" href="../Web-Dev/web-development.html">
+            <span class="mega-item-title">Web Dev</span>
+            <span class="mega-item-desc">Build fast, scalable web apps and custom digital platforms</span>
+          </a>
+          <a class="mega-item active" href="../mobile-app/mobile-app.html">
+            <span class="mega-item-title">Mobile App</span>
+            <span class="mega-item-desc">iOS, Android, and cross-platform apps built for performance</span>
+          </a>
+          <a class="mega-item" href="../ai-solutions/ai-solutions.html">
+            <span class="mega-item-title">AI Solutions</span>
+            <span class="mega-item-desc">LLM integrations, AI agents, and intelligent automation</span>
+          </a>
+          <a class="mega-item" href="../e-commerce-solutions/e-commerce-solutions.html">
+            <span class="mega-item-title">E-Commerce Solutions</span>
+            <span class="mega-item-desc">Shopify, WooCommerce, and custom store integrations</span>
+          </a>
+          <a class="mega-item" href="../digital-marketing/digital-marketing.html">
+            <span class="mega-item-title">Digital Marketing</span>
+            <span class="mega-item-desc">SEO, paid ads, and data-driven campaigns for global growth</span>
+          </a>
+          <a class="mega-featured" href="../Contact/contact.html">
+            <div>
+              <div class="mega-featured-eyebrow">Ready to build?</div>
+              <div class="mega-featured-title">Start a Project</div>
+              <div class="mega-featured-desc">Tell us your idea and we'll turn it into a high-performance digital
+                product.</div>
+            </div>
+            <span class="mega-featured-link">Get started →</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+    <!-- SIDE DRAWER -->
+    <div class="nav-drawer-overlay" id="nav-drawer-overlay"></div>
+    <div class="nav-drawer" id="nav-drawer" role="navigation" aria-label="Mobile navigation">
+      <div class="nav-drawer-header">
+        <a href="../Home/homepage.html"><img src="../../public/assets/Updated-Navbar.png" alt="Globotech logo"
+            class="nav-drawer-logo" /></a>
+        <button class="nav-drawer-close" id="nav-drawer-close" aria-label="Close menu">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+      <div class="nav-drawer-body">
+        <a href="../Home/homepage.html">Home</a>
+        <div class="nav-drawer-services-toggle" id="nav-drawer-services-toggle">
+          Services
+          <span class="drawer-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5" stroke-linecap="round">
+              <path d="M9 18l6-6-6-6" />
+            </svg></span>
+        </div>
+        <div class="nav-drawer-services" id="nav-drawer-services">
+          <a href="../Web-Dev/web-development.html">Web Development</a>
+          <a href="../mobile-app/mobile-app.html" class="active">Mobile App</a>
+          <a href="../ai-solutions/ai-solutions.html">AI Solutions</a>
+          <a href="../e-commerce-solutions/e-commerce-solutions.html">E-Commerce Solutions</a>
+          <a href="../digital-marketing/digital-marketing.html">Digital Marketing</a>
+        </div>
+        <a href="../About/aboutus.html">About</a>
+        <a href="../Blog/blog.html">Blog</a>
+        <a href="../Contact/contact.html">Contact Us</a>
+        <a href="../Contact/contact.html" class="nav-drawer-cta">Start a Project →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <!-- LEFT SIDE -->
+        <div>
+          <div class="hero-eyebrow">
+            <div class="hero-eyebrow-dot"></div>
+            MOBILE APP ENGINEERING
+          </div>
+
+          <h1 class="hero-h1">We Build Premium. <em>iOS & Android.</em> Apps.</h1>
+
+          <p class="hero-sub">From custom native interfaces to React Native cross-platform apps — high-performance mobile products built to scale.</p>
+
+          <div class="hero-btns">
+            <a href="#cta" class="hero-btn-primary">Start a Project →</a>
+            <a href="../Home/homepage.html#cases" class="hero-btn-secondary">View our work ↓</a>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDE: FLOW ANIMATION -->
+        <div class="dev-flow" id="pipeline-container">
+          <div class="flow-bg"></div>
+
+          <!-- SVG Pipeline Canvas -->
+          <svg id="flow-svg">
+            <path id="pipeline-path" d="" />
+            <polygon id="pipeline-arrow" fill="#33c5f3" points="" />
+          </svg>
+
+          <!-- 3 glowing cyan dots flowing together -->
+          <div class="flow-dot" id="dot-1"></div>
+          <div class="flow-dot" id="dot-2"></div>
+          <div class="flow-dot" id="dot-3"></div>
+
+          <div class="hero-flow-grid">
+            <!-- TOP ROW -->
+            <div class="fnode" id="card-req">
+              <div class="fnode-icon" style="background:rgba(51,197,243,.1)"><svg width="18" height="18"
+                  viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                  <rect x="9" y="3" width="6" height="4" rx="1" />
+                  <path d="M9 12h6M9 16h4" />
+                </svg></div>
+              <div class="fnode-name">App Discovery</div>
+            </div>
+            <div class="fnode" id="card-design">
+              <div class="fnode-icon" style="background:rgba(16,185,129,.1)"><svg width="18" height="18"
+                  viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg></div>
+              <div class="fnode-name">Mobile UX/UI</div>
+            </div>
+            <div class="fnode" id="card-dev">
+              <div class="fnode-icon" style="background:rgba(139,92,246,.1)"><svg width="18" height="18"
+                  viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg></div>
+              <div class="fnode-name">App Development</div>
+            </div>
+
+            <!-- BOTTOM ROW -->
+            <div class="fnode" id="card-qa">
+              <div class="fnode-icon" style="background:rgba(16,185,129,.1)"><svg width="18" height="18"
+                  viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg></div>
+              <div class="fnode-name">Device QA</div>
+            </div>
+            <div class="fnode" id="card-dep">
+              <div class="fnode-icon" style="background:rgba(99,102,241,.1)"><svg width="18" height="18"
+                  viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M4.5 16.5c-1.5 1.25-2.5 3.5-2.5 3.5s2.25-1 3.5-2.5M15 9l-9 9M9 15l-3 3M19 3a10.9 10.9 0 0 0-7.8 3.2L6 11.4a1 1 0 0 0 .2 1.4L11 17.6a1 1 0 0 0 1.4-.2l5.2-5.2A10.9 10.9 0 0 0 21 5V3z" />
+                </svg></div>
+              <div class="fnode-name">App Store Deploy</div>
+            </div>
+            <div class="fnode" id="card-live">
+              <div class="fnode-icon" style="background:rgba(51,197,243,.1)"><svg width="18" height="18"
+                  viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path
+                    d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg></div>
+              <div class="fnode-name">Live Product</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREMIUM FEATURE SHOWCASE -->
+  <section class="showcase-section reveal">
+    <!-- Glow Blobs for Glassmorphism -->
+    <div class="showcase-glow-blob blob-1" id="showcase-glow"></div>
+
+    <div class="container">
+      <div class="showcase-header">
+        <p class="section-eyebrow">OUR SPECIALIZATION</p>
+        <h2 class="section-h2">Premium Mobile Engineering</h2>
+        <p style="font-size: 16px; line-height: 1.7; color: var(--text-2); margin-top: 14px;">
+          We build robust, high-performance native and cross-platform mobile products tailored to your operations, designed to scale and optimize customer loyalty.
+        </p>
+      </div>
+
+      <div class="showcase-layout">
+        <!-- Tab Navigation (Left Column) -->
+        <div class="specialty-tabs">
+
+          <!-- Tab 1: iOS Engineering -->
+          <div class="specialty-tab-btn active" data-tab="sim-ios" data-theme="purple">
+            <div class="tab-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+            </div>
+            <div class="tab-info">
+              <div class="tab-info-header">
+                <span class="tab-title">iOS Engineering</span>
+                <span class="tab-badge">SwiftUI Native</span>
+              </div>
+              <p class="tab-desc">Architecting bespoke native iOS apps with modern Swift architectures.</p>
+            </div>
+          </div>
+
+          <!-- Tab 2: Android Engineering -->
+          <div class="specialty-tab-btn" data-tab="sim-android" data-theme="cyan">
+            <div class="tab-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <circle cx="12" cy="18" r="1"></circle>
+              </svg>
+            </div>
+            <div class="tab-info">
+              <div class="tab-info-header">
+                <span class="tab-title">Android Engineering</span>
+                <span class="tab-badge">Kotlin Compose</span>
+              </div>
+              <p class="tab-desc">Developing clean, modular native Android apps using material design components.</p>
+            </div>
+          </div>
+
+          <!-- Tab 3: Cross-Platform -->
+          <div class="specialty-tab-btn" data-tab="sim-cross" data-theme="green">
+            <div class="tab-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <path d="M12 18h.01" />
+                <path d="M9 7h2M13 7h2M9 11h2M13 11h2" />
+              </svg>
+            </div>
+            <div class="tab-info">
+              <div class="tab-info-header">
+                <span class="tab-title">Cross-Platform</span>
+                <span class="tab-badge">Single Codebase</span>
+              </div>
+              <p class="tab-desc">Accelerating time-to-market with high-fidelity React Native and Flutter builds.</p>
+            </div>
+          </div>
+
+          <!-- Tab 4: Launch & ASO -->
+          <div class="specialty-tab-btn" data-tab="sim-store" data-theme="orange">
+            <div class="tab-icon-wrap">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+            </div>
+            <div class="tab-info">
+              <div class="tab-info-header">
+                <span class="tab-title">Store Launch &amp; ASO</span>
+                <span class="tab-badge">App Store Ready</span>
+              </div>
+              <p class="tab-desc">Deploying products with optimized App Store and Google Play indexing.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Interactive Console Display (Right Column) -->
+        <div class="console-container">
+          <div class="console-screen" style="padding:0; background:transparent; box-shadow:none;">
+
+            <!-- Panel 1: iOS Playground -->
+            <div class="simulator-panel active" id="sim-ios">
+              <div class="mobile-showcase-layout">
+                <!-- Left: Code Editor Mock -->
+                <div class="ide-mock">
+                  <div class="ide-header">
+                    <div class="ide-dots">
+                      <span class="term-dot term-dot-r"></span>
+                      <span class="term-dot term-dot-y"></span>
+                      <span class="term-dot term-dot-g"></span>
+                    </div>
+                    <span style="font-size:10px; color:#8e8e93; font-family:var(--fb); margin-left: 12px; flex:1; text-align:left;">ContentView.swift</span>
+                    <button class="ide-btn-run" id="btn-run-ios">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                      </svg>
+                      Run Build
+                    </button>
+                  </div>
+                  <div class="ide-body">
+                    <div class="ide-code-lines">
+                      <p class="ide-line">1 import SwiftUI</p>
+                      <p class="ide-line">2 struct ContentView: View {</p>
+                      <p class="ide-line">3   var body: some View {</p>
+                      <p class="ide-line">4     VStack(spacing: 20) {</p>
+                      <p class="ide-line">5       Image(systemName: "bolt.fill")</p>
+                      <p class="ide-line">6       Text("Globotech Mobile")</p>
+                      <p class="ide-line">7         .font(.title).bold()</p>
+                      <p class="ide-line">8     }</p>
+                      <p class="ide-line">9   }</p>
+                      <p class="ide-line">10 }</p>
+                    </div>
+                    <div class="ide-console-out" id="ios-console">
+                      <p class="ide-line info">Click "Run Build" above to boot iOS Simulator and launch app...</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Phone Simulator -->
+                <div class="phone-simulator-container">
+                  <div class="phone-simulator">
+                    <div class="phone-notch" id="ios-notch"></div>
+                    <div class="phone-screen phone-screen-ios">
+                      <div class="phone-booting" id="ios-booting">
+                        <svg class="apple-logo" viewBox="0 0 24 24">
+                          <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.48C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.1 16.67C20.08 16.74 19.67 18.11 18.71 19.5M15.97 4.17C16.63 3.37 17.07 2.28 16.95 1C16 1.04 14.9 1.6 14.24 2.38C13.68 3.04 13.19 4.14 13.34 5.39C14.39 5.47 15.4 4.88 15.97 4.17Z"/>
+                        </svg>
+                      </div>
+                      <div class="phone-app-header">Globotech Pay</div>
+                      <div class="phone-app-body" id="ios-app-body">
+                        <div class="phone-app-card">
+                          <div class="phone-app-card-title">Available Balance</div>
+                          <div style="font-size: 16px; font-weight:800; color:#111827; margin: 2px 0;">$14,204.50</div>
+                          <div class="phone-app-card-desc">Updated just now · Secure</div>
+                        </div>
+                        <div class="phone-app-card">
+                          <div class="phone-app-card-title">Analytics</div>
+                          <div class="phone-app-chart" id="ios-chart">
+                            <div class="phone-app-chart-bar"></div>
+                            <div class="phone-app-chart-bar"></div>
+                            <div class="phone-app-chart-bar"></div>
+                            <div class="phone-app-chart-bar"></div>
+                            <div class="phone-app-chart-bar"></div>
+                          </div>
+                        </div>
+                        <div class="phone-app-actions">
+                          <div class="phone-app-action-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            <span class="phone-app-action-label">Send</span>
+                          </div>
+                          <div class="phone-app-action-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                            <span class="phone-app-action-label">Request</span>
+                          </div>
+                          <div class="phone-app-action-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="5" width="20" height="14" rx="2" /><line x1="2" y1="10" x2="22" y2="10" /></svg>
+                            <span class="phone-app-action-label">Cards</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 2: Android Playground -->
+            <div class="simulator-panel" id="sim-android">
+              <div class="mobile-showcase-layout">
+                <!-- Left: Code Editor Mock -->
+                <div class="ide-mock">
+                  <div class="ide-header">
+                    <div class="ide-dots">
+                      <span class="term-dot term-dot-r"></span>
+                      <span class="term-dot term-dot-y"></span>
+                      <span class="term-dot term-dot-g"></span>
+                    </div>
+                    <span style="font-size:10px; color:#8e8e93; font-family:var(--fb); margin-left: 12px; flex:1; text-align:left;">MainActivity.kt</span>
+                    <button class="ide-btn-run" id="btn-run-android">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                      </svg>
+                      Run Build
+                    </button>
+                  </div>
+                  <div class="ide-body">
+                    <div class="ide-code-lines">
+                      <p class="ide-line">1 import androidx.compose.material3.*</p>
+                      <p class="ide-line">2 @Composable</p>
+                      <p class="ide-line">3 fun GlobotechApp() {</p>
+                      <p class="ide-line">4   Column(Modifier.padding(16.dp)) {</p>
+                      <p class="ide-line">5     Text("Globotech Dashboard",</p>
+                      <p class="ide-line">6       style = MaterialTheme</p>
+                      <p class="ide-line">7         .typography.headlineMedium)</p>
+                      <p class="ide-line">8   }</p>
+                      <p class="ide-line">9 }</p>
+                    </div>
+                    <div class="ide-console-out" id="android-console">
+                      <p class="ide-line info">Click "Run Build" above to boot Android Emulator and install APK...</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Phone Simulator -->
+                <div class="phone-simulator-container">
+                  <div class="phone-simulator">
+                    <div class="phone-notch notch-android" id="android-notch"></div>
+                    <div class="phone-screen phone-screen-android">
+                      <div class="phone-booting" id="android-booting">
+                        <svg class="android-logo" viewBox="0 0 100 100">
+                          <path d="M20 70V50c0-16.5 13.5-30 30-30s30 13.5 30 30v20c0 5.5-4.5 10-10 10H30c-5.5 0-10-4.5-10-10zM50 15c-1.1 0-2-.9-2-2v-5c0-1.1.9-2 2-2s2 .9 2 2v5c0 1.1-.9 2-2 2z"/>
+                        </svg>
+                      </div>
+                      <div class="phone-app-header android-header">Globotech Pro</div>
+                      <div class="phone-app-body" id="android-app-body">
+                        <div class="phone-app-card" style="background:#1e293b; color:#fff;">
+                          <div class="phone-app-card-title" style="color:rgba(255,255,255,0.7)">Storage Status</div>
+                          <div style="font-size: 15px; font-weight:800; color:#38bdf8; margin: 4px 0;">42.8 GB / 512 GB</div>
+                          <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; margin-top:8px;">
+                            <div style="height: 100%; width: 15%; background: #38bdf8; border-radius:3px;"></div>
+                          </div>
+                        </div>
+                        <div class="phone-app-card">
+                          <div class="phone-app-card-title">Network Metrics</div>
+                          <div style="font-size: 12px; font-weight:700; color:#10b981; margin-top:6px;">Latency: 14ms (Excellent)</div>
+                          <div style="font-size: 11px; color:#6b7280; margin-top:2px;">Bandwidth: 142.8 Mbps</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 3: Cross-Platform Playground -->
+            <div class="simulator-panel" id="sim-cross">
+              <div class="cross-toggle-bar">
+                <button class="cross-toggle-btn active" id="btn-toggle-ios">iOS Device</button>
+                <button class="cross-toggle-btn" id="btn-toggle-android">Android Device</button>
+              </div>
+              <div class="mobile-showcase-layout">
+                <!-- Left: Code Editor Mock -->
+                <div class="ide-mock">
+                  <div class="ide-header">
+                    <div class="ide-dots">
+                      <span class="term-dot term-dot-r"></span>
+                      <span class="term-dot term-dot-y"></span>
+                      <span class="term-dot term-dot-g"></span>
+                    </div>
+                    <span style="font-size:10px; color:#8e8e93; font-family:var(--fb); margin-left: 12px; flex:1; text-align:left;">App.tsx</span>
+                    <button class="ide-btn-run" id="btn-run-cross">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="5 3 19 12 5 21 5 3" />
+                      </svg>
+                      Reload Bundler
+                    </button>
+                  </div>
+                  <div class="ide-body">
+                    <div class="ide-code-lines">
+                      <p class="ide-line">1 import React from 'react';</p>
+                      <p class="ide-line">2 import { View, Text } from 'react-native';</p>
+                      <p class="ide-line">3 export default function App() {</p>
+                      <p class="ide-line">4   return (</p>
+                      <p class="ide-line">5     &lt;View style={styles.screen}&gt;</p>
+                      <p class="ide-line">6       &lt;Text&gt;Cross-Platform&lt;/Text&gt;</p>
+                      <p class="ide-line">7     &lt;/View&gt;</p>
+                      <p class="ide-line">8   );</p>
+                      <p class="ide-line">9 }</p>
+                    </div>
+                    <div class="ide-console-out" id="cross-console">
+                      <p class="ide-line info">Metro bundler running: port 8081. Ready for hot reload...</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Phone Simulator -->
+                <div class="phone-simulator-container">
+                  <div class="phone-simulator" id="cross-phone-frame">
+                    <div class="phone-notch" id="cross-phone-notch"></div>
+                    <div class="phone-screen phone-screen-ios" id="cross-phone-screen">
+                      <div class="phone-booting hidden" id="cross-booting">
+                        <svg class="apple-logo" id="cross-booting-logo" viewBox="0 0 170 170" style="width:38px;">
+                          <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.34.13-9.13-1.92-14.35-6.12-3.57-2.8-7.5-7.7-11.78-14.7-6.07-9.87-10.9-20.9-14.47-33.1C6.73 103.07 5 91.58 5 80.68c0-13.88 3.52-25.13 10.56-33.74 7.04-8.62 15.8-12.98 26.27-13.1 5.92.1 12.12 1.77 18.6 5 6.47 3.24 11.2 4.86 14.17 4.86 2.8 0 7.39-1.54 13.77-4.63 6.37-3.1 12.02-4.68 16.94-4.76 10.48-.25 19.64 3.22 27.5 10.4 6.7 6.1 11.53 13.68 14.52 22.74-13.8 6.06-20.48 15.35-20.06 27.86.4 10.82 4.9 19.78 13.53 26.85 8.64 7.08 18.66 10.86 30.08 11.33-2.6 7.4-6 14.07-10.2 20.02zM119.22 5.24c0 8.04-3.13 15.86-9.4 23.47-6.26 7.6-13.67 12.38-22.25 14.34.25-7.6 3.4-15.18 9.47-22.75 6.06-7.56 13.56-12.32 22.18-14.28.3 1.25.4 3.1.4 5.22z"/>
+                        </svg>
+                      </div>
+                      <div class="phone-app-header" id="cross-app-header">Globotech Hybrid</div>
+                      <div class="phone-app-body active" id="cross-app-body">
+                        <div class="phone-app-card" style="border-left:3px solid #10b981;">
+                          <div class="phone-app-card-title">Shared Core Module</div>
+                          <div class="phone-app-card-desc">React Native UI elements adaptively rendered for native viewport speeds.</div>
+                        </div>
+                        <div class="phone-app-card" style="border-left:3px solid #33c5f3;">
+                          <div class="phone-app-card-title">Expo Integration</div>
+                          <div class="phone-app-card-desc">Hot reloading and OTA app updates enabled.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel 4: Store Submission -->
+            <div class="simulator-panel" id="sim-store">
+              <div class="mobile-showcase-layout">
+                <!-- Left: Checklist -->
+                <div class="store-checklist-card">
+                  <h4 class="store-checklist-title">Submission Checklist</h4>
+                  <div class="checklist-items">
+                    <label class="checklist-item checked">
+                      <input type="checkbox" checked disabled />
+                      <span>Provisioning Profiles</span>
+                    </label>
+                    <label class="checklist-item checked">
+                      <input type="checkbox" checked disabled />
+                      <span>App Bundle Compiled (.ipa/.aab)</span>
+                    </label>
+                    <label class="checklist-item checked">
+                      <input type="checkbox" checked disabled />
+                      <span>ASO Keywords &amp; Description</span>
+                    </label>
+                    <label class="checklist-item" id="item-screenshots">
+                      <input type="checkbox" id="check-screenshots" />
+                      <span>App Store Screenshots (6.7" &amp; 5.5")</span>
+                    </label>
+                    <label class="checklist-item" id="item-review">
+                      <input type="checkbox" id="check-review" />
+                      <span>Submit for Guidelines Review</span>
+                    </label>
+                  </div>
+                  <button class="store-btn-launch" id="btn-launch-app">Submit to App Store →</button>
+                </div>
+
+                <!-- Right: Status display -->
+                <div class="store-status-display">
+                  <div class="status-icon" id="status-icon">⚙️</div>
+                  <div class="status-badge draft" id="status-badge">Draft</div>
+                  <div style="font-family:var(--fh); font-weight:800; font-size:13px; color:#1d1d1f;" id="status-app-name">Globotech Go</div>
+                  <div class="status-meta" id="status-meta">Version 1.0.4 · Not submitted</div>
+                  <div class="store-console" id="store-console" style="margin-top:10px; min-height:100px; max-height:120px;">
+                    <p class="info">> App Store Connect client initialized.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK SECTION -->
+  <section class="tech-stack-section reveal">
+    <div class="container">
+      <div class="tech-stack-head">
+        <p class="section-eyebrow">TECHNOLOGY STACK</p>
+        <h2 class="section-h2">Mobile Technologies We Use</h2>
+        <p class="tech-stack-sub">
+          We leverage industry-leading mobile frameworks to deliver fluid native performance, robust offline features, and rapid store validations.
+        </p>
+      </div>
+
+      <div class="tech-tabs">
+        <button class="tech-tab-btn active" data-tab="tech-native">Native Apps</button>
+        <button class="tech-tab-btn" data-tab="tech-cross">Cross-Platform</button>
+        <button class="tech-tab-btn" data-tab="tech-backend">Backend &amp; API</button>
+      </div>
+
+      <!-- Native Tab -->
+      <div class="tech-grid active" id="tech-native">
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(51, 197, 243, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">Swift &amp; SwiftUI</h3>
+          <p class="tech-card-desc">Writing high-performance native iOS apps utilizing Apple's modern UI framework for rapid, reliable rendering speeds.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(139, 92, 246, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <circle cx="12" cy="18" r="1"></circle>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">Kotlin &amp; Compose</h3>
+          <p class="tech-card-desc">Powering modular native Android apps with Google's declarative Jetpack Compose UI toolkit for material styling.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(16, 185, 129, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">CoreData &amp; Room</h3>
+          <p class="tech-card-desc">Implementing fast local persistence layers for native offline structures, data graphs, and secure caching models.</p>
+        </div>
+      </div>
+
+      <!-- Cross-Platform Tab -->
+      <div class="tech-grid" id="tech-cross">
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(51, 197, 243, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">React Native &amp; Expo</h3>
+          <p class="tech-card-desc">Building universal apps running on iOS, Android and Web using a single codebase without losing native performance capabilities.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(139, 92, 246, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">Flutter &amp; Dart</h3>
+          <p class="tech-card-desc">Utilizing Google's graphics engine to paint custom interfaces with near-zero latency, robust animations, and rich rendering templates.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(16, 185, 129, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">TypeScript</h3>
+          <p class="tech-card-desc">Bringing type safety and autocomplete to hybrid component models for reliable runtime execution and scaling.</p>
+        </div>
+      </div>
+
+      <!-- Backend & API Tab -->
+      <div class="tech-grid" id="tech-backend">
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(51, 197, 243, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">Firebase &amp; Supabase</h3>
+          <p class="tech-card-desc">Powering real-time synchronization databases, authentication modules, security configurations, and cloud functions instantly.</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(139, 92, 246, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">Push Notifications &amp; APNS</h3>
+          <p class="tech-card-desc">Designing transaction alerts and user triggers via Apple Push Notification Service (APNS) and Firebase Cloud Messaging (FCM).</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon-container" style="background: rgba(16, 185, 129, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+          </div>
+          <h3 class="tech-card-title">REST / GraphQL APIs</h3>
+          <p class="tech-card-desc">Implementing fast backend microservices on Node.js/Python to synchronize offline SQLite/Realm models with the cloud database.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEVELOPMENT PROCESS SECTION -->
+  <section class="process-section reveal">
+    <div class="process-glow"></div>
+    <div class="container">
+      <div class="process-header">
+        <p class="section-eyebrow">METHODOLOGY</p>
+        <h2 class="section-h2">Our Mobile Engineering Process</h2>
+        <p style="font-size: 16px; line-height: 1.7; color: rgba(255, 255, 255, 0.6); margin-top: 14px;">
+          How we take your mobile app idea from scoping and wireframes to app store submission and launch.
+        </p>
+      </div>
+
+      <div class="process-grid">
+        <!-- Step 1 -->
+        <div class="process-card">
+          <span class="process-step">Phase 01</span>
+          <h3 class="process-card-title">Discovery</h3>
+          <p class="process-card-desc">We scope wireframes, define device flows, and create high-level ASO keyword blueprints.</p>
+          <div class="process-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="process-card">
+          <span class="process-step">Phase 02</span>
+          <h3 class="process-card-title">UI/UX Design</h3>
+          <p class="process-card-desc">Our design team creates responsive mobile templates in Figma, mapping dynamic color systems.</p>
+          <div class="process-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="process-card">
+          <span class="process-step">Phase 03</span>
+          <h3 class="process-card-title">App Build</h3>
+          <p class="process-card-desc">Experienced engineers build Swift/Kotlin or React Native codes, integrating local databases.</p>
+          <div class="process-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="process-card">
+          <span class="process-step">Phase 04</span>
+          <h3 class="process-card-title">Device QA</h3>
+          <p class="process-card-desc">We distribute beta builds via TestFlight or Google Play to test layout integrity and battery use.</p>
+          <div class="process-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="process-card">
+          <span class="process-step">Phase 05</span>
+          <h3 class="process-card-title">Store Launch</h3>
+          <p class="process-card-desc">Managing certificates, submission checklist audits, and indexing for app store release.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES GRID SECTION -->
+  <section class="features-grid-section reveal">
+    <div class="container">
+      <div class="features-grid-head">
+        <p class="section-eyebrow">BUILT FOR MOBILE</p>
+        <h2 class="section-h2">Core App Features In Every Build</h2>
+        <p style="font-size: 16px; line-height: 1.7; color: var(--text-2); margin-top: 14px;">
+          We build with high-end native mobile standards to ensure your application is fast, battery-efficient, and secure.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1: Performance -->
+        <div class="feature-grid-card">
+          <div class="feature-grid-icon" style="background: rgba(16, 185, 129, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="feature-grid-title">60fps Smooth Speed</h3>
+          <p class="feature-grid-desc">Every app view is optimized to lock at 60fps. We profile CPU threads, isolate garbage collection, and manage asset sizes for zero lag.</p>
+        </div>
+
+        <!-- Feature 2: Offline Mode -->
+        <div class="feature-grid-card">
+          <div class="feature-grid-icon" style="background: rgba(51, 197, 243, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <h3 class="feature-grid-title">Offline Synchronization</h3>
+          <p class="feature-grid-desc">Apps operate reliably with local storage, using queue syncing algorithms that update the main database immediately upon reconnection.</p>
+        </div>
+
+        <!-- Feature 3: Security -->
+        <div class="feature-grid-card">
+          <div class="feature-grid-icon" style="background: rgba(139, 92, 246, 0.08);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="feature-grid-title">Hardened Biometrics</h3>
+          <p class="feature-grid-desc">Securing user sessions via TouchID/FaceID hooks, secure keychain credential storage, and SSL certificate pinning for backend calls.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY CHOOSE -->
+  <section class="why-choose">
+    <div class="container">
+      <div class="why-choose-inner">
+        <!-- LEFT SIDE -->
+        <div class="why-choose-left">
+          <div class="hero-eyebrow" style="margin-bottom: 14px;">
+            <div class="hero-eyebrow-dot"></div>
+            WHY CHOOSE GLOBOTECH
+          </div>
+          <h2 class="section-h2">Why GloboTech for <span>Mobile App Development in USA?</span></h2>
+          <p class="why-choose-desc" style="margin-bottom: 20px;">Globotech Solutions offers professional mobile app development services that inspire the product journey and deliver results. Our team of highly skilled mobile developers will ensure that your app is not just visually stunning but also optimized for speed, battery efficiency, and user experience.</p>
+          <p class="why-choose-desc" style="margin-bottom: 0;">If you select Globotech Solutions, you benefit from our many years of experience in the delivery of high-quality mobile app projects to companies all over the USA. We are committed to honesty, prompt delivery, and client satisfaction. Please find out more about our team and our values on our About page. This makes us a trusted companion in your journey to digital growth.</p>
+        </div>
+        <!-- RIGHT SIDE -->
+        <div class="why-choose-right">
+          <div class="why-choose-grid-glow"></div>
+          <div class="why-choose-grid">
+            <!-- Card 1 -->
+            <div class="why-card">
+              <div class="why-card-icon-container">
+                <div class="why-card-icon-bg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                  </svg>
+                </div>
+              </div>
+              <div class="why-card-title">Native Performance</div>
+              <div class="why-card-desc">We optimize CPU and memory footprint, ensuring 60fps render speeds, responsive inputs, and minimal battery drainage.</div>
+            </div>
+            <!-- Card 2 -->
+            <div class="why-card">
+              <div class="why-card-icon-container">
+                <div class="why-card-icon-bg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
+              </div>
+              <div class="why-card-title">Offline Capability</div>
+              <div class="why-card-desc">We design local database sync states so your application works reliably even in low connectivity or offline mode.</div>
+            </div>
+            <!-- Card 3 -->
+            <div class="why-card">
+              <div class="why-card-icon-container">
+                <div class="why-card-icon-bg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                  </svg>
+                </div>
+              </div>
+              <div class="why-card-title">Secure Infrastructure</div>
+              <div class="why-card-desc">We implement secure keychain storage, biometric authentication, and network pinning to protect user credentials and data.</div>
+            </div>
+            <!-- Card 4 -->
+            <div class="why-card">
+              <div class="why-card-icon-container">
+                <div class="why-card-icon-bg">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#33c5f3" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="why-card-title">App Store Approval</div>
+              <div class="why-card-desc">Our developers keep up-to-date with Apple and Google design guidelines, guaranteeing smooth store validation and approval.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="cta">
+    <div class="cta-glow"></div>
+    <div class="container">
+      <div class="cta-inner reveal">
+        <h2 class="cta-h2">Ready to build<br>something great?</h2>
+        <p class="cta-sub">Tell us what you're building. We'll tell you exactly how we'd do it — and what it costs.</p>
+        <div class="cta-btns"><a href="../Contact/contact.html" class="cta-btn-primary">Start a Project →</a><a href="#"
+            class="cta-btn-ghost">Schedule a Call</a></div>
+        <div class="cta-note">No commitment · Response within 24 hours · USA-based team</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="../Home/homepage.html" class="footer-logo">
+            <img src="../../public/assets/footer-and-header.png" alt="Globotech logo" />
+          </a>
+          <p class="footer-tagline">One team. Every layer of your stack.</p>
+          <p class="footer-desc">Globotech delivers full-stack product builds, AI automation, and premium growth systems
+            for ambitious companies.</p>
+        </div>
+        <div class="footer-column">
+          <div class="footer-title">Services</div>
+          <a href="../mobile-app/mobile-app.html">Mobile App Development</a>
+          <a href="../Web-Dev/web-development.html">Web Development</a>
+          <a href="../ai-solutions/ai-solutions.html">AI &amp; Automation</a>
+          <a href="../digital-marketing/digital-marketing.html">Digital Marketing</a>
+          <a href="../e-commerce-solutions/e-commerce-solutions.html">E-Commerce Solutions</a>
+        </div>
+        <div class="footer-column">
+          <div class="footer-title">Quick Links</div>
+          <a href="../Home/homepage.html">Home</a>
+
+          <a href="../About/aboutus.html">About</a>
+          <a href="../Blog/blog.html">Blog</a><a href="../Contact/contact.html">Contact Us</a>
+          <a href="#cta">Contact</a>
+        </div>
+        <div class="footer-column contact-block">
+          <div class="footer-title">USA</div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3 5.18 2 2 0 0 1 5 3h3a2 2 0 0 1 2 1.72 12.05 12.05 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L9.91 10.09a16 16 0 0 0 6 6l1.45-1.45a2 2 0 0 1 2.11-.45 12.05 12.05 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            <div><strong>+1 214 644 9136</strong></div>
+          </div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16v16H4z" />
+              <path d="M22 6L12 13 2 6" />
+            </svg>
+            <div><strong>info@globotechsolutions.com</strong></div>
+          </div>
+          <div class="contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4l16 8-16 8V4z" />
+            </svg>
+            <div><span>8105 Rasor Blvd, Plano, TX 75024, United States</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 Globotech Solutions. All rights reserved.</div>
+        <div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a><a
+            href="#">Clutch</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Flow Animation Pipeline Layout & Motion Path Calculator ──
+    function updatePipeline() {
+      const container = document.getElementById('pipeline-container');
+      const path = document.getElementById('pipeline-path');
+      const arrow = document.getElementById('pipeline-arrow');
+      const dots = [
+        document.getElementById('dot-1'),
+        document.getElementById('dot-2'),
+        document.getElementById('dot-3')
+      ];
+      if (!container || !path) return;
+
+      const containerRect = container.getBoundingClientRect();
+
+      const cards = [
+        document.getElementById('card-req'),
+        document.getElementById('card-design'),
+        document.getElementById('card-dev'),
+        document.getElementById('card-qa'),
+        document.getElementById('card-dep'),
+        document.getElementById('card-live')
+      ];
+
+      if (cards.some(c => !c)) return;
+
+      const points = cards.map(card => {
+        const rect = card.getBoundingClientRect();
+        return {
+          x: rect.left - containerRect.left + rect.width / 2,
+          y: rect.top - containerRect.top + rect.height / 2
+        };
+      });
+
+      const isMobile = window.innerWidth <= 768;
+      let pathD = '';
+
+      if (isMobile) {
+        if (arrow) arrow.style.display = 'none';
+        // Mobile: simple vertical sequence
+        pathD = "M " + points[0].x + " " + points[0].y;
+        for (let i = 1; i < points.length; i++) {
+          pathD += " L " + points[i].x + " " + points[i].y;
+        }
+      } else {
+        // Desktop: Row 1 (L-to-R) -> orthogonal curve down -> Row 2 (R-to-L)
+        const pDev = points[2];
+        const pQA = points[3];
+
+        const rectDev = cards[2].getBoundingClientRect();
+        const devRight = rectDev.right - containerRect.left;
+
+        const dx = 50;
+        const xRightLimit = devRight + dx;
+        const R = 24;
+
+        pathD = "M " + points[0].x + " " + points[0].y;
+        pathD += " L " + points[1].x + " " + points[1].y;
+        pathD += " L " + pDev.x + " " + pDev.y;
+
+        pathD += " L " + (xRightLimit - R) + " " + pDev.y;
+        pathD += " Q " + xRightLimit + " " + pDev.y + ", " + xRightLimit + " " + (pDev.y + R);
+        pathD += " L " + xRightLimit + " " + (pQA.y - R);
+        pathD += " Q " + xRightLimit + " " + pQA.y + ", " + (xRightLimit - R) + " " + pQA.y;
+        pathD += " L " + pQA.x + " " + pQA.y;
+
+        pathD += " L " + points[4].x + " " + points[4].y;
+        pathD += " L " + points[5].x + " " + points[5].y;
+
+        if (arrow) {
+          arrow.style.display = 'block';
+          const rectQA = cards[3].getBoundingClientRect();
+          const qaRight = rectQA.right - containerRect.left;
+          const offset = 2;
+          const tipX = qaRight + offset;
+          arrow.setAttribute('points', tipX + "," + pQA.y + " " + (tipX + 8) + "," + (pQA.y - 4) + " " + (tipX + 8) + "," + (pQA.y + 4));
+        }
+      }
+
+      path.setAttribute('d', pathD);
+
+      dots.forEach(dot => {
+        if (dot) {
+          dot.style.setProperty('offset-path', "path('" + pathD + "')");
+          dot.style.setProperty('-webkit-offset-path', "path('" + pathD + "')");
+        }
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', updatePipeline);
+    window.addEventListener('load', updatePipeline);
+    window.addEventListener('resize', updatePipeline);
+    if (document.fonts) {
+      document.fonts.ready.then(updatePipeline);
+    }
+
+    (function () {
+      var segments = [
+        { id: 'card-req', at: 0.03 },
+        { id: 'card-design', at: 0.18 },
+        { id: 'card-dev', at: 0.35 },
+        { id: 'card-qa', at: 0.62 },
+        { id: 'card-dep', at: 0.79 },
+        { id: 'card-live', at: 0.94 }
+      ];
+      var HALF = 0.065;
+      var activeId = null;
+      var epoch = performance.now();
+
+      var dot1 = document.getElementById('dot-1');
+      if (dot1) dot1.addEventListener('animationiteration', function () { epoch = performance.now(); });
+
+      function tick(now) {
+        var cycle = window.innerWidth <= 768 ? 7000 : 5500;
+        var progress = ((now - epoch) % cycle) / cycle;
+        if (progress < 0) progress += 1;
+
+        var newId = null;
+        for (var i = 0; i < segments.length; i++) {
+          if (progress >= segments[i].at - HALF && progress <= segments[i].at + HALF) {
+            newId = segments[i].id;
+            break;
+          }
+        }
+
+        if (newId !== activeId) {
+          if (activeId) { var prev = document.getElementById(activeId); if (prev) prev.classList.remove('fnode-active'); }
+          if (newId) { var next = document.getElementById(newId); if (next) next.classList.add('fnode-active'); }
+          activeId = newId;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      window.addEventListener('load', function () { epoch = performance.now(); requestAnimationFrame(tick); });
+    })();
+
+    // ── Mega Menu ──
+    (function () {
+      const trigger = document.getElementById('nav-services-trigger');
+      const menu = document.getElementById('mega-services');
+      if (!trigger || !menu) return;
+      let closeTimer;
+      function openMenu() {
+        clearTimeout(closeTimer);
+        trigger.classList.add('open');
+        menu.style.display = 'block';
+        requestAnimationFrame(() => { menu.classList.add('visible'); });
+      }
+      function closeMenu() {
+        closeTimer = setTimeout(() => {
+          trigger.classList.remove('open');
+          menu.classList.remove('visible');
+          setTimeout(() => { if (!menu.classList.contains('visible')) menu.style.display = 'none'; }, 220);
+        }, 120);
+      }
+      trigger.addEventListener('mouseenter', openMenu);
+      trigger.addEventListener('mouseleave', closeMenu);
+      menu.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+      menu.addEventListener('mouseleave', closeMenu);
+    })();
+
+    // ── Side Drawer Navigation ──
+    (function () {
+      const ham = document.querySelector('.nav-hamburger');
+      const drawer = document.getElementById('nav-drawer');
+      const overlay = document.getElementById('nav-drawer-overlay');
+      const closeBtn = document.getElementById('nav-drawer-close');
+      const svcToggle = document.getElementById('nav-drawer-services-toggle');
+      const svcMenu = document.getElementById('nav-drawer-services');
+      if (!ham || !drawer) return;
+      function openDrawer() { drawer.classList.add('open'); overlay && overlay.classList.add('open'); document.body.style.overflow = 'hidden'; ham.setAttribute('aria-expanded', 'true'); }
+      function closeDrawer() { drawer.classList.remove('open'); overlay && overlay.classList.remove('open'); document.body.style.overflow = ''; ham.setAttribute('aria-expanded', 'false'); }
+      ham.addEventListener('click', (e) => { e.stopPropagation(); openDrawer(); });
+      overlay && overlay.addEventListener('click', closeDrawer);
+      closeBtn && closeBtn.addEventListener('click', closeDrawer);
+      svcToggle && svcToggle.addEventListener('click', () => {
+        const isOpen = svcMenu && svcMenu.classList.contains('open');
+        svcToggle.classList.toggle('open');
+        if (svcMenu) {
+          svcMenu.classList.toggle('open');
+          svcMenu.style.display = isOpen ? 'none' : 'block';
+        }
+      });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+    })();
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    (function () {
+      const tabs = document.querySelectorAll('.specialty-tab-btn');
+      const panels = document.querySelectorAll('.simulator-panel');
+      const glow = document.getElementById('showcase-glow');
+
+      const themeColors = {
+        purple: '#8b5cf6',
+        cyan: '#33c5f3',
+        green: '#10b981',
+        orange: '#f59e0b'
+      };
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetId = tab.getAttribute('data-tab');
+          const theme = tab.getAttribute('data-theme');
+
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          panels.forEach(p => p.classList.remove('active'));
+          const targetPanel = document.getElementById(targetId);
+          if (targetPanel) targetPanel.classList.add('active');
+
+          if (glow && themeColors[theme]) {
+            glow.style.background = themeColors[theme];
+          }
+        });
+      });
+
+      // --- SIMULATOR 1: iOS Build Simulator ---
+      const runBtnIos = document.getElementById('btn-run-ios');
+      const iosConsole = document.getElementById('ios-console');
+      const iosBooting = document.getElementById('ios-booting');
+      const iosAppBody = document.getElementById('ios-app-body');
+      const iosChartBars = document.querySelectorAll('#ios-chart .phone-app-chart-bar');
+
+      if (runBtnIos && iosConsole && iosBooting && iosAppBody) {
+        runBtnIos.addEventListener('click', () => {
+          if (runBtnIos.classList.contains('building')) return;
+
+          runBtnIos.classList.add('building');
+          runBtnIos.innerHTML = `
+            <svg class="spinner" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite; margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle><path d="M4 12a8 8 0 0 1 8-8"></path></svg>
+            Building...
+          `;
+
+          iosBooting.classList.remove('hidden');
+          iosAppBody.classList.remove('active');
+          iosChartBars.forEach(bar => {
+            bar.classList.remove('filled');
+            bar.style.height = '10%';
+          });
+
+          iosConsole.innerHTML = `
+            <p class="ide-line info">[xcodebuild] Target: GlobotechMobile (Debug)</p>
+            <p class="ide-line">[xcodebuild] Compiling Swift modules...</p>
+          `;
+
+          setTimeout(() => {
+            iosConsole.innerHTML += '<p class="ide-line">[xcodebuild] Resolving Swift Package Graph (GlobotechSDK)...</p>';
+          }, 400);
+
+          setTimeout(() => {
+            iosConsole.innerHTML += '<p class="ide-line">[xcodebuild] Linking static binary frameworks...</p>';
+          }, 800);
+
+          setTimeout(() => {
+            iosConsole.innerHTML += '<p class="ide-line info">[xcodebuild] Booting Simulator (iPhone 15 Pro Max)...</p>';
+            iosBooting.classList.add('hidden');
+          }, 1200);
+
+          setTimeout(() => {
+            iosConsole.innerHTML += `
+              <p class="ide-line success">✓ Build Successful! App Launched.</p>
+              <p class="ide-line info">ℹ Performance stats: CPU 1.8%, Memory 24MB, FPS 60.0 locked</p>
+            `;
+            iosAppBody.classList.add('active');
+            
+            const heights = ['30%', '60%', '45%', '90%', '70%'];
+            iosChartBars.forEach((bar, idx) => {
+              setTimeout(() => {
+                bar.classList.add('filled');
+                bar.style.height = heights[idx];
+              }, 100 * idx);
+            });
+
+            runBtnIos.classList.remove('building');
+            runBtnIos.innerHTML = `
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Run Build
+            `;
+          }, 1800);
+        });
+      }
+
+      // --- SIMULATOR 2: Android Build Simulator ---
+      const runBtnAndroid = document.getElementById('btn-run-android');
+      const androidConsole = document.getElementById('android-console');
+      const androidBooting = document.getElementById('android-booting');
+      const androidAppBody = document.getElementById('android-app-body');
+
+      if (runBtnAndroid && androidConsole && androidBooting && androidAppBody) {
+        runBtnAndroid.addEventListener('click', () => {
+          if (runBtnAndroid.classList.contains('building')) return;
+
+          runBtnAndroid.classList.add('building');
+          runBtnAndroid.innerHTML = `
+            <svg class="spinner" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite; margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle><path d="M4 12a8 8 0 0 1 8-8"></path></svg>
+            Building...
+          `;
+
+          androidBooting.classList.remove('hidden');
+          androidAppBody.classList.remove('active');
+
+          androidConsole.innerHTML = `
+            <p class="ide-line info">[gradle] Running daemon: execute build task :app:assembleDebug</p>
+            <p class="ide-line">[gradle] compileDebugKotlin (Kotlin compiler v1.9)</p>
+          `;
+
+          setTimeout(() => {
+            androidConsole.innerHTML += '<p class="ide-line">[gradle] Building layout graphs and Jetpack compose UI caches...</p>';
+          }, 500);
+
+          setTimeout(() => {
+            androidConsole.innerHTML += '<p class="ide-line">[gradle] APK packaging complete. Size: 11.2 MB</p>';
+          }, 1000);
+
+          setTimeout(() => {
+            androidConsole.innerHTML += '<p class="ide-line info">[emulator] Connecting to Android Emulator (Pixel 7 Pro API 34)...</p>';
+            androidBooting.classList.add('hidden');
+          }, 1300);
+
+          setTimeout(() => {
+            androidConsole.innerHTML += `
+              <p class="ide-line success">✓ Gradle build successful in 1.8s. App deployed.</p>
+              <p class="ide-line info">ℹ Performance stats: CPU 2.2%, Latency 14ms, FPS 60.0</p>
+            `;
+            androidAppBody.classList.add('active');
+
+            runBtnAndroid.classList.remove('building');
+            runBtnAndroid.innerHTML = `
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Run Build
+            `;
+          }, 1800);
+        });
+      }
+
+      // --- SIMULATOR 3: Cross-Platform Viewport Toggle ---
+      const btnToggleIos = document.getElementById('btn-toggle-ios');
+      const btnToggleAndroid = document.getElementById('btn-toggle-android');
+      const crossPhoneFrame = document.getElementById('cross-phone-frame');
+      const crossPhoneNotch = document.getElementById('cross-phone-notch');
+      const crossPhoneScreen = document.getElementById('cross-phone-screen');
+      const crossAppHeader = document.getElementById('cross-app-header');
+      const runBtnCross = document.getElementById('btn-run-cross');
+      const crossConsole = document.getElementById('cross-console');
+      const crossBooting = document.getElementById('cross-booting');
+      const crossBootingLogo = document.getElementById('cross-booting-logo');
+
+      function switchCrossPlatformView(isIos) {
+        if (isIos) {
+          btnToggleIos.classList.add('active');
+          btnToggleAndroid.classList.remove('active');
+          
+          crossPhoneNotch.classList.remove('phone-notch-android');
+          crossPhoneScreen.classList.remove('phone-screen-android');
+          crossPhoneScreen.classList.add('phone-screen-ios');
+          crossAppHeader.classList.remove('android-header');
+          crossAppHeader.innerText = 'Globotech Hybrid';
+          
+          crossBootingLogo.innerHTML = '<path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.48C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.1 16.67C20.08 16.74 19.67 18.11 18.71 19.5M15.97 4.17C16.63 3.37 17.07 2.28 16.95 1C16 1.04 14.9 1.6 14.24 2.38C13.68 3.04 13.19 4.14 13.34 5.39C14.39 5.47 15.4 4.88 15.97 4.17Z"/>';
+          crossBootingLogo.setAttribute('viewBox', '0 0 24 24');
+          crossBootingLogo.style.width = '38px';
+          crossBootingLogo.style.fill = '#fff';
+        } else {
+          btnToggleAndroid.classList.add('active');
+          btnToggleIos.classList.remove('active');
+          
+          crossPhoneNotch.classList.add('phone-notch-android');
+          crossPhoneScreen.classList.remove('phone-screen-ios');
+          crossPhoneScreen.classList.add('phone-screen-android');
+          crossAppHeader.classList.add('android-header');
+          crossAppHeader.innerText = 'Globotech Android';
+          
+          crossBootingLogo.innerHTML = '<path d="M20 70V50c0-16.5 13.5-30 30-30s30 13.5 30 30v20c0 5.5-4.5 10-10 10H30c-5.5 0-10-4.5-10-10zM50 15c-1.1 0-2-.9-2-2m4 0c0-1.1-.9-2-2-2"/>';
+          crossBootingLogo.setAttribute('viewBox', '0 0 100 100');
+          crossBootingLogo.style.width = '44px';
+          crossBootingLogo.style.fill = '#a4c639';
+        }
+      }
+
+      if (btnToggleIos && btnToggleAndroid) {
+        btnToggleIos.addEventListener('click', () => switchCrossPlatformView(true));
+        btnToggleAndroid.addEventListener('click', () => switchCrossPlatformView(false));
+      }
+
+      if (runBtnCross && crossConsole && crossBooting) {
+        runBtnCross.addEventListener('click', () => {
+          if (runBtnCross.classList.contains('building')) return;
+
+          runBtnCross.classList.add('building');
+          runBtnCross.innerHTML = `
+            <svg class="spinner" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite; margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"></circle><path d="M4 12a8 8 0 0 1 8-8"></path></svg>
+            Reloading...
+          `;
+
+          crossBooting.classList.remove('hidden');
+          crossConsole.innerHTML = `
+            <p class="ide-line info">[metro] Reloading active layout bundle on port 8081...</p>
+          `;
+
+          setTimeout(() => {
+            crossConsole.innerHTML += '<p class="ide-line">[metro] Transforming: App.tsx (JavaScript transpilation)...</p>';
+          }, 400);
+
+          setTimeout(() => {
+            crossConsole.innerHTML += '<p class="ide-line">[metro] Re-linking React Native bridge hooks...</p>';
+          }, 800);
+
+          setTimeout(() => {
+            crossBooting.classList.add('hidden');
+            crossConsole.innerHTML += `
+              <p class="ide-line success">✓ Metro bundle successfully hot-reloaded (42.5 KB)</p>
+            `;
+            runBtnCross.classList.remove('building');
+            runBtnCross.innerHTML = `
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Reload Bundler
+            `;
+          }, 1200);
+        });
+      }
+
+      // --- SIMULATOR 4: Store Submission Checklist ---
+      const btnLaunchApp = document.getElementById('btn-launch-app');
+      const storeConsole = document.getElementById('store-console');
+      const statusBadge = document.getElementById('status-badge');
+      const statusIcon = document.getElementById('status-icon');
+      const statusMeta = document.getElementById('status-meta');
+      const checkScreenshots = document.getElementById('check-screenshots');
+      const checkReview = document.getElementById('check-review');
+      const labelScreenshots = document.getElementById('item-screenshots');
+      const labelReview = document.getElementById('item-review');
+
+      if (btnLaunchApp && storeConsole && statusBadge && statusIcon) {
+        btnLaunchApp.addEventListener('click', () => {
+          if (!checkScreenshots.checked) {
+            storeConsole.innerHTML = '<p class="warning">⚠️ Submission failed: Please verify App Store Screenshots checklist item.</p>';
+            return;
+          }
+
+          if (!checkReview.checked) {
+            storeConsole.innerHTML = '<p class="warning">⚠️ Submission failed: Please verify Guidelines Review checklist item.</p>';
+            return;
+          }
+
+          if (btnLaunchApp.classList.contains('processing')) return;
+
+          btnLaunchApp.classList.add('processing');
+          btnLaunchApp.innerText = 'Submitting...';
+
+          statusBadge.className = 'status-badge review';
+          statusBadge.innerText = 'In Review';
+          statusIcon.innerText = '⏳';
+          statusMeta.innerText = 'Version 1.0.4 · Submitting';
+
+          storeConsole.innerHTML = `
+            <p class="info">> Handshaking with App Store Connect gateway...</p>
+            <p class="info">> Validating provisioning profile & cert hashes... PASS</p>
+          `;
+
+          setTimeout(() => {
+            storeConsole.innerHTML += '<p class="info">> Uploading application package ver. 1.0.4...</p>';
+          }, 600);
+
+          setTimeout(() => {
+            storeConsole.innerHTML += '<p class="info">> Verifying Apple privacy manifest configurations...</p>';
+          }, 1200);
+
+          setTimeout(() => {
+            storeConsole.innerHTML += '<p class="success">> Submission complete. Guideline reviews starting...</p>';
+          }, 1800);
+
+          setTimeout(() => {
+            statusBadge.className = 'status-badge live';
+            statusBadge.innerText = 'Ready for Sale';
+            statusIcon.innerText = '🚀';
+            statusMeta.innerText = 'Version 1.0.4 · Live on App Store';
+            
+            storeConsole.innerHTML += `
+              <p class="success">✓ App Store status updated: READY FOR SALE</p>
+              <p class="success">✓ Google Play status updated: PRODUCTION RELEASE LIVE</p>
+            `;
+
+            btnLaunchApp.classList.remove('processing');
+            btnLaunchApp.innerText = 'Launch Successful!';
+            btnLaunchApp.style.background = '#10b981';
+          }, 2600);
+        });
+
+        checkScreenshots.addEventListener('change', () => {
+          if (checkScreenshots.checked) labelScreenshots.classList.add('checked');
+          else labelScreenshots.classList.remove('checked');
+        });
+
+        checkReview.addEventListener('change', () => {
+          if (checkReview.checked) labelReview.classList.add('checked');
+          else labelReview.classList.remove('checked');
+        });
+      }
+    })();
+
+    document.querySelectorAll('.tech-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-tab');
+
+        document.querySelectorAll('.tech-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.querySelectorAll('.tech-grid').forEach(grid => grid.classList.remove('active'));
+        const targetGrid = document.getElementById(targetId);
+        if (targetGrid) {
+          targetGrid.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>

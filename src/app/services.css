@@ -1,0 +1,249 @@
+/* ── OUR SERVICES SECTION ── */
+.our-services {
+  padding: 120px 0;
+  background: #ffffff;
+}
+
+.os-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+}
+
+@media(max-width: 900px) {
+  .os-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.os-left {
+  align-self: start;
+}
+
+.os-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1d1d1f;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 24px;
+  padding: 8px 18px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 100px;
+}
+
+.os-title {
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #1d1d1f;
+  margin-bottom: 24px;
+}
+
+.os-title em {
+  font-style: normal;
+  color: #33c5f3;
+}
+
+.os-desc {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #6e6e73;
+  margin-bottom: 40px;
+  max-width: 440px;
+}
+
+.os-btn-cyan {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #33c5f3;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 15px 30px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: opacity .2s, transform .2s;
+  box-shadow: 0 8px 24px rgba(51, 197, 243, 0.3);
+}
+
+.os-btn-cyan:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.os-tabs-wrap {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  margin-bottom: 40px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.os-tabs-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.os-tab {
+  padding: 10px 24px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 100px;
+  background: transparent;
+  color: #1d1d1f;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+}
+
+.os-tab:hover {
+  border-color: #1d1d1f;
+}
+
+.os-tab.active {
+  background: #33c5f3;
+  color: #fff;
+  border-color: #33c5f3;
+}
+
+.os-list {
+  display: none;
+}
+
+.os-list.active {
+  display: block;
+  animation: osFadeIn 0.4s ease forwards;
+}
+
+@keyframes osFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.os-item {
+  display: flex;
+  align-items: center;
+  padding: 32px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.os-item:first-child {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.os-item:hover .os-item-title {
+  color: #33c5f3;
+}
+
+.os-item:hover .os-item-arrow {
+  transform: translateX(5px);
+  color: #33c5f3;
+}
+
+.os-item-num {
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #6e6e73;
+  width: 40px;
+  opacity: 0.6;
+}
+
+.os-item-title {
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1d1d1f;
+  flex-grow: 1;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.os-item-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.os-tag-pop {
+  background: rgba(51, 197, 243, 0.1);
+  color: #33c5f3;
+}
+
+.os-tag-new {
+  background: rgba(139, 92, 246, 0.1);
+  color: #8b5cf6;
+}
+
+.os-item-arrow {
+  font-size: 20px;
+  color: #6e6e73;
+  transition: transform .2s, color .2s;
+}
+
+.os-bottom-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 50px;
+}
+
+.os-bottom-link {
+  font-size: 15px;
+  font-weight: 600;
+  color: #6e6e73;
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.os-bottom-link:hover {
+  color: #1d1d1f;
+}
+
+.os-btn-dark {
+  background: #1d1d1f;
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  padding: 15px 30px;
+  border-radius: 100px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  transition: transform .2s, box-shadow .2s;
+}
+
+.os-btn-dark:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+}
