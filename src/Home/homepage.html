@@ -3081,7 +3081,7 @@
       </div>
       <div class="nav-drawer-body">
         <a href="../Home/homepage.html" class="active">Home</a>
-        <div class="nav-drawer-services-toggle" id="nav-drawer-services-toggle">
+        <div class="nav-drawer-services-toggle" id="nav-drawer-services-toggle" onclick="this.classList.toggle('open'); const menu = document.getElementById('nav-drawer-services'); if (menu) { menu.classList.toggle('open'); menu.style.display = menu.classList.contains('open') ? 'block' : 'none'; }">
           Services
           <span class="drawer-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
               stroke-width="2.5" stroke-linecap="round">
@@ -3810,6 +3810,8 @@
 
     function buildWhyRing() {
       const g = document.getElementById('why-segs');
+      if (!g) return;
+      g.innerHTML = '';
       WHY_CAPS.forEach((cap, i) => {
         const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         c.setAttribute('cx', WHY_CX); c.setAttribute('cy', WHY_CY); c.setAttribute('r', WHY_R);
@@ -3825,6 +3827,8 @@
 
     function buildWhyCards() {
       const list = document.getElementById('why-cards');
+      if (!list) return;
+      list.innerHTML = '';
       WHY_CAPS.forEach((cap, i) => {
         const item = document.createElement('div');
         item.className = 'why-card'; item.id = `why-card-${i}`; item.setAttribute('data-index', i);
@@ -3952,14 +3956,7 @@
       ham.addEventListener('click', (e) => { e.stopPropagation(); openDrawer(); });
       overlay && overlay.addEventListener('click', closeDrawer);
       closeBtn && closeBtn.addEventListener('click', closeDrawer);
-      svcToggle && svcToggle.addEventListener('click', () => {
-        const isOpen = svcMenu && svcMenu.classList.contains('open');
-        svcToggle.classList.toggle('open');
-        if (svcMenu) {
-          svcMenu.classList.toggle('open');
-          svcMenu.style.display = isOpen ? 'none' : 'block';
-        }
-      });
+      // Removed conflicting JS click listener to let inline onclick toggle Services menu in mobile drawer
       document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
     })();
 
