@@ -194,7 +194,7 @@ body{
       .nav-links {
         display: none;
       }
-      .nav-cta {
+      nav .nav-cta {
         display: none !important;
       }
 
@@ -2137,7 +2137,7 @@ body{
       .process-grid,
       .faq-grid,
       .testimonials-grid,
-      .blog-grid {
+      .blog-grid-container {
         grid-template-columns: 1fr !important;
         gap: 24px !important;
       }
@@ -2239,6 +2239,94 @@ body{
       }
       .footer-bottom-links a {
         font-size: 12px !important;
+      }
+
+      /* Blog page specific compact spacing overrides */
+      .blog-hero {
+        padding-top: 106px !important;
+        padding-bottom: 24px !important;
+      }
+      .blog-filter-section {
+        padding-top: 0 !important;
+        padding-bottom: 12px !important;
+      }
+      .blog-filter-divider {
+        margin: 0 auto 16px !important;
+      }
+      .blog-filter-container {
+        margin: 0 !important;
+        padding: 6px 0 !important;
+      }
+      .blog-filter-scroll-control {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      .blog-search-section {
+        padding-top: 0 !important;
+        padding-bottom: 24px !important;
+      }
+      .blog-search-input {
+        padding: 12px 16px 12px 40px !important;
+        font-size: 14px !important;
+      }
+      .blog-search-icon {
+        left: 14px !important;
+        width: 16px !important;
+        height: 16px !important;
+      }
+      .featured-blog-section {
+        padding-top: 0 !important;
+        padding-bottom: 24px !important;
+      }
+      .blog-featured-card {
+        grid-template-columns: 1fr !important;
+      }
+      .blog-featured-card .blog-card-image-wrap {
+        min-height: 200px !important;
+      }
+      .blog-featured-card .blog-card-content {
+        padding: 24px 20px !important;
+      }
+      .blog-featured-card .blog-card-title {
+        font-size: 24px !important;
+        margin-bottom: 12px !important;
+        line-height: 1.25 !important;
+      }
+      .blog-featured-card .blog-card-excerpt {
+        font-size: 15px !important;
+        margin-bottom: 20px !important;
+        line-height: 1.5 !important;
+      }
+      .blog-grid-section {
+        padding-top: 12px !important;
+        padding-bottom: 48px !important;
+      }
+      .blog-grid-container {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+      }
+      .blog-card-image-wrap {
+        height: 160px !important;
+      }
+      .blog-card-content {
+        padding: 16px !important;
+      }
+      .blog-card-title {
+        font-size: 16px !important;
+        margin-bottom: 8px !important;
+      }
+      .blog-card-excerpt {
+        font-size: 13px !important;
+        margin-bottom: 14px !important;
+      }
+      .faq-q {
+        padding: 16px 18px !important;
+        font-size: 15px !important;
+      }
+      .faq-a p {
+        padding: 0 18px 16px !important;
+        font-size: 13.5px !important;
+        line-height: 1.6 !important;
       }
     }
 
@@ -2426,9 +2514,9 @@ body{
 
 
 <!-- FEATURED BLOG -->
-<section class="featured-blog-section" style="padding-bottom: 20px;">
+<section class="featured-blog-section" id="featured-post-section" style="padding-bottom: 20px;">
   <div class="container">
-    <div class="blog-featured-card reveal d1">
+    <div class="blog-featured-card featured-card reveal d1" data-category="ai-news news" data-search-text="The Future of AI Agents in Enterprise Software Discover how autonomous AI agents are moving beyond chatbots to execute complex workflows, manage resources, and transform the operational landscape of modern businesses.">
       <div class="blog-card-image-wrap">
         <img src="../../public/assets/web-dev-images/3123831.jpg" alt="Featured Blog" class="blog-card-image">
       </div>
