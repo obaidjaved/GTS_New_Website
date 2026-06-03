@@ -574,9 +574,9 @@
       padding-top: 24px;
     }
 
-    /* ── HERO (light · no video) ── */
+    /* ── HERO ── */
     .hero {
-      background: #ffffff;
+      background: #05081a;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -585,16 +585,63 @@
       padding: 140px 0 80px;
     }
 
-    .hero::before {
-      content: '';
+    /* Photo layer */
+    .hero-photo {
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 55% 70% at 88% 38%, rgba(51, 197, 243, 0.11) 0%, transparent 65%),
-        radial-gradient(ellipse 35% 45% at 8% 88%, rgba(16, 185, 129, 0.06) 0%, transparent 55%),
-        radial-gradient(ellipse 30% 40% at 72% 88%, rgba(139, 92, 246, 0.05) 0%, transparent 55%);
-      pointer-events: none;
+        url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1800&q=90&auto=format&fit=crop')
+        center 40% / cover no-repeat;
+      animation: heroDrift 26s ease-in-out infinite alternate;
+      will-change: transform;
     }
+    @keyframes heroDrift {
+      from { transform: scale(1.0) translate(0px, 0px); }
+      to   { transform: scale(1.07) translate(-16px, -6px); }
+    }
+
+    /* Overlay 1 — deep navy base */
+    .hero-ov1 {
+      position: absolute; inset: 0;
+      background: rgba(5, 8, 24, 0.55);
+    }
+
+    /* Overlay 2 — directional: left darker for text, right open for animation */
+    .hero-ov2 {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        106deg,
+        rgba(5,8,24,0.50) 0%,
+        rgba(5,8,24,0.22) 50%,
+        rgba(5,8,24,0.08) 100%
+      );
+    }
+
+    /* Overlay 3 — brand colour radials */
+    .hero-ov3 {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 70% at 88% 38%, rgba(51,197,243,0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 35% 45% at 8%  88%, rgba(16,185,129,0.09) 0%, transparent 55%),
+        radial-gradient(ellipse 30% 40% at 72% 88%, rgba(139,92,246,0.11) 0%, transparent 55%);
+    }
+
+    /* Overlay 4 — bottom curtain */
+    .hero-ov4 {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 220px;
+      background: linear-gradient(transparent, rgba(5,8,24,0.72));
+    }
+
+    /* Overlay 5 — top vignette (blends with navbar) */
+    .hero-ov5 {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 160px;
+      background: linear-gradient(rgba(5,8,24,0.50), transparent);
+    }
+
+    /* hero::before no longer needed — replaced by overlay divs */
+    .hero::before { display: none; }
 
     .hero .container {
       width: 100%;
@@ -658,8 +705,9 @@
       font-weight: 900;
       letter-spacing: -.045em;
       line-height: 1.05;
-      color: var(--text);
+      color: #ffffff;
       margin-bottom: 22px;
+      text-shadow: 0 2px 28px rgba(0,0,0,0.4);
     }
 
     .hero-h1 em {
@@ -673,7 +721,7 @@
     .hero-sub {
       font-size: 17px;
       line-height: 1.7;
-      color: var(--text-2);
+      color: rgba(255,255,255,0.65);
       max-width: 420px;
       margin-bottom: 36px;
     }
@@ -687,8 +735,8 @@
     }
 
     .hero-btn-primary {
-      background: #1d1d1f;
-      color: #fff;
+      background: #ffffff;
+      color: #0d1021;
       font-family: var(--fh);
       font-size: 15px;
       font-weight: 700;
@@ -699,19 +747,19 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(51,197,243,0.12);
       transition: transform .2s var(--ease), box-shadow .2s;
     }
 
     .hero-btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
     }
 
     .hero-btn-secondary {
       font-size: 15px;
       font-weight: 600;
-      color: var(--text-2);
+      color: rgba(255,255,255,0.60);
       text-decoration: none;
       padding: 15px 16px;
       display: inline-flex;
@@ -721,7 +769,7 @@
     }
 
     .hero-btn-secondary:hover {
-      color: var(--text);
+      color: rgba(255,255,255,0.90);
     }
 
 
@@ -912,22 +960,23 @@
     }
 
     .fnode {
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(16px) saturate(160%);
-      -webkit-backdrop-filter: blur(16px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, 0.95);
+      background: rgba(255,255,255,0.09);
+      backdrop-filter: blur(28px) saturate(190%);
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255,255,255,0.17);
       border-radius: 14px;
       padding: 12px 14px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.10);
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: transform .3s var(--ease), box-shadow .3s;
+      transition: transform .3s var(--ease), background .3s, box-shadow .3s;
     }
 
     .fnode:hover {
       transform: translateX(-3px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+      background: rgba(255,255,255,0.14);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.38);
     }
 
     .fnode-right:hover {
@@ -949,14 +998,14 @@
       font-family: var(--fh);
       font-size: 13px;
       font-weight: 700;
-      color: var(--text);
+      color: #ffffff;
       line-height: 1.2;
       margin-bottom: 2px;
     }
 
     .fnode-detail {
       font-size: 11px;
-      color: #9ca3af;
+      color: rgba(255,255,255,0.42);
     }
 
     .fnode-out {
@@ -3162,15 +3211,43 @@
       }
 
       .hero-btn-primary {
-        background: #1d1d1f !important;
-        color: #fff !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+        background: #ffffff !important;
+        color: #0d1021 !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
       }
 
       .hero-btn-secondary {
-        color: var(--text) !important;
-        background: rgba(0, 0, 0, 0.04) !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        color: rgba(255,255,255,0.65) !important;
+        background: transparent !important;
+        border: 1px solid rgba(255,255,255,0.22) !important;
+      }
+
+      /* Mobile: switch directional overlay to top-bottom (text is centred) */
+      .hero-ov2 {
+        background: linear-gradient(
+          180deg,
+          rgba(5,8,24,0.58) 0%,
+          rgba(5,8,24,0.38) 50%,
+          rgba(5,8,24,0.62) 100%
+        ) !important;
+      }
+
+      /* Mobile: pause Ken-Burns — saves battery, less jarring on small screens */
+      .hero-photo {
+        animation-play-state: paused !important;
+        background-position: center 20% !important;
+      }
+
+      /* Mobile: hero text centred */
+      .hero-inner > div:first-child {
+        text-align: center;
+      }
+      .hero-sub {
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+      .hero-btns {
+        justify-content: center !important;
       }
 
       /* 3. Standard mobile side paddings for container columns */
@@ -3447,6 +3524,12 @@
 
   <!-- HERO -->
   <section class="hero">
+    <div class="hero-photo"></div>
+    <div class="hero-ov1"></div>
+    <div class="hero-ov2"></div>
+    <div class="hero-ov3"></div>
+    <div class="hero-ov4"></div>
+    <div class="hero-ov5"></div>
     <div class="container">
       <div class="hero-inner">
 
