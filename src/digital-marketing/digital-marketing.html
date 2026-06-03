@@ -4195,137 +4195,82 @@
   </footer>
 
   <script>
-    // ── Flow Animation Pipeline Layout & Motion Path Calculator ──
-    function updatePipeline() {
-      const container = document.getElementById('pipeline-container');
-      const path = document.getElementById('pipeline-path');
-      const arrow = document.getElementById('pipeline-arrow');
-      const dots = [
-        document.getElementById('dot-1'),
-        document.getElementById('dot-2'),
-        document.getElementById('dot-3')
-      ];
-      if (!container || !path) return;
-
-      const containerRect = container.getBoundingClientRect();
-
-      const cards = [
-        document.getElementById('card-req'),
-        document.getElementById('card-design'),
-        document.getElementById('card-dev'),
-        document.getElementById('card-qa'),
-        document.getElementById('card-dep'),
-        document.getElementById('card-live')
-      ];
-
-      if (cards.some(c => !c)) return;
-
-      const points = cards.map(card => {
-        const rect = card.getBoundingClientRect();
-        return {
-          x: rect.left - containerRect.left + rect.width / 2,
-          y: rect.top - containerRect.top + rect.height / 2
-        };
-      });
-
-      const isMobile = window.innerWidth <= 768;
-      let pathD = '';
-
-      if (isMobile) {
-        if (arrow) arrow.style.display = 'none';
-        pathD = "M " + points[0].x + " " + points[0].y;
-        for (let i = 1; i < points.length; i++) {
-          pathD += " L " + points[i].x + " " + points[i].y;
-        }
-      } else {
-        const pDev = points[2];
-        const pQA = points[3];
-
-        const rectDev = cards[2].getBoundingClientRect();
-        const devRight = rectDev.right - containerRect.left;
-
-        const dx = 50;
-        const xRightLimit = devRight + dx;
-        const R = 24;
-
-        pathD = "M " + points[0].x + " " + points[0].y;
-        pathD += " L " + points[1].x + " " + points[1].y;
-        pathD += " L " + pDev.x + " " + pDev.y;
-
-        pathD += " L " + (xRightLimit - R) + " " + pDev.y;
-        pathD += " Q " + xRightLimit + " " + pDev.y + ", " + xRightLimit + " " + (pDev.y + R);
-        pathD += " L " + xRightLimit + " " + (pQA.y - R);
-        pathD += " Q " + xRightLimit + " " + pQA.y + ", " + (xRightLimit - R) + " " + pQA.y;
-        pathD += " L " + pQA.x + " " + pQA.y;
-
-        pathD += " L " + points[4].x + " " + points[4].y;
-        pathD += " L " + points[5].x + " " + points[5].y;
-
-        if (arrow) {
-          arrow.style.display = 'block';
-          const rectQA = cards[3].getBoundingClientRect();
-          const qaRight = rectQA.right - containerRect.left;
-          const offset = 2;
-          const tipX = qaRight + offset;
-          arrow.setAttribute('points', tipX + "," + pQA.y + " " + (tipX + 8) + "," + (pQA.y - 4) + " " + (tipX + 8) + "," + (pQA.y + 4));
-        }
-      }
-
-      path.setAttribute('d', pathD);
-
-      dots.forEach(dot => {
-        if (dot) {
-          dot.style.setProperty('offset-path', "path('" + pathD + "')");
-          dot.style.setProperty('-webkit-offset-path', "path('" + pathD + "')");
-        }
-      });
-    }
-
-    window.addEventListener('DOMContentLoaded', updatePipeline);
-    window.addEventListener('load', updatePipeline);
-    window.addEventListener('resize', updatePipeline);
-    if (document.fonts) {
-      document.fonts.ready.then(updatePipeline);
-    }
-
+    // ── Build Monitor Animation ──
     (function () {
-      var segments = [
-        { id: 'card-req', at: 0.03 },
-        { id: 'card-design', at: 0.18 },
-        { id: 'card-dev', at: 0.35 },
-        { id: 'card-qa', at: 0.62 },
-        { id: 'card-dep', at: 0.79 },
-        { id: 'card-live', at: 0.94 }
+      var STEPS = [
+        { id: 'bm-s0', tid: 'bm-t0', time: '0.3s',  msg: 'Analysing audience segments...' },
+        { id: 'bm-s1', tid: 'bm-t1', time: '1.2s',  msg: 'Generating campaign creatives...' },
+        { id: 'bm-s2', tid: 'bm-t2', time: '2.4s',  msg: 'Launching paid ad pipelines...' },
+        { id: 'bm-s3', tid: 'bm-t3', time: '0.7s',  msg: 'Running A/B conversion tests...' },
+        { id: 'bm-s4', tid: 'bm-t4', time: '0.4s',  msg: 'Publishing to all channels...' },
+        { id: 'bm-s5', tid: 'bm-t5', time: 'live',  msg: 'Campaign live! 🚀' }
       ];
-      var HALF = 0.065;
-      var activeId = null;
-      var epoch = performance.now();
 
-      var dot1 = document.getElementById('dot-1');
-      if (dot1) dot1.addEventListener('animationiteration', function () { epoch = performance.now(); });
+      var fill    = document.getElementById('bm-fill');
+      var pct     = document.getElementById('bm-pct');
+      var status  = document.getElementById('bm-status');
+      var cycle   = document.getElementById('bm-cycle');
+      var m0      = document.getElementById('bm-m0');
+      var m1      = document.getElementById('bm-m1');
+      var m2      = document.getElementById('bm-m2');
 
-      function tick(now) {
-        var cycle = window.innerWidth <= 768 ? 7000 : 5500;
-        var progress = ((now - epoch) % cycle) / cycle;
-        if (progress < 0) progress += 1;
+      if (!fill) return;
 
-        var newId = null;
-        for (var i = 0; i < segments.length; i++) {
-          if (progress >= segments[i].at - HALF && progress <= segments[i].at + HALF) {
-            newId = segments[i].id;
-            break;
-          }
-        }
+      var cycleNum = 1;
+      var CHECK_SVG = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
-        if (newId !== activeId) {
-          if (activeId) { var prev = document.getElementById(activeId); if (prev) prev.classList.remove('fnode-active'); }
-          if (newId) { var next = document.getElementById(newId); if (next) next.classList.add('fnode-active'); }
-          activeId = newId;
-        }
-        requestAnimationFrame(tick);
+      function setProgress(p) {
+        if (fill) fill.style.width = p + '%';
+        if (pct) pct.textContent = p + '%';
       }
 
-      window.addEventListener('load', function () { epoch = performance.now(); requestAnimationFrame(tick); });
+      function runStep(i) {
+        if (i >= STEPS.length) {
+          if (m0) { m0.textContent = '100'; m0.classList.add('lit'); }
+          if (m1) { m1.textContent = '42kb'; m1.classList.add('lit'); }
+          if (m2) { m2.textContent = '0.2s'; m2.classList.add('lit'); }
+          setProgress(100);
+          if (status) status.textContent = 'Build complete — site is live! 🚀';
+          setTimeout(resetMonitor, 3800);
+          return;
+        }
+
+        var s = STEPS[i];
+        var el = document.getElementById(s.id);
+        var tel = document.getElementById(s.tid);
+        if (!el) { runStep(i + 1); return; }
+
+        el.className = 'bm-step bm-running';
+        if (status) status.textContent = s.msg;
+        setProgress(Math.round(((i + 0.5) / STEPS.length) * 100));
+
+        setTimeout(function () {
+          el.className = 'bm-step bm-done';
+          el.querySelector('.bm-step-ico').innerHTML = CHECK_SVG;
+          if (tel) tel.textContent = s.time;
+          setProgress(Math.round(((i + 1) / STEPS.length) * 100));
+          setTimeout(function () { runStep(i + 1); }, 500);
+        }, 1100);
+      }
+
+      function resetMonitor() {
+        cycleNum++;
+        if (cycle) cycle.textContent = 'Cycle ' + cycleNum;
+        if (m0) { m0.textContent = '—'; m0.classList.remove('lit'); }
+        if (m1) { m1.textContent = '—'; m1.classList.remove('lit'); }
+        if (m2) { m2.textContent = '—'; m2.classList.remove('lit'); }
+        setProgress(0);
+        if (status) status.textContent = 'Initializing environment...';
+        STEPS.forEach(function (s) {
+          var el = document.getElementById(s.id);
+          var tel = document.getElementById(s.tid);
+          if (el) { el.className = 'bm-step bm-pending'; el.querySelector('.bm-step-ico').innerHTML = '<div class="bm-step-ico-circle"></div>'; }
+          if (tel) tel.textContent = '';
+        });
+        setTimeout(function () { runStep(0); }, 900);
+      }
+
+      window.addEventListener('load', function () { setTimeout(function () { runStep(0); }, 800); });
     })();
 
     // ── Mega Menu ──
