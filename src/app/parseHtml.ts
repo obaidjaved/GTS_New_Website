@@ -6,6 +6,7 @@ export interface ParsedHtml {
   styles: string;
   scripts: string;
   title: string;
+  jsonLd: string[];
 }
 
 export function parseHtmlFile(relativeFilePath: string): ParsedHtml {
@@ -59,14 +60,26 @@ export function parseHtmlFile(relativeFilePath: string): ParsedHtml {
   body = body.replace(/href="\.\.\/digital-marketing\/digital-marketing\.html"/g, 'href="/digital-marketing"');
   body = body.replace(/href="digital-marketing\.html"/g, 'href="/digital-marketing"');
 
-  // Extract all inline script blocks and wrap each in an IIFE scope with try-catch.
-  // This prevents variable collision / "Identifier already declared" syntax errors.
-  const scriptMatches = [...html.matchAll(/<script(?![^>]*src)[\s\S]*?>([\s\S]*?)<\/script>/gi)];
-  const scripts = scriptMatches.map(m => `(function(){\ntry{\n${m[1]}\n}catch(e){console.error("Script error:", e);}\n})();`).join('\n');
+  // Separate JSON-LD schema scripts from regular inline scripts.
+  // JSON-LD scripts must be preserved as-is (not wrapped in IIFEs) and injected into <head>.
+  const allScriptMatches = [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)];
+  const jsonLd: string[] = [];
+  const regularScripts: string[] = [];
+  for (const m of allScriptMatches) {
+    const attrs = m[1];
+    const content = m[2];
+    if (/src\s*=/i.test(attrs)) continue; // skip external scripts
+    if (/type\s*=\s*["']application\/ld\+json["']/i.test(attrs)) {
+      jsonLd.push(content.trim());
+    } else {
+      regularScripts.push(`(function(){\ntry{\n${content}\n}catch(e){console.error("Script error:", e);}\n})();`);
+    }
+  }
+  const scripts = regularScripts.join('\n');
 
   // Extract title
   const titleMatch = html.match(/<title>([\s\S]*?)<\/title>/i);
   const title = titleMatch ? titleMatch[1].trim() : '';
 
-  return { body, styles, scripts, title };
+  return { body, styles, scripts, title, jsonLd };
 }
