@@ -753,22 +753,22 @@
 
     /* ── TRUST LOGOS SECTION ── */
     .trust-logos-section {
-      background: #1d1d1f;
+      background: var(--bg);
       padding: 72px 0 80px;
       position: relative;
       overflow: hidden;
     }
 
-    /* subtle ambient glow */
+    /* subtle teal bloom — matches site accent */
     .trust-logos-section::before {
       content: '';
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 600px;
-      height: 300px;
-      background: radial-gradient(ellipse, rgba(51, 197, 243, .07) 0%, transparent 70%);
+      width: 700px;
+      height: 320px;
+      background: radial-gradient(ellipse, rgba(51, 197, 243, .06) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -787,33 +787,33 @@
 
     .trust-logos-section .tls-line {
       flex: 1;
-      max-width: 200px;
+      max-width: 220px;
       height: 1px;
-      background: linear-gradient(to right, transparent, rgba(255,255,255,.12));
+      background: linear-gradient(to right, transparent, rgba(0,0,0,.10));
     }
 
     .trust-logos-section .tls-line.rev {
-      background: linear-gradient(to left, transparent, rgba(255,255,255,.12));
+      background: linear-gradient(to left, transparent, rgba(0,0,0,.10));
     }
 
     .trust-logos-section .tls-label {
       font-family: var(--fh);
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: .18em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, .3);
+      color: #9ca3af;
       white-space: nowrap;
     }
 
-    /* logo items inside dark section — brighter filter */
+    /* logo items on light background — clear grayscale */
     .trust-logos-section .client-logo-item img {
-      filter: grayscale(1) opacity(.22) invert(1);
+      filter: grayscale(1) opacity(.45);
       transition: filter .3s ease, transform .25s ease;
     }
 
     .trust-logos-section .client-logo-item img:hover {
-      filter: grayscale(0) opacity(.75) invert(0);
+      filter: grayscale(0) opacity(.9);
       transform: scale(1.06);
     }
 
