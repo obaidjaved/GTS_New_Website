@@ -3159,9 +3159,59 @@
       .hero, 
       .about-hero, 
       .blog-hero {
-        padding-top: 72px !important;
+        padding-top: 106px !important;
         padding-bottom: 40px !important;
         min-height: auto !important;
+      }
+
+      /* 2b. Hero Section Mobile Optimization (alignments, side-by-side buttons, and tight vertical spacing) */
+      .hero-btns {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 12px !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        margin-bottom: 24px !important;
+      }
+
+      .hero-btn-primary,
+      .hero-btn-secondary {
+        font-size: 13px !important;
+        height: 44px !important;
+        padding: 0 20px !important;
+        border-radius: var(--radius-pill) !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        flex: 1 !important;
+        max-width: 160px !important;
+      }
+
+      .hero-btn-primary {
+        background: #1d1d1f !important;
+        color: #fff !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+      }
+
+      .hero-btn-secondary {
+        color: var(--text) !important;
+        background: rgba(0, 0, 0, 0.04) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+      }
+
+      .hero-trust {
+        padding-top: 24px !important;
+        gap: 16px 20px !important;
+      }
+
+      .hero-trust-item .n {
+        font-size: 22px !important;
+      }
+
+      .hero-trust-item .l {
+        font-size: 11px !important;
       }
 
       /* 3. Standard mobile side paddings for container columns */
