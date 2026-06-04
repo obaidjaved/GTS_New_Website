@@ -7,31 +7,14 @@ interface ClientPageProps {
   styles: string;
   scripts: string;
   title: string;
-  jsonLd?: string[];
 }
 
-export default function ClientPage({ body, styles, scripts, title, jsonLd }: ClientPageProps) {
+export default function ClientPage({ body, styles, scripts, title }: ClientPageProps) {
   useEffect(() => {
     if (title) {
       document.title = title;
     }
   }, [title]);
-
-  useEffect(() => {
-    if (!jsonLd || jsonLd.length === 0) return;
-    const injected: HTMLScriptElement[] = [];
-    jsonLd.forEach((json, i) => {
-      const existing = document.getElementById(`page-jsonld-${i}`);
-      if (existing) existing.remove();
-      const el = document.createElement('script');
-      el.id = `page-jsonld-${i}`;
-      el.type = 'application/ld+json';
-      el.textContent = json;
-      document.head.appendChild(el);
-      injected.push(el);
-    });
-    return () => { injected.forEach(el => el.remove()); };
-  }, [jsonLd]);
 
   useEffect(() => {
     if (!scripts) return;
